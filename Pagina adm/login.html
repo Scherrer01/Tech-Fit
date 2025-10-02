@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style_login.css">
+  <title>Login - TechFit</title>
+</head>
+<body>
+  <div class="container">
+    <img src="logo.png" alt="Logo TechFit"><br>
+
+    <h1 class="titulo">
+      <span class="titulo1">Tech</span>Fit
+    </h1>
+
+    <form action="login.php"method="post">
+      <label for="email" >Email:</label>
+      <input id="email" type="email" name="email" placeholder="seu.nome@br.techfit.com" required autocomplete="username">
+
+      <label for="senha">Senha:</label>
+      <input id="senha" type="password" name="senha" placeholder="Insira a senha" required autocomplete="current-password">
+
+      <p id="mensagem-login"></p>
+      <button class="btn-login" onclick="window.location.href='adm.html'">Entrar</button>
+    </form>
+  </div>
+  <script>
+    function fazerLogin(){
+        const email = document.getElementById(email).values;
+        const senha= document.getElementById(senha).values;
+        const mensagem = document.getElementById(mensagem-login).values;
+
+        if (email.includes("@") && email.includes(".") && senha.length >= 8) {
+            mensagem.innerText = "Login bem-sucedido!";
+            mensagem.style.color = "green";
+        } else if (!email.includes(".")) {
+            mensagem.innerText = "Email precisa de '.'";
+            mensagem.style.color = "red";
+        } else if (senha.length < 8) {
+            mensagem.innerText = "Senha precisa ter pelo menos 8 caracteres.";
+            mensagem.style.color = "red";
+        } else {
+            mensagem.innerText = "Email inválido.";
+            mensagem.style.color = "red";
+        }
+        
+        }
+
+    
+  </script>
+</body>
+</html>
+
