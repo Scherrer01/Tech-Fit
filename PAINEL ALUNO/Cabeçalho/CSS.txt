@@ -1,0 +1,143 @@
+/* ============================================================== */
+/* CABEÇALHO PADRÃO */
+h1 {
+    color: #FFFFFF; /* Cor principal */
+}
+
+.color-accent {
+    color: #FF2626; /* Cor secundária */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: #282828;
+}
+
+.cabecalho {
+    background-color: #282828;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 50px; 
+    align-items: center;
+    height: 100%;
+    margin-left: 10%;
+}
+
+nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s;
+    position: relative;
+    padding: 12px 0; 
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+nav a:hover {
+    color: #FF2626;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: #FF2626;
+    transition: width 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+#login {
+    list-style: none;
+    margin-left: auto;
+    
+}
+
+#login a {
+    background-color: #FF2626;
+    color: white;
+    text-decoration: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: 1px solid #FF2626;
+}
+
+#login a:hover {
+    background-color: #FF2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(117, 15, 15, 0.3);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.05);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+    transform: translateX(-15px); 
+    margin-left: -30px
+}
+
+.logo-container h1 {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.color-accent {
+    color: #FF2626;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+/* ============================================================== */

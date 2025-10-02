@@ -1,0 +1,297 @@
+/* ============================================================== */
+/* CABEÇALHO PADRÃO */
+h1 {
+    color: #FFFFFF; /* Cor principal */
+}
+
+.color-accent {
+    color: #FF2626; /* Cor secundária */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: #282828;
+}
+
+.cabecalho {
+    background-color: #282828;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 50px; 
+    align-items: center;
+    height: 100%;
+    margin-left: 10%;
+}
+
+nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s;
+    position: relative;
+    padding: 12px 0; 
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+nav a:hover {
+    color: #FF2626;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: #FF2626;
+    transition: width 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+#login {
+    list-style: none;
+    margin-left: auto;
+    
+}
+
+#login a {
+    background-color: #FF2626;
+    color: white;
+    text-decoration: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: 1px solid #FF2626;
+}
+
+#login a:hover {
+    background-color: #FF2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(117, 15, 15, 0.3);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.05);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+    transform: translateX(-15px); 
+    margin-left: -30px
+}
+
+.logo-container h1 {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.color-accent {
+    color: #FF2626;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+/* ============================================================== */
+
+/* ============================================================== */
+h2 {
+    color: white;
+}
+/* REGISTRO */
+.registro-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 40px 6%; /* mais para a esquerda, mas não colado */
+    gap: 18px;
+}
+
+.registro-card {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 35px;
+    width: 380px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-left: 0; /* remove o espaçamento à esquerda */
+}
+
+.registro-titulo {
+    color: white;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.registro-titulo .color-accent {
+    color: #FF2626;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-grupo {
+    margin-bottom: 18px;
+}
+
+.campo-grupo label {
+    color: white;
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.campo-grupo input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #282828;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.campo-grupo input:focus {
+    border-color: #FF2626;
+    box-shadow: 0 0 0 2px rgba(255, 38, 38, 0.3);
+}
+
+.campo-grupo input::placeholder {
+    color: #888;
+    font-size: 13px;
+}
+
+.btn-registrar {
+    width: 100%;
+    padding: 12px;
+    background-color: #FF2626;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-registrar:hover {
+    background-color: #e02020;
+    transform: scale(1.02);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.login-link a {
+    color: #FF2626;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para validação */
+.campo-grupo input:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: #ff6b6b;
+}
+
+.campo-grupo input:valid:not(:focus):not(:placeholder-shown) {
+    border-color: #51cf66;
+}
+/* ============================================================== */
+
+/* ============================================================== */
+/* Boas vindas */
+.bem-vindo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background: none;
+    color: white;
+    max-width: 350px;
+    margin-left: 0; /* pode remover ou deixar zero para colar mais */
+    text-align: right;
+}
+
+.bem-vindo-logo img {
+    height: 300px; /* tamanho mais equilibrado */
+    margin-bottom: 15px;
+}
+
+.bem-vindo-titulo {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #FF2626;
+}
+
+.bem-vindo-texto {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 0;
+}
+
+/* ============================================================== */

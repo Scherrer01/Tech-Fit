@@ -1,0 +1,16 @@
+<header class="cabecalho">
+    <div class="logo-container">
+        <div class="logo">
+            <img src="logo.png" alt="Tech Fit">
+        </div>
+        <h1>Tech <span class="color-accent">Fit</span></h1>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="#home">Planos</a></li>
+            <li><a href="#sobre">Sobre Nós</a></li>
+            <li><a href="#contato">Contato</a></li>
+            <li id="login"><a href="#contato">Login</a></li>
+        </ul>
+    </nav>
+</header>
