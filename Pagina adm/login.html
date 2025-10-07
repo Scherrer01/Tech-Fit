@@ -3,52 +3,227 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style_login.css">
   <title>Login - TechFit</title>
+  <style>
+    /* Reset e base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at 20% 20%, #ff2626, #000);
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    /* Efeito de partículas de fundo */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 300%;
+      height: 300%;
+      background: repeating-radial-gradient(circle, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 100px);
+      animation: rotate 50s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Container principal */
+    .container {
+      background: rgba(20, 20, 20, 0.9);
+      border: 1px solid rgba(255, 38, 38, 0.3);
+      border-radius: 25px;
+      width: 90%;
+      max-width: 400px;
+      padding: 50px 30px;
+      box-shadow: 0 0 25px rgba(255, 38, 38, 0.4);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Logo */
+    img {
+      width: 110px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 10px #ff2626);
+      transition: transform 0.5s ease;
+    }
+
+    img:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Título */
+    h1 {
+      font-size: 34px;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #ff2626, #ff5a5a);
+     -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(255, 38, 38, 0.4);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 15px;
+      color: #ccc;
+    }
+
+    input {
+      margin-top: 8px;
+      width: 80%;
+      padding: 12px;
+      border: none;
+      border-radius: 30px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      box-shadow: 0 0 10px #ff2626;
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    /* Botão de senha */
+    .toggle-senha {
+      background: none;
+      border: none;
+      color: #ff2626;
+      cursor: pointer;
+      font-size: 18px;
+      position: absolute;
+      right: 50px;
+      top: 55%;
+      transform: translateY(-50%);
+      transition: 0.3s;
+    }
+
+    .toggle-senha:hover {
+      transform: translateY(-50%) scale(1.2);
+      color: #ff5a5a;
+    }
+
+    /* Botão principal */
+    .btn-login {
+      margin-top: 35px;
+      padding: 14px 40px;
+      background: linear-gradient(90deg, #ff2626, #7a0000);
+      border: none;
+      border-radius: 50px;
+      color: #fff;
+      font-size: 16px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 38, 38, 0.5);
+      transition: all 0.4s ease;
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(90deg, #ff4040, #a30000);
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(255, 38, 38, 0.8);
+    }
+
+    .btn-login:active {
+      transform: scale(0.98);
+    }
+
+    #mensagem-login {
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    /* Responsividade */
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+      h1 { font-size: 28px; }
+      input { width: 90%; }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <img src="logo.png" alt="Logo TechFit"><br>
+    <img src="justgorila.png" alt="Logo TechFit">
+    <h1>TechFit</h1>
 
-    <h1 class="titulo">
-      <span class="titulo1">Tech</span>Fit
-    </h1>
+    <label for="email">E-mail</label>
+    <input id="email" type="email" placeholder="seu.nome@br.techfit.com" required>
 
-    <form action="login.php"method="post">
-      <label for="email" >Email:</label>
-      <input id="email" type="email" name="email" placeholder="seu.nome@br.techfit.com" required autocomplete="username">
+    <label for="senha">Senha</label>
+    <div style="position: relative; width: 100%; display: flex; justify-content: center;">
+      <input id="senha" type="password" placeholder="Digite sua senha" required>
+      <button type="button" class="toggle-senha" onclick="toggleSenha()">👁️</button>
+    </div>
 
-      <label for="senha">Senha:</label>
-      <input id="senha" type="password" name="senha" placeholder="Insira a senha" required autocomplete="current-password">
-
-      <p id="mensagem-login"></p>
-      <button class="btn-login" onclick="window.location.href='adm.html'">Entrar</button>
-    </form>
+    <p id="mensagem-login"></p>
+    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
   </div>
+
   <script>
-    function fazerLogin(){
-        const email = document.getElementById(email).values;
-        const senha= document.getElementById(senha).values;
-        const mensagem = document.getElementById(mensagem-login).values;
+function fazerLogin() {
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+  const mensagem = document.getElementById("mensagem-login");
 
-        if (email.includes("@") && email.includes(".") && senha.length >= 8) {
-            mensagem.innerText = "Login bem-sucedido!";
-            mensagem.style.color = "green";
-        } else if (!email.includes(".")) {
-            mensagem.innerText = "Email precisa de '.'";
-            mensagem.style.color = "red";
-        } else if (senha.length < 8) {
-            mensagem.innerText = "Senha precisa ter pelo menos 8 caracteres.";
-            mensagem.style.color = "red";
-        } else {
-            mensagem.innerText = "Email inválido.";
-            mensagem.style.color = "red";
-        }
-        
-        }
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const senhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
 
-    
+  if (emailValido && senhaForte.test(senha)) {
+    mensagem.innerText = "✅ Login bem-sucedido! Redirecionando...";
+    mensagem.style.color = "#4cff4c";
+    setTimeout(() => {
+      window.location.href = "Adm.html";
+    }, 2000);
+  } else if (!emailValido) {
+    mensagem.innerText = "❌ Email inválido. Verifique o formato.";
+    mensagem.style.color = "#ff2626";
+  } else {
+    mensagem.innerText = "❌ Senha fraca. Use letras maiúsculas, minúsculas, número e símbolo.";
+    mensagem.style.color = "#ff2626";
+  }
+}
+
+
+    function toggleSenha() {
+      const senhaInput = document.getElementById("senha");
+      const botao = event.target;
+      if (senhaInput.type === "password") {
+        senhaInput.type = "text";
+        botao.innerText = "🙈";
+      } else {
+        senhaInput.type = "password";
+        botao.innerText = "👁️";
+      }
+    }
   </script>
 </body>
 </html>
-
