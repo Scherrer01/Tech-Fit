@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
   <title>Login - TechFit</title>
   <style>
     /* Reset e base */
@@ -14,7 +17,7 @@
 
     body {
       background: radial-gradient(circle at 20% 20%, #ff2626, #000);
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Open Sans', sans-serif;
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -42,7 +45,7 @@
     /* Container principal */
     .container {
       background: rgba(20, 20, 20, 0.9);
-      border: 1px solid rgba(255, 38, 38, 0.3);
+      border: 1px solid rgba(247, 164, 164, 0.3);
       border-radius: 25px;
       width: 90%;
       max-width: 400px;
@@ -79,7 +82,6 @@
       background: linear-gradient(90deg, #ff2626, #ff5a5a);
      -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
       letter-spacing: 2px;
       text-shadow: 0 0 10px rgba(255, 38, 38, 0.4);
     }
@@ -175,8 +177,8 @@
     <img src="justgorila.png" alt="Logo TechFit">
     <h1>TechFit</h1>
 
-    <label for="email">E-mail</label>
-    <input id="email" type="email" placeholder="seu.nome@br.techfit.com" required>
+    <label for="username">Username</label>
+    <input id="username" type="email" placeholder="username" required>
 
     <label for="senha">Senha</label>
     <div style="position: relative; width: 100%; display: flex; justify-content: center;">
@@ -190,24 +192,20 @@
 
   <script>
 function fazerLogin() {
-  const email = document.getElementById("email").value;
+  const email = document.getElementById("username").value;
   const senha = document.getElementById("senha").value;
   const mensagem = document.getElementById("mensagem-login");
 
-  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const senhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
 
-  if (emailValido && senhaForte.test(senha)) {
+  if (senhaForte.test(senha)) {
     mensagem.innerText = "✅ Login bem-sucedido! Redirecionando...";
     mensagem.style.color = "#4cff4c";
     setTimeout(() => {
       window.location.href = "Adm.html";
     }, 2000);
-  } else if (!emailValido) {
-    mensagem.innerText = "❌ Email inválido. Verifique o formato.";
-    mensagem.style.color = "#ff2626";
   } else {
-    mensagem.innerText = "❌ Senha fraca. Use letras maiúsculas, minúsculas, número e símbolo.";
+    mensagem.innerText = "❌ Senha fraca.";
     mensagem.style.color = "#ff2626";
   }
 }

@@ -1,0 +1,101 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #1c1c1c;
+  color: #fff;
+  padding: 20px;
+  height: 100vh;
+}
+
+.sidebar .logo {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.sidebar li:hover {
+  color: #d4af37;
+}
+
+.dashboard {
+  flex: 1;
+  padding: 30px;
+}
+
+.top-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  font-weight: 600;
+}
+
+.charts {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.bar-chart, .pie-chart {
+  background-color: #fff;
+  flex: 1;
+  height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
+
+.professores table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.professores th, .professores td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.ultimos-alunos ul {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  list-style: none;
+}
+
+.ultimos-alunos li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
