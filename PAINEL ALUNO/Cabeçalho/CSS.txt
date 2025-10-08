@@ -16,7 +16,9 @@ h1 {
 }
 
 body {
-    background-color: #282828;
+    background: linear-gradient(to right, #FF2626, #282828 90%);
+    position: relative;
+    overflow-x: hidden;
 }
 
 .cabecalho {

@@ -15,9 +15,13 @@ h1 {
     font-family: 'Segoe UI', Arial, sans-serif;
 }
 
+/* #FF2626 #282828 */
 body {
-    background-color: #282828;
+    background: linear-gradient(to right, #FF2626, #282828 90%);
+    position: relative;
+    overflow-x: hidden;
 }
+
 
 .cabecalho {
     background-color: #282828;
@@ -153,17 +157,17 @@ h2 {
     align-items: center;
     min-height: calc(100vh - 80px);
     padding: 40px 6%; /* mais para a esquerda, mas não colado */
-    gap: 18px;
+    gap: 150px;
 }
 
 .registro-card {
-    background-color: #1a1a1a;
+    background: linear-gradient(145deg, #1a1a1a, #222222);
     border: 1px solid #333;
     border-radius: 8px;
     padding: 35px;
     width: 380px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    margin-left: 0; /* remove o espaçamento à esquerda */
+    margin-left: 0;
 }
 
 .registro-titulo {
@@ -268,17 +272,20 @@ h2 {
 .bem-vindo-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    justify-content: center; /* Centraliza verticalmente */
+    align-items: flex-start;
     background: none;
     color: white;
     max-width: 350px;
-    margin-left: 0; /* pode remover ou deixar zero para colar mais */
-    text-align: right;
+    margin-left: 40px;
+    text-align: left;
+    height: 300px; /* mesma altura da imagem */
 }
 
 .bem-vindo-logo img {
-    height: 300px; /* tamanho mais equilibrado */
+    height: 300px;
     margin-bottom: 15px;
+    align-self: flex-start;
 }
 
 .bem-vindo-titulo {
@@ -286,12 +293,48 @@ h2 {
     font-weight: 700;
     margin-bottom: 10px;
     color: #FF2626;
+    text-align: center;
+    margin-left: 25px;
+    text-shadow: 0 0 10px rgba(255, 38, 38, 0.8),
+                 0 0 20px rgba(255, 38, 38, 0.4),
+                 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .bem-vindo-texto {
     font-size: 16px;
     color: #fff;
     margin-bottom: 0;
+    text-align: center;
+    margin-left: -2px;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.6),
+                 0 0 12px rgba(255, 255, 255, 0.3);
+    filter: brightness(1.1);
 }
 
 /* ============================================================== */
+/* Mensagens de erro */
+
+.mensagem-erro {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.campo-grupo input:invalid {
+    border-color: #e74c3c;
+}
+
+.campo-grupo input:valid {
+    border-color: #2ecc71;
+}
+
+.btn-registrar:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.btn-registrar:disabled:hover {
+    background-color: #95a5a6;
+    transform: none;
+}
