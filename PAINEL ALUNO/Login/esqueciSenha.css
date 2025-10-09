@@ -1,0 +1,591 @@
+/* ============================================================== */
+/* CABEÇALHO PADRÃO */
+h1 {
+    color: #FFFFFF; /* Cor principal */
+}
+
+.color-accent {
+    color: #FF2626; /* Cor secundária */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* #FF2626 #282828 */
+body {
+    background: linear-gradient(to right, #FF2626, #282828 90%);
+    position: relative;
+    overflow-x: hidden;
+}
+
+
+.cabecalho {
+    background-color: #282828;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 50px; 
+    align-items: center;
+    height: 100%;
+    margin-left: 10%;
+}
+
+nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s;
+    position: relative;
+    padding: 12px 0; 
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+nav a:hover {
+    color: #FF2626;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: #FF2626;
+    transition: width 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+#login {
+    list-style: none;
+    margin-left: auto;
+    
+}
+
+#login a {
+    background-color: #FF2626;
+    color: white;
+    text-decoration: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: 1px solid #FF2626;
+}
+
+#login a:hover {
+    background-color: #FF2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(117, 15, 15, 0.3);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.05);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+    transform: translateX(-15px); 
+    margin-left: -30px
+}
+
+.logo-container h1 {
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.color-accent {
+    color: #FF2626;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+/* ============================================================== */
+
+/* ============================================================== */
+h2 {
+    color: white;
+}
+/* RECUPERAÇÃO DE SENHA */
+.recuperacao-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 40px 6%;
+    gap: 150px;
+}
+
+.recuperacao-card {
+    background: linear-gradient(145deg, #1a1a1a, #222222);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 35px;
+    width: 420px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-left: 0;
+}
+
+.recuperacao-titulo {
+    color: white;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.recuperacao-titulo .color-accent {
+    color: #FF2626;
+}
+
+.recuperacao-descricao {
+    color: #b0b0b0;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo-grupo {
+    margin-bottom: 18px;
+}
+
+.campo-grupo label {
+    color: white;
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.campo-grupo input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #282828;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.campo-grupo input:focus {
+    border-color: #FF2626;
+    box-shadow: 0 0 0 2px rgba(255, 38, 38, 0.3);
+}
+
+.campo-grupo input::placeholder {
+    color: #888;
+    font-size: 13px;
+}
+
+.btn-recuperar {
+    width: 100%;
+    padding: 12px;
+    background-color: #FF2626;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.btn-recuperar:hover {
+    background-color: #e02020;
+    transform: scale(1.02);
+}
+
+.voltar-login {
+    text-align: center;
+}
+
+.btn-voltar {
+    color: #FF2626;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-voltar:hover {
+    text-decoration: underline;
+}
+
+/* Etapa do Código */
+.etapa-codigo {
+    margin-top: 20px;
+}
+
+.codigo-titulo {
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.codigo-descricao {
+    color: #b0b0b0;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.email-destino {
+    color: #FF2626;
+    font-weight: 600;
+}
+
+.codigo-grupo {
+    margin-bottom: 20px;
+}
+
+.codigo-inputs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.codigo-digito {
+    width: 45px !important;
+    height: 50px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 0 !important;
+}
+
+.codigo-digito:focus {
+    border-color: #FF2626;
+    box-shadow: 0 0 0 2px rgba(255, 38, 38, 0.3);
+}
+
+.reenviar-codigo {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #b0b0b0;
+}
+
+.reenviar-codigo a {
+    color: #FF2626;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.reenviar-codigo a:hover {
+    text-decoration: underline;
+}
+
+.reenviar-codigo a:disabled {
+    color: #666;
+    cursor: not-allowed;
+}
+
+.contador {
+    display: block;
+    margin-top: 5px;
+    color: #FF2626;
+    font-weight: 600;
+}
+
+.btn-verificar {
+    width: 100%;
+    padding: 12px;
+    background-color: #FF2626;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-verificar:hover {
+    background-color: #e02020;
+    transform: scale(1.02);
+}
+
+/* Etapa Nova Senha */
+.etapa-nova-senha {
+    margin-top: 20px;
+}
+
+.nova-senha-titulo {
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.nova-senha-descricao {
+    color: #b0b0b0;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.requisitos-senha {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.requisito {
+    font-size: 11px;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.requisito.atendido {
+    color: #2ecc71;
+}
+
+.requisito.nao-atendido {
+    color: #e74c3c;
+}
+
+.btn-redefinir {
+    width: 100%;
+    padding: 12px;
+    background-color: #FF2626;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+}
+
+.btn-redefinir:hover {
+    background-color: #e02020;
+    transform: scale(1.02);
+}
+
+/* Mensagem de Sucesso */
+.sucesso-mensagem {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.sucesso-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #2ecc71;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto 20px;
+}
+
+.sucesso-titulo {
+    color: white;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.sucesso-descricao {
+    color: #b0b0b0;
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.btn-login-sucesso {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #FF2626;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-login-sucesso:hover {
+    background-color: #e02020;
+    transform: scale(1.02);
+}
+
+/* ============================================================== */
+/* Boas vindas */
+.bem-vindo-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background: none;
+    color: white;
+    max-width: 350px;
+    margin-left: 40px;
+    text-align: left;
+    height: 300px;
+}
+
+.bem-vindo-logo img {
+    height: 300px;
+    margin-bottom: 15px;
+    align-self: flex-start;
+}
+
+.bem-vindo-titulo {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #FF2626;
+    text-align: center;
+    margin-left: 25px;
+    text-shadow: 0 0 10px rgba(255, 38, 38, 0.8),
+                 0 0 20px rgba(255, 38, 38, 0.4),
+                 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bem-vindo-texto {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 0;
+    text-align: center;
+    margin-left: -2px;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.6),
+                 0 0 12px rgba(255, 255, 255, 0.3);
+    filter: brightness(1.1);
+}
+
+/* ============================================================== */
+/* Mensagens de erro */
+
+.mensagem-erro {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.campo-grupo input:invalid {
+    border-color: #e74c3c;
+}
+
+.campo-grupo input:valid {
+    border-color: #2ecc71;
+}
+
+.btn-recuperar:disabled,
+.btn-verificar:disabled,
+.btn-redefinir:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.btn-recuperar:disabled:hover,
+.btn-verificar:disabled:hover,
+.btn-redefinir:disabled:hover {
+    background-color: #95a5a6;
+    transform: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .recuperacao-container {
+        flex-direction: column;
+        gap: 40px;
+        padding: 40px 20px;
+        justify-content: center;
+    }
+    
+    .recuperacao-card {
+        width: 100%;
+        max-width: 380px;
+        margin: 0 auto;
+    }
+    
+    .bem-vindo-container {
+        margin-left: 0;
+        text-align: center;
+        align-items: center;
+    }
+    
+    .bem-vindo-logo img {
+        align-self: center;
+    }
+    
+    .bem-vindo-titulo,
+    .bem-vindo-texto {
+        margin-left: 0;
+    }
+    
+    .codigo-inputs {
+        gap: 8px;
+    }
+    
+    .codigo-digito {
+        width: 40px !important;
+        height: 45px;
+    }
+}

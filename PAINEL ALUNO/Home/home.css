@@ -16,7 +16,7 @@ h1 {
 }
 
 body {
-    background: linear-gradient(to right, #FF2626, #282828 90%);
+    background-color: #1A1A1D;
     position: relative;
     overflow-x: hidden;
 }
@@ -450,7 +450,7 @@ nav a:hover::after {
 /* Classes Section */
 .classes {
     padding: 100px 80px;
-    background-color: #1A1A1D;
+    background: linear-gradient(to right, #FF2626, #282828 90%);
 }
 
 .classes-grid {
@@ -571,6 +571,8 @@ nav a:hover::after {
     height: 50px;
     border-radius: 50%;
     background-color: #282828;
+    object-fit: cover; 
+    border: 2px solid #FF2626; 
 }
 
 .client-info h4 {
@@ -615,7 +617,7 @@ nav a:hover::after {
 /* Footer */
 .footer {
     background-color: #0a0a0a;
-    padding: 60px 80px 30px;
+    padding: 60px 5% 30px;
 }
 
 .footer-content {
@@ -651,11 +653,24 @@ nav a:hover::after {
     color: #FF2626;
 }
 
-.footer-section p {
-    color: white; /* Adicionado para deixar branco */
+.footer-logo .logo-container {
+    margin-bottom: 15px;
 }
 
+.footer-logo .logo-container h2 {
+    color: white;
+}
 
+.footer-logo p {
+    color: #b0b0b0;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
 
 .social-links a {
     display: inline-block;

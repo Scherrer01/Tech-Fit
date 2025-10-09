@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="esqueciSenha.css">
+    <title>Recuperar Senha - Tech Fit</title>
+</head>
+<body>
+<!-- ============================================================================================-->
+    <!-- Cabeçalho padrão -->
+ <header class="cabecalho">
+    <div class="logo-container">
+        <div class="logo">
+            <img src="logo.png" alt="Tech Fit">
+        </div>
+        <h1>Tech <span class="color-accent">Fit</span></h1>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="home.html">Planos</a></li>
+            <li><a href="sobre-nos.html">Sobre Nós</a></li>
+            <li><a href="contato.html">Contato</a></li>
+            <li id="login"><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+</header>
+<!-- ============================================================================================-->
+
+<!-- ============================================================================================-->
+  <div class="container">
+        <div class="recuperacao-container">
+            <div class="recuperacao-card">
+                <h2 class="recuperacao-titulo">Recuperar <span class="color-accent">Senha</span></h2>
+                <p class="recuperacao-descricao">Digite seu e-mail cadastrado para receber as instruções de redefinição de senha.</p>
+                
+                <form class="formulario" id="formRecuperacao">
+                    <div class="campo-grupo">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail cadastrado" required>
+                    </div>
+
+                    <button type="submit" class="btn-recuperar">Enviar Instruções</button>
+
+                    <div class="voltar-login">
+                        <a href="login.html" class="btn-voltar">← Voltar para o Login</a>
+                    </div>
+                </form>
+
+                <!-- Etapa 2 - Código de Verificação (inicialmente oculta) -->
+                <div class="etapa-codigo" id="etapaCodigo" style="display: none;">
+                    <h3 class="codigo-titulo">Verifique seu E-mail</h3>
+                    <p class="codigo-descricao">Enviamos um código de 6 dígitos para: <span id="emailDestino" class="email-destino"></span></p>
+                    
+                    <div class="codigo-grupo">
+                        <label for="codigo">Código de Verificação</label>
+                        <div class="codigo-inputs">
+                            <input type="text" maxlength="1" class="codigo-digito" data-index="0">
+                            <input type="text" maxlength="1" class="codigo-digito" data-index="1">
+                            <input type="text" maxlength="1" class="codigo-digito" data-index="2">
+                            <input type="text" maxlength="1" class="codigo-digito" data-index="3">
+                            <input type="text" maxlength="1" class="codigo-digito" data-index="4">
+                            <input type="text" maxlength="1" class="codigo-digito" data-index="5">
+                        </div>
+                        <input type="hidden" id="codigoCompleto" name="codigo">
+                    </div>
+
+                    <div class="reenviar-codigo">
+                        <p>Não recebeu o código? <a href="#" id="reenviarCodigo">Reenviar código</a></p>
+                        <span class="contador" id="contador">60</span>
+                    </div>
+
+                    <button type="button" class="btn-verificar" id="btnVerificar">Verificar Código</button>
+                </div>
+
+                <!-- Etapa 3 - Nova Senha (inicialmente oculta) -->
+                <div class="etapa-nova-senha" id="etapaNovaSenha" style="display: none;">
+                    <h3 class="nova-senha-titulo">Criar Nova Senha</h3>
+                    <p class="nova-senha-descricao">Digite sua nova senha abaixo.</p>
+                    
+                    <div class="campo-grupo">
+                        <label for="novaSenha">Nova Senha</label>
+                        <input type="password" id="novaSenha" name="novaSenha" placeholder="Digite sua nova senha" required minlength="6">
+                        <div class="requisitos-senha">
+                            <span id="reqTamanho" class="requisito">• Mínimo 6 caracteres</span>
+                            <span id="reqMaiuscula" class="requisito">• Pelo menos 1 letra maiúscula</span>
+                            <span id="reqNumero" class="requisito">• Pelo menos 1 número</span>
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label for="confirmarSenha">Confirmar Nova Senha</label>
+                        <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirme sua nova senha" required>
+                    </div>
+
+                    <button type="button" class="btn-redefinir" id="btnRedefinir">Redefinir Senha</button>
+                </div>
+
+                <!-- Sucesso (inicialmente oculta) -->
+                <div class="sucesso-mensagem" id="sucessoMensagem" style="display: none;">
+                    <div class="sucesso-icon">✓</div>
+                    <h3 class="sucesso-titulo">Senha Redefinida!</h3>
+                    <p class="sucesso-descricao">Sua senha foi redefinida com sucesso. Agora você pode fazer login com sua nova senha.</p>
+                    <a href="login.html" class="btn-login-sucesso">Fazer Login</a>
+                </div>
+            </div>
+            <div class="bem-vindo-container">
+                <div class="bem-vindo-logo">
+                    <img src="logo.png" alt="Tech Fit">
+                </div>
+                <h2 class="bem-vindo-titulo">Recupere seu Acesso</h2>
+                <p class="bem-vindo-texto">Siga os passos para redefinir sua senha e voltar aos treinos.</p>
+            </div>
+        </div>
+    </div>
+<!-- ============================================================================================-->
+
+<script src="esqueci-senha.js"></script>
+</body>
+</html>
