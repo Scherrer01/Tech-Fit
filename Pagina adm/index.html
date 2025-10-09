@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            font-family: 'Segoe UI',Arial, sans-serif;
+            background-color: radial-gradient(circle at 20% 20% #ff2626, #000); /* criar a degradê circular*/
+            color: #fff;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden; /*escondido*/
+        }
+        /*Sidebar*/
+        .sidebar{
+            width: 260px; /* define a largura do sidebar*/
+            background: rgba(20,20,20,0.9); /* fundo quase opaco 90% (0.9) de opacidade*/
+            backdrop-filter:blur(10px); /* coloca um filtro no background, desfocando o fundo*/
+            border-right: 1px solid rgba(255,38,38,0.3); /* borda na direita na cor vinho*/
+            box-shadow: 0 0 20px rgba(255, 38, 38,0.3); /*borda no sidebar dando destaque*/
+            padding: 20px 20px; /*espaçamento dentro do sidebar*/
+            display: flex;
+            flex-direction: column; /* deixa os itens como colunas*/
+            justify-content: space-between; /* adiciona espaço entre eles*/
+            position: fixed; /* fixa a sidebar na tela mesmo ao rolar*/
+            height: 100vh; /*ocupa 100% da altura da tela*/
+            left: 0; /* canto esquerdo*/
+            top: 0;   /* canto superior */
+        
+        }
+        /* div.logo{
+            background-image: url(justgorila.png);
+            background-repeat: no-repeat;
+            background-size: 200px;
+            margin-top: 0px;
+            
+            
+        } */
+         img.logo-sidebar{
+            height:100px;
+            margin-left: 12.5%;
+
+         }
+         .logo-text{
+            font-size:28px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(90deg, #f49595,#ff0000 );
+            -webkit-background-clip:text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255,38,38,0.4);
+            margin-bottom:-75px;
+        }
+        nav ul{
+            list-style: none;
+        }
+        nav ul li{
+            padding:12px 20px;
+            margin-top: 2px;
+            margin-bottom:0px;
+            border-radius:12px;
+            cursor:pointer;
+            transition: all 0.3s;
+            color: #ccc;
+            text-align: left;
+        }
+        nav ul li:hover{
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255,38,38 , 0.5);
+            transform: translateX(5px);
+    }
+#sair{
+    list-style: none;
+}
+#sair li{
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s;
+    text-align: left;
+}
+
+#sair li:hover{
+    
+
+}
+
+    </style>
+     <!-- comando "aside" cria uma "aba" de navegação lateral no site -->
+    <aside class="sidebar"> 
+
+        <div class="logo">
+          <img class="logo-sidebar" src="justgorila.png" alt="">
+            <h2 class="logo-text">Tech Fit</h2>
+        </div>
+    <!-- nav para criar a navegação da barra lateral -->
+    <nav style="margin-top: 40px;"> 
+        <ul>
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+              <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+              <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
+            </svg> Home</li>
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-arms-up" viewBox="0 0 16 16">
+              <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+              <path d="m5.93 6.704-.846 8.451a.768.768 0 0 0 1.523.203l.81-4.865a.59.59 0 0 1 1.165 0l.81 4.865a.768.768 0 0 0 1.523-.203l-.845-8.451A1.5 1.5 0 0 1 10.5 5.5L13 2.284a.796.796 0 0 0-1.239-.998L9.634 3.84a.7.7 0 0 1-.33.235c-.23.074-.665.176-1.304.176-.64 0-1.074-.102-1.305-.176a.7.7 0 0 1-.329-.235L4.239 1.286a.796.796 0 0 0-1.24.998l2.5 3.216c.317.316.475.758.43 1.204Z"/>
+            </svg> Alunos</li>
+            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-fill" viewBox="0 0 16 16">
+            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5"/>
+            </svg> Agendas</li>
+            <li>👥 Colaboradores</li>
+            <li>💰 Financeiro</li>
+            <li>⚙️ Configurações</li>
+        </ul>
+    </nav>
+    </div>
+    <ul id="sair">
+        <li> 🚪Sair</li>
+    </ul>
+    </aside>
+
+    <main class="dashboard">
+        <section class="topstats">
+            <div class="card">
+                <p>Alunos Cadastrados: <strong>1070</strong></p>
+                <span class="comparative"> +15%</span>
+                <p class="year"></p>
+            </div>
+            <div class="card">
+                <p>Funcionários: <strong>110</strong></p>
+            </div>
+            <div class="card">
+                <p>Cancelamentos: <strong>55</strong></p>
+            </div>
+            <div class="card">
+                <p>Modalidades: <strong>12</strong></p>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html> 
