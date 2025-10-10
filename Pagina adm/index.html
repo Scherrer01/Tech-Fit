@@ -1,42 +1,63 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pagina inicial</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
+
 <body>
     <style>
-        *{
-            margin:0;
+        * {
+            margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body{
-            font-family: 'Segoe UI',Arial, sans-serif;
-            background-color: radial-gradient(circle at 20% 20% #ff2626, #000); /* criar a degradê circular*/
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(circle at 20% 20% #ff2626, #000);
+            /* criar a degradê circular*/
             color: #fff;
             display: flex;
             min-height: 100vh;
-            overflow-x: hidden; /*escondido*/
+            overflow-x: hidden;
+            /*escondido*/
         }
+
         /*Sidebar*/
-        .sidebar{
-            width: 260px; /* define a largura do sidebar*/
-            background: rgba(20,20,20,0.9); /* fundo quase opaco 90% (0.9) de opacidade*/
-            backdrop-filter:blur(10px); /* coloca um filtro no background, desfocando o fundo*/
-            border-right: 1px solid rgba(255,38,38,0.3); /* borda na direita na cor vinho*/
-            box-shadow: 0 0 20px rgba(255, 38, 38,0.3); /*borda no sidebar dando destaque*/
-            padding: 20px 20px; /*espaçamento dentro do sidebar*/
+        .sidebar {
+            width: 260px;
+            /* define a largura do sidebar*/
+            background: rgba(20, 20, 20, 0.9);
+            /* fundo quase opaco 90% (0.9) de opacidade*/
+            backdrop-filter: blur(10px);
+            /* coloca um filtro no background, desfocando o fundo*/
+            border-right: 1px solid rgba(255, 38, 38, 0.3);
+            /* borda na direita na cor vinho*/
+            box-shadow: 0 0 20px rgba(255, 38, 38, 0.3);
+            /*borda no sidebar dando destaque*/
+            padding: 20px 20px;
+            /*espaçamento dentro do sidebar*/
             display: flex;
-            flex-direction: column; /* deixa os itens como colunas*/
-            justify-content: space-between; /* adiciona espaço entre eles*/
-            position: fixed; /* fixa a sidebar na tela mesmo ao rolar*/
-            height: 100vh; /*ocupa 100% da altura da tela*/
-            left: 0; /* canto esquerdo*/
-            top: 0;   /* canto superior */
-        
+            flex-direction: column;
+            /* deixa os itens como colunas*/
+            justify-content: space-between;
+            /* adiciona espaço entre eles*/
+            position: fixed;
+            /* fixa a sidebar na tela mesmo ao rolar*/
+            height: 100vh;
+            /*ocupa 100% da altura da tela*/
+            left: 0;
+            /* canto esquerdo*/
+            top: 0;
+            /* canto superior */
+
         }
+
         /* div.logo{
             background-image: url(justgorila.png);
             background-repeat: no-repeat;
@@ -45,96 +66,344 @@
             
             
         } */
-         img.logo-sidebar{
-            height:100px;
+        img.logo-sidebar {
+            height: 100px;
             margin-left: 12.5%;
 
-         }
-         .logo-text{
-            font-size:28px;
+        }
+
+        .logo-text {
+            font-size: 28px;
             font-weight: 700;
             text-align: center;
-            background: linear-gradient(90deg, #f49595,#ff0000 );
-            -webkit-background-clip:text;
+            background: linear-gradient(90deg, #f49595, #ff0000);
+            -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(255,38,38,0.4);
-            margin-bottom:-75px;
+            text-shadow: 0 0 10px rgba(255, 38, 38, 0.4);
+            margin-bottom: -75px;
         }
-        nav ul{
+
+        nav ul {
             list-style: none;
         }
-        nav ul li{
-            padding:12px 20px;
+
+        nav ul li {
+            padding: 12px 20px;
             margin-top: 2px;
-            margin-bottom:0px;
-            border-radius:12px;
-            cursor:pointer;
+            margin-bottom: 0px;
+            border-radius: 12px;
+            cursor: pointer;
             transition: all 0.3s;
             color: #ccc;
             text-align: left;
         }
-        nav ul li:hover{
+
+        nav ul li:hover {
             background: linear-gradient(90deg, #ff2626, #7a0000);
             color: #fff;
-            box-shadow: 0 0 15px rgba(255,38,38 , 0.5);
+            box-shadow: 0 0 15px rgba(255, 38, 38, 0.5);
             transform: translateX(5px);
-    }
-#sair{
-    list-style: none;
-}
-#sair li{
-    padding: 12px 20px;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: all 0.3s;
-    text-align: left;
-}
+        }
 
-#sair li:hover{
-    
+        #sair {
+            list-style: none;
+        }
 
-}
+        #sair li {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+            text-align: left;
+        }
 
+        #sair li:hover {
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 38, 38, 0.5);
+            transform: translateX(5px);
+
+        }
+
+        .animated-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 16px 36px;
+            border: 4px solid;
+            border-color: transparent;
+            font-size: 16px;
+            background-color: inherit;
+            border-radius: 100px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 0 0 2px #ff2626;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button svg {
+            position: absolute;
+            width: 24px;
+            fill: white;
+            z-index: 9;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button .arr-1 {
+            right: 16px;
+        }
+
+        .animated-button .arr-2 {
+            left: -25%;
+        }
+
+        .animated-button .circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button .text {
+            position: relative;
+            z-index: 1;
+            transform: translateX(-12px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button:hover {
+            box-shadow: 0 0 0 12px transparent;
+            color: white;
+            border-radius: 12px;
+        }
+
+        .animated-button:hover .arr-1 {
+            right: -25%;
+        }
+
+        .animated-button:hover .arr-2 {
+            left: 16px;
+        }
+
+        .animated-button:hover .text {
+            transform: translateX(12px);
+        }
+
+        .animated-button:hover svg {
+            fill: white;
+        }
+
+        .animated-button:active {
+            scale: 0.95;
+            box-shadow: 0 0 0 4px 622BFF;
+        }
+
+        .animated-button:hover .circle {
+            width: 220px;
+            height: 220px;
+            opacity: 1;
+        }
+
+        .dashboard {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px;
+            animation: fadeIn 1s ease-in-out
+                /* fadeIn gera o efeito de chegar suavemente, vindo de baixo*/
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            /* estado inicial*/
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /*estado final*/
+        }
+
+        .card {
+            padding: 1rem;
+            background-color: #fff;
+            max-width: 320px;
+            border-radius: 20px;
+            box-shadow: 10px 10px #323232;
+            border: 3px solid #323232;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+        }
+
+        .title span {
+            position: relative;
+            padding: 0.5rem;
+            background-color: #10B981;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 9999px;
+        }
+
+        .title span svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            height: 1rem;
+        }
+
+        .title-text {
+            margin-left: 0.5rem;
+            color: #374151;
+            font-size: 18px;
+        }
+
+        .percent {
+            margin-left: 0.5rem;
+            color: rgb(26, 248, 37);
+            font-weight: 600;
+            display: flex;
+        }
+
+        .data {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .data p {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            color: #1F2937;
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .data .range {
+            position: relative;
+            background-color: #E5E7EB;
+            width: 100%;
+            height: 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .data .range .fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #ff2626;
+            width: 76%;
+            height: 100%;
+            border-radius: 0.25rem;
+        }
     </style>
-     <!-- comando "aside" cria uma "aba" de navegação lateral no site -->
-    <aside class="sidebar"> 
+    <!-- comando "aside" cria uma "aba" de navegação lateral no site -->
+    <aside class="sidebar">
 
         <div class="logo">
-          <img class="logo-sidebar" src="justgorila.png" alt="">
+            <img class="logo-sidebar" src="justgorila.png" alt="">
             <h2 class="logo-text">Tech Fit</h2>
         </div>
-    <!-- nav para criar a navegação da barra lateral -->
-    <nav style="margin-top: 40px;"> 
-        <ul>
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
-              <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
-              <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
-            </svg> Home</li>
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-arms-up" viewBox="0 0 16 16">
-              <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-              <path d="m5.93 6.704-.846 8.451a.768.768 0 0 0 1.523.203l.81-4.865a.59.59 0 0 1 1.165 0l.81 4.865a.768.768 0 0 0 1.523-.203l-.845-8.451A1.5 1.5 0 0 1 10.5 5.5L13 2.284a.796.796 0 0 0-1.239-.998L9.634 3.84a.7.7 0 0 1-.33.235c-.23.074-.665.176-1.304.176-.64 0-1.074-.102-1.305-.176a.7.7 0 0 1-.329-.235L4.239 1.286a.796.796 0 0 0-1.24.998l2.5 3.216c.317.316.475.758.43 1.204Z"/>
-            </svg> Alunos</li>
-            <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-fill" viewBox="0 0 16 16">
-            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5"/>
-            </svg> Agendas</li>
-            <li>👥 Colaboradores</li>
-            <li>💰 Financeiro</li>
-            <li>⚙️ Configurações</li>
+        <!-- nav para criar a navegação da barra lateral -->
+        <nav style="margin-top: 40px;">
+            <ul>
+                <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-house-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z" />
+                        <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z" />
+                    </svg> Home</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-person-arms-up" viewBox="0 0 16 16">
+                        <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
+                        <path
+                            d="m5.93 6.704-.846 8.451a.768.768 0 0 0 1.523.203l.81-4.865a.59.59 0 0 1 1.165 0l.81 4.865a.768.768 0 0 0 1.523-.203l-.845-8.451A1.5 1.5 0 0 1 10.5 5.5L13 2.284a.796.796 0 0 0-1.239-.998L9.634 3.84a.7.7 0 0 1-.33.235c-.23.074-.665.176-1.304.176-.64 0-1.074-.102-1.305-.176a.7.7 0 0 1-.329-.235L4.239 1.286a.796.796 0 0 0-1.24.998l2.5 3.216c.317.316.475.758.43 1.204Z" />
+                    </svg> Alunos</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-calendar-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5" />
+                    </svg> Agendas</li>
+                <li> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-people" viewBox="0 0 16 16">
+                        <path
+                            d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                    </svg></i> Colaboradores</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-cash-stack" viewBox="0 0 16 16">
+                        <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4" />
+                        <path
+                            d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2z" />
+                    </svg> Financeiro</li>
+                <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-gear" viewBox="0 0 16 16">
+                        <path
+                            d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0" />
+                        <path
+                            d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z" />
+                    </svg> Configurações</li>
+            </ul>
+        </nav>
+        </div>
+        <ul id="sair">
+            <!-- From Uiverse.io by mishary_5473 -->
+            <button class="animated-button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
+                    <path
+                        d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z">
+                    </path>
+                </svg>
+                <span class="text">Sair</span>
+                <span class="circle"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="arr-1" viewBox="0 0 24 24">
+                    <path
+                        d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z">
+                    </path>
+                </svg>
+            </button>
+
         </ul>
-    </nav>
-    </div>
-    <ul id="sair">
-        <li> 🚪Sair</li>
-    </ul>
     </aside>
 
     <main class="dashboard">
         <section class="topstats">
             <div class="card">
-                <p>Alunos Cadastrados: <strong>1070</strong></p>
-                <span class="comparative"> +15%</span>
-                <p class="year"></p>
+                <div class="title">
+                    <p class="title-text">
+                        Alunos inscritos:
+                    </p>
+                    <p class="percent">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1408 1216q0 26-19 45t-45 19h-896q-26 0-45-19t-19-45 19-45l448-448q19-19 45-19t45 19l448 448q19 19 19 45z"></path>
+                        </svg> 20%
+                    </p>
+                </div>
+                <div class="data"><p>1070</p>
+                    <div class="range">
+                        <div class="fill">
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="card">
                 <p>Funcionários: <strong>110</strong></p>
             </div>
@@ -144,8 +413,10 @@
             <div class="card">
                 <p>Modalidades: <strong>12</strong></p>
             </div>
+            
         </section>
 
     </main>
 </body>
-</html> 
+
+</html>
