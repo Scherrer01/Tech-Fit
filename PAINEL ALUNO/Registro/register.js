@@ -208,7 +208,7 @@ function processarCadastro() {
         botao.disabled = false;
         
         // REDIRECIONAMENTO PARA A PÁGINA HOME
-        window.location.href = 'HOME.html';
+        window.location.href = '/Home/home.html';
         
     }, 2000);
 }
