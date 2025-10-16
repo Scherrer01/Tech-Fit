@@ -19,7 +19,7 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: radial-gradient(circle at 20% 20% #ff2626, #000);
+            background: radial-gradient(circle at 20% 20%, #ff2626, #000);
             /* criar a degradê circular*/
             color: #fff;
             display: flex;
@@ -218,7 +218,7 @@
             flex: 1;
             padding: 40px;
             animation: fadeIn 1s ease-in-out
-                /* fadeIn gera o efeito de chegar suavemente, vindo de baixo*/
+            /* fadeIn gera o efeito de chegar suavemente, vindo de baixo*/
         }
 
         @keyframes fadeIn {
@@ -241,9 +241,22 @@
             background-color: #fff;
             max-width: 320px;
             border-radius: 20px;
-            box-shadow: 10px 10px #323232;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.466);
             border: 3px solid #323232;
+            display: grid;
+            position: relative;
+            margin-left: 10px;
+    
         }
+        .topstats {
+          display: flex;
+          justify-content: center; /* centraliza horizontalmente */
+          align-items: flex-start; /* alinha no topo */
+          gap: 20px; /* espaço entre os cards */
+          flex-wrap: wrap; /* quebra linha se não couber */
+          padding: 2rem;
+        }
+
 
         .title {
             display: flex;
@@ -276,7 +289,7 @@
 
         .percent {
             margin-left: 0.5rem;
-            color: rgb(26, 248, 37);
+            color: rgb(13, 174, 1);
             font-weight: 600;
             display: flex;
         }
@@ -313,6 +326,36 @@
             width: 76%;
             height: 100%;
             border-radius: 0.25rem;
+        }
+        .charts{
+            display: grip;
+            grid-template-columns: 2fr 1fr;
+            gap:30px;
+            margin-bottom: 50px;
+        }
+        .chart-container{
+            background: rgba(20,20,20,0.85);
+            border-radius: 20px;
+            border: 1px solid rgba(255,38,38,0.3);
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 38,38,0.2);
+        }
+        h3{
+            margin-bottom: 15px;
+            font-size: 22px;
+            color: #ff5a5a;
+            text-shadow: 0 0 8px rgba(255,38,38,0.3);
+        }
+        table{
+            width: 100%;
+            border-collapse: collapse;/*é usada em tabelas para fundir as bordas das células adjacentes, criando um visual mais limpo e contínuo*/
+            background: tgba(20,20,20,0.85);
+            border: 1px solid tgba(255,38,38,0.3);
+            border-radius: 12px;
+            overflow: hidden; /*é usada em tabelas para fundir as bordas das células adjacentes, criando um visual mais limpo e contínuo*/
+            box-shadow: 0 0 15px rgba(255, 38, 38, 0.2);
+
         }
     </style>
     <!-- comando "aside" cria uma "aba" de navegação lateral no site -->
@@ -385,7 +428,7 @@
 
     <main class="dashboard">
         <section class="topstats">
-            <div class="card">
+            <div class="card" id="alunos">
                 <div class="title">
                     <p class="title-text">
                         Alunos inscritos:
@@ -404,16 +447,59 @@
                 </div>
             </div>
 
-            <div class="card">
-                <p>Funcionários: <strong>110</strong></p>
+            <div class="card" id="funcionarios">
+                <p class ="title-text">Funcionários:</p>
+                <span style="text-align: center;"><strong>189</strong></span>
+
             </div>
-            <div class="card">
-                <p>Cancelamentos: <strong>55</strong></p>
+            <div class="card" id="cancelamentos">
+                <p class ="title-text">Cancelamentos:</p>
+                <span style="text-align: center;"><strong>15</strong></span>
             </div>
-            <div class="card">
-                <p>Modalidades: <strong>12</strong></p>
+            <div class="card" id="modalidades">
+                <p class ="title-text">Modalidades:</p>
+                <span style="text-align: center;"><strong>12</strong></span>
             </div>
-            
+        </section>
+        <section class="charts">
+            <div class="chat-container">
+                <h3>Matriculas por Mês </h3>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="chart-conatiner">
+                <h3>Relação de Alunos</h3>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </section>
+        <section class="professores">
+            <h3>Professores</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Área</th>
+                        <th>Sala</th>
+                        <th>RA</th>
+                        <th>Turno</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Luís Fernando</td>
+                        <td>Musculção</td>
+                        <td>10</td>
+                        <td>1098</td>
+                        <td>Manhâ</td>
+                    </tr>
+                    <tr>
+                        <td>Cibelly Ferreira</td>
+                        <td>Crossfit</td>
+                        <td>09</td>
+                        <td>4576</td>
+                        <td>Manhã</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
 
     </main>
