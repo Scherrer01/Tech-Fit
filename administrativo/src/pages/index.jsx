@@ -1,6 +1,10 @@
+import Aside from "../components/Aside"
+
+
 function index (){
     return (
-        <h1>Salve</h1>
+        
+        <Aside/>
     )
 }
 

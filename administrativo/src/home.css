@@ -1,0 +1,348 @@
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(circle at 20% 20%, #ff2626, #000);
+            /* criar a degradê circular*/
+            color: #fff;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /*escondido*/
+        }
+
+        /*Sidebar*/
+        .sidebar {
+            width: 40vh;
+            /* define a largura do sidebar*/
+            background: rgba(20, 20, 20, 0.9);
+            /* fundo quase opaco 90% (0.9) de opacidade*/
+            backdrop-filter: blur(10px);
+            /* coloca um filtro no background, desfocando o fundo*/
+            border-right: 1px solid rgba(255, 38, 38, 0.3);
+            /* borda na direita na cor vinho*/
+            box-shadow: 0 0 20px rgba(255, 38, 38, 0.3);
+            /*borda no sidebar dando destaque*/
+            padding: 20px 20px;
+            /*espaçamento dentro do sidebar*/
+            display: flex;
+            flex-direction: column;
+            /* deixa os itens como colunas*/
+            justify-content: space-between;
+            /* adiciona espaço entre eles*/
+            position: fixed;
+            /* fixa a sidebar na tela mesmo ao rolar*/
+            height: 100vh;
+            /*ocupa 100% da altura da tela*/
+            left: 0;
+            /* canto esquerdo*/
+            top: 0;
+            /* canto superior */
+
+        }
+
+        /* div.logo{
+            background-image: url(justgorila.png);
+            background-repeat: no-repeat;
+            background-size: 200px;
+            margin-top: 0px;
+            
+            
+        } */
+        img.logo-sidebar {
+            height: 100px;
+            margin-left: 20%;
+
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(90deg, #f49595, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 38, 38, 0.4);
+            margin-bottom: -75px;
+        }
+
+        .nav-ul {
+            list-style: none;
+        }
+
+        .nav-li {
+            display:flex;
+            align-items: center;
+            gap: 7px;
+            padding: 12px 20px;
+            margin-top: 2px;
+            margin-bottom: 0px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #ccc;
+            text-align: left;
+        }
+
+        .nav-li:hover {
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 38, 38, 0.5);
+            transform: translateX(5px);
+        }
+
+        #sair {
+            list-style: none;
+        }
+
+        #sair li {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        #sair li:hover {
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 38, 38, 0.5);
+            transform: translateX(5px);
+
+        }
+
+        .animated-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 16px 36px;
+            border: 4px solid;
+            border-color: transparent;
+            font-size: 16px;
+            background-color: inherit;
+            border-radius: 100px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 0 0 2px #ff2626;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button svg {
+            position: absolute;
+            width: 24px;
+            fill: white;
+            z-index: 9;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button .arr-1 {
+            right: 16px;
+        }
+
+        .animated-button .arr-2 {
+            left: -25%;
+        }
+
+        .animated-button .circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button .text {
+            position: relative;
+            z-index: 1;
+            transform: translateX(-12px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button:hover {
+            box-shadow: 0 0 0 12px transparent;
+            color: white;
+            border-radius: 12px;
+        }
+
+        .animated-button:hover .arr-1 {
+            right: -25%;
+        }
+
+        .animated-button:hover .arr-2 {
+            left: 16px;
+        }
+
+        .animated-button:hover .text {
+            transform: translateX(12px);
+        }
+
+        .animated-button:hover svg {
+            fill: white;
+        }
+
+        .animated-button:active {
+            scale: 0.95;
+            box-shadow: 0 0 0 4px 622BFF;
+        }
+
+        .animated-button:hover .circle {
+            width: 220px;
+            height: 220px;
+            opacity: 1;
+        }
+
+        .dashboard {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px;
+            animation: fadeIn 1s ease-in-out
+            /* fadeIn gera o efeito de chegar suavemente, vindo de baixo*/
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            /* estado inicial*/
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /*estado final*/
+        }
+
+        .card {
+            padding: 1rem;
+            background-color: #fff;
+            max-width: 320px;
+            border-radius: 20px;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.466);
+            border: 3px solid #323232;
+            display: grid;
+            position: relative;
+            margin-left: 10px;
+    
+        }
+        .topstats {
+          display: flex;
+          justify-content: center; /* centraliza horizontalmente */
+          align-items: flex-start; /* alinha no topo */
+          gap: 20px; /* espaço entre os cards */
+          flex-wrap: wrap; /* quebra linha se não couber */
+          padding: 2rem;
+        }
+
+
+        .title {
+            display: flex;
+            align-items: center;
+        }
+
+        .title span {
+            position: relative;
+            padding: 0.5rem;
+            background-color: #10B981;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 9999px;
+        }
+
+        .title span svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            height: 1rem;
+        }
+
+        .title-text {
+            margin-left: 0.5rem;
+            color: #374151;
+            font-size: 18px;
+        }
+
+        .percent {
+            margin-left: 0.5rem;
+            color: rgb(13, 174, 1);
+            font-weight: 600;
+            display: flex;
+        }
+
+        .data {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .data p {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            color: #1F2937;
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .data .range {
+            position: relative;
+            background-color: #E5E7EB;
+            width: 100%;
+            height: 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        .data .range .fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #ff2626;
+            width: 76%;
+            height: 100%;
+            border-radius: 0.25rem;
+        }
+        .charts{
+            display: grip;
+            grid-template-columns: 2fr 1fr;
+            gap:30px;
+            margin-bottom: 50px;
+        }
+        .chart-container{
+            background: rgba(20,20,20,0.85);
+            border-radius: 20px;
+            border: 1px solid rgba(255,38,38,0.3);
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 38,38,0.2);
+        }
+        h3{
+            margin-bottom: 15px;
+            font-size: 22px;
+            color: #ff5a5a;
+            text-shadow: 0 0 8px rgba(255,38,38,0.3);
+        }
+        table{
+            width: 100%;
+            border-collapse: collapse;/*é usada em tabelas para fundir as bordas das células adjacentes, criando um visual mais limpo e contínuo*/
+            background: tgba(20,20,20,0.85);
+            border: 1px solid tgba(255,38,38,0.3);
+            border-radius: 12px;
+            overflow: hidden; /*é usada em tabelas para fundir as bordas das células adjacentes, criando um visual mais limpo e contínuo*/
+            box-shadow: 0 0 15px rgba(255, 38, 38, 0.2);
+        }

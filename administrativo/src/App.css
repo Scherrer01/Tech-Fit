@@ -72,14 +72,12 @@
 
     /* Título */
     .title {
-      font-family: 'Open Sans', sans-serif;
-      font-size: 34px;
-      margin-bottom: 30px;
-      background: linear-gradient(90deg, #ff2626, #ff5a5a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px rgba(255, 38, 38, 0.4);
+      font-family: "Open sans";
+      text-align: center;
+      color: #ff2626;
+      font-size: 36px;
+      margin-left: 25%;
+      font-weight: bold ;
     }
 
     .label {

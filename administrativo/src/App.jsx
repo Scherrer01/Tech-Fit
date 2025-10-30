@@ -54,7 +54,7 @@ function App() {
     <div className="container">
       <img src="/justgorila.png" alt="Logo-TechFit" />
       
-      <h1 className='title'>TechFit</h1>
+      <h1 className="title">Tech Fit</h1>
 
       <label className='label' id="usuarios">Username</label>
       <Inputs type="text" placeholder="Digite seu usuário" value={usuario} onChange={(e) => setUsuario(e.target.value)}/>
