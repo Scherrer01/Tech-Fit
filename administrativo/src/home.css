@@ -45,25 +45,17 @@
 
         }
 
-        /* div.logo{
-            background-image: url(justgorila.png);
-            background-repeat: no-repeat;
-            background-size: 200px;
-            margin-top: 0px;
-            
-            
-        } */
-        img.logo-sidebar {
+        .logo-sidebar {
             height: 100px;
-            margin-left: 20%;
+            text-align: center;
 
         }
 
         .logo-text {
-            font-size: 28px;
+            font-size: 1.8rem;
             font-weight: 700;
             text-align: center;
-            background: linear-gradient(90deg, #f49595, #ff0000);
+            background: linear-gradient(90deg, #d8807d, #ff0000);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 10px rgba(255, 38, 38, 0.4);
@@ -76,10 +68,11 @@
 
         .nav-li {
             display:flex;
+            font-size: 1rem;
             align-items: center;
-            gap: 7px;
-            padding: 12px 20px;
-            margin-top: 2px;
+            gap: 2em;
+            padding: 1.5rem 2rem;
+            margin-top: 0.3em;
             margin-bottom: 0px;
             border-radius: 12px;
             cursor: pointer;
@@ -201,148 +194,4 @@
             width: 220px;
             height: 220px;
             opacity: 1;
-        }
-
-        .dashboard {
-            margin-left: 280px;
-            flex: 1;
-            padding: 40px;
-            animation: fadeIn 1s ease-in-out
-            /* fadeIn gera o efeito de chegar suavemente, vindo de baixo*/
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            /* estado inicial*/
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            /*estado final*/
-        }
-
-        .card {
-            padding: 1rem;
-            background-color: #fff;
-            max-width: 320px;
-            border-radius: 20px;
-            box-shadow: 5px 5px 0px rgba(0,0,0,0.466);
-            border: 3px solid #323232;
-            display: grid;
-            position: relative;
-            margin-left: 10px;
-    
-        }
-        .topstats {
-          display: flex;
-          justify-content: center; /* centraliza horizontalmente */
-          align-items: flex-start; /* alinha no topo */
-          gap: 20px; /* espaço entre os cards */
-          flex-wrap: wrap; /* quebra linha se não couber */
-          padding: 2rem;
-        }
-
-
-        .title {
-            display: flex;
-            align-items: center;
-        }
-
-        .title span {
-            position: relative;
-            padding: 0.5rem;
-            background-color: #10B981;
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 9999px;
-        }
-
-        .title span svg {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ffffff;
-            height: 1rem;
-        }
-
-        .title-text {
-            margin-left: 0.5rem;
-            color: #374151;
-            font-size: 18px;
-        }
-
-        .percent {
-            margin-left: 0.5rem;
-            color: rgb(13, 174, 1);
-            font-weight: 600;
-            display: flex;
-        }
-
-        .data {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        .data p {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-            color: #1F2937;
-            font-size: 2.25rem;
-            line-height: 2.5rem;
-            font-weight: 700;
-            text-align: left;
-        }
-
-        .data .range {
-            position: relative;
-            background-color: #E5E7EB;
-            width: 100%;
-            height: 0.5rem;
-            border-radius: 0.25rem;
-        }
-
-        .data .range .fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: #ff2626;
-            width: 76%;
-            height: 100%;
-            border-radius: 0.25rem;
-        }
-        .charts{
-            display: grip;
-            grid-template-columns: 2fr 1fr;
-            gap:30px;
-            margin-bottom: 50px;
-        }
-        .chart-container{
-            background: rgba(20,20,20,0.85);
-            border-radius: 20px;
-            border: 1px solid rgba(255,38,38,0.3);
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(255, 38,38,0.2);
-        }
-        h3{
-            margin-bottom: 15px;
-            font-size: 22px;
-            color: #ff5a5a;
-            text-shadow: 0 0 8px rgba(255,38,38,0.3);
-        }
-        table{
-            width: 100%;
-            border-collapse: collapse;/*é usada em tabelas para fundir as bordas das células adjacentes, criando um visual mais limpo e contínuo*/
-            background: tgba(20,20,20,0.85);
-            border: 1px solid tgba(255,38,38,0.3);
-            border-radius: 12px;
-            overflow: hidden; /*é usada em tabelas para fundir as bordas das células adjacentes, criando um visual mais limpo e contínuo*/
-            box-shadow: 0 0 15px rgba(255, 38, 38, 0.2);
         }

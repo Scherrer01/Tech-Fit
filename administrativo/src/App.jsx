@@ -52,7 +52,7 @@ function App() {
 
   return (
     <div className="container">
-      <img src="/justgorila.png" alt="Logo-TechFit" />
+      <img  className="logo"src="/justgorila.png" alt="Logo-TechFit" />
       
       <h1 className="title">Tech Fit</h1>
 
