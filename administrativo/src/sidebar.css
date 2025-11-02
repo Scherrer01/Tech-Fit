@@ -10,6 +10,7 @@
             /* criar a degradê circular*/
             color: #fff;
             display: flex;
+            
             min-height: 100vh;
             overflow-x: hidden;
             /*escondido*/
@@ -17,7 +18,7 @@
 
         /*Sidebar*/
         .sidebar {
-            width: 40vh;
+            width: 18vw;
             /* define a largura do sidebar*/
             background: rgba(20, 20, 20, 0.9);
             /* fundo quase opaco 90% (0.9) de opacidade*/
@@ -46,7 +47,8 @@
         }
 
         .logo-sidebar {
-            height: 100px;
+            height: 10vh;
+            width: auto;
             text-align: center;
 
         }
