@@ -76,13 +76,13 @@ nav a:hover::after {
     width: 100%;
 }
 
-#login {
+#conta {
     list-style: none;
     margin-left: auto;
     
 }
 
-#login a {
+#conta a {
     background-color: #FF2626;
     color: white;
     text-decoration: none;
@@ -95,7 +95,7 @@ nav a:hover::after {
     border: 1px solid #FF2626;
 }
 
-#login a:hover {
+#conta a:hover {
     background-color: #FF2626;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(117, 15, 15, 0.3);

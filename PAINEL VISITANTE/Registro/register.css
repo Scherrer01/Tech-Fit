@@ -20,6 +20,7 @@ body {
     background: linear-gradient(to right, #FF2626, #282828 90%);
     position: relative;
     overflow-x: hidden;
+    color: white;
 }
 
 
@@ -337,4 +338,26 @@ h2 {
 .btn-registrar:disabled:hover {
     background-color: #95a5a6;
     transform: none;
+}
+
+.campo-grupo select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #282828;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.campo-grupo select:focus {
+    border-color: #FF2626;
+    box-shadow: 0 0 0 2px rgba(255, 38, 38, 0.3);
+}
+
+.campo-grupo select option {
+    background-color: #282828;
+    color: white;
 }

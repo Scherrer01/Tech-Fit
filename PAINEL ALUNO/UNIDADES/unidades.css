@@ -75,12 +75,12 @@ nav a:hover::after {
     width: 100%;
 }
 
-#login {
+#conta {
     list-style: none;
     margin-left: auto;
 }
 
-#login a {
+#conta a {
     background-color: #FF2626;
     color: white;
     text-decoration: none;
@@ -93,7 +93,7 @@ nav a:hover::after {
     border: 1px solid #FF2626;
 }
 
-#login a:hover {
+#conta a:hover {
     background-color: #FF2626;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(117, 15, 15, 0.3);
@@ -391,66 +391,6 @@ nav a:hover::after {
     background-color: #e02020;
 }
 
-/* Tabela de Comparação */
-.comparison-section {
-    margin-top: 60px;
-}
-
-.comparison-section h2 {
-    text-align: center;
-    color: #FFFFFF;
-    font-size: 36px;
-    margin-bottom: 30px;
-    text-transform: uppercase;
-}
-
-.comparison-table {
-    background-color: #282828;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.table-header {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-    gap: 1px;
-    background-color: #FF2626;
-}
-
-.header-cell {
-    padding: 20px;
-    color: white;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 14px;
-    text-align: center;
-}
-
-.table-row {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-    gap: 1px;
-    background-color: #1A1A1D;
-}
-
-.table-row:nth-child(even) {
-    background-color: #282828;
-}
-
-.cell {
-    padding: 15px;
-    color: #b0b0b0;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.unidade-name {
-    font-weight: 600;
-    color: #FFFFFF;
-    justify-content: flex-start;
-}
 
 /* ============================================================== */
 /* FOOTER PADRÃO */

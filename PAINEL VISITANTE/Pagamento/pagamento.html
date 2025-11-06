@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="pagamento.css">
+    <title>Pagamento - Tech Fit</title>
+</head>
+<body>
+    <header class="cabecalho">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="logo.png" alt="Tech Fit">
+            </div>
+            <h1>Tech <span class="color-accent">Fit</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/Planos/planos.html">Planos</a></li>
+                <li><a href="/Sobre Nós/sobreNós.html">Sobre Nós</a></li>
+                <li><a href="/Contato/contato.html">Contato</a></li>
+                <li id="login"><a href="/Login/login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="pagamento-container">
+            <div class="pagamento-card">
+                <h2 class="titulo">Finalizar Pagamento</h2>
+                
+                <div class="resumo-compra">
+                    <h3>Resumo da Compra</h3>
+                    <div id="resumo-plano" class="resumo-item">
+                        <!-- Preenchido via JavaScript -->
+                    </div>
+                    <div class="total">
+                        <strong>Total: <span id="valor-total">R$ 0,00</span></strong>
+                    </div>
+                </div>
+
+                <form class="formulario-pagamento" id="formPagamento">
+                    <div class="campo-grupo">
+                        <label for="tipo_pagamento">Forma de Pagamento</label>
+                        <select id="tipo_pagamento" name="tipo_pagamento" required>
+                            <option value="">Selecione</option>
+                            <option value="PIX">PIX</option>
+                            <option value="Crédito">Cartão de Crédito</option>
+                            <option value="Débito">Cartão de Débito</option>
+                            <option value="Boleto">Boleto Bancário</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos Cartão -->
+                    <div id="campos-cartao" class="secao-pagamento hidden">
+                        <h4>Dados do Cartão</h4>
+                        <div class="campo-grupo">
+                            <label for="numero_cartao">Número do Cartão</label>
+                            <input type="text" id="numero_cartao" name="numero_cartao" placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+
+                        <div class="campos-linha">
+                            <div class="campo-grupo">
+                                <label for="validade_cartao">Validade</label>
+                                <input type="text" id="validade_cartao" name="validade_cartao" placeholder="MM/AA" maxlength="5">
+                            </div>
+
+                            <div class="campo-grupo">
+                                <label for="cvv_cartao">CVV</label>
+                                <input type="text" id="cvv_cartao" name="cvv_cartao" placeholder="000" maxlength="3">
+                            </div>
+                        </div>
+
+                        <div class="campo-grupo">
+                            <label for="nome_cartao">Nome no Cartão</label>
+                            <input type="text" id="nome_cartao" name="nome_cartao" placeholder="Como está no cartão">
+                        </div>
+                    </div>
+
+                    <!-- Instruções PIX -->
+                    <div id="instrucoes-pix" class="secao-pagamento hidden">
+                        <div class="info-pagamento">
+                            <h4>Pagamento via PIX</h4>
+                            <p>Após confirmar o pagamento, você receberá um QR Code para finalizar a transação.</p>
+                            <div class="vantagens">
+                                <span>✓ Pagamento instantâneo</span>
+                                <span>✓ Sem taxas</span>
+                                <span>✓ Disponível 24h</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruções Boleto -->
+                    <div id="instrucoes-boleto" class="secao-pagamento hidden">
+                        <div class="info-pagamento">
+                            <h4>Pagamento via Boleto</h4>
+                            <p>O boleto será gerado após a confirmação e terá vencimento em 3 dias úteis.</p>
+                        </div>
+                    </div>
+
+                    <!-- Instruções Dinheiro -->
+                    <div id="instrucoes-dinheiro" class="secao-pagamento hidden">
+                        <div class="info-pagamento">
+                            <h4>Pagamento em Dinheiro</h4>
+                            <p>Dirija-se até uma de nossas unidades para efetuar o pagamento em até 3 dias.</p>
+                        </div>
+                    </div>
+
+                    <div class="botoes-acao">
+                        <button type="button" class="btn-voltar" onclick="window.history.back()">← Voltar</button>
+                        <button type="submit" class="btn-finalizar" id="btnFinalizar">
+                            Finalizar Pagamento
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="info-container">
+                <div class="info-logo">
+                    <img src="logo.png" alt="Tech Fit">
+                </div>
+                <h2 class="info-titulo">Quase lá!</h2>
+                <p class="info-texto">Finalize seu pagamento e comece hoje mesmo sua jornada fitness.</p>
+                
+                <div class="beneficios">
+                    <h4>Você receberá:</h4>
+                    <ul>
+                        <li>✓ Acesso imediato à academia</li>
+                        <li>✓ Carteirinha digital</li>
+                        <li>✓ App exclusivo</li>
+                        <li>✓ Suporte 24/7</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="pagamento.js"></script>
+</body>
+</html>

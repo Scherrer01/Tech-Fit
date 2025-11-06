@@ -28,50 +28,107 @@
 <!-- ============================================================================================-->
 
 <!-- ============================================================================================-->
+
+
   <div class="container">
-        <div class="registro-container">
-            <div class="registro-card">
-                <h2 class="titulo">Criar Conta</h2>
-                <form class="formulario" id="formRegistro">
-                    <div class="campo-grupo">
-                        <label for="nome">Nome Completo</label>
-                        <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="nascimento">Data de Nascimento</label>
-                        <input type="date" id="nascimento" name="nascimento" required>
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="cpf">CPF</label>
-                        <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required maxlength="14">
-                    </div>
-
-                    <div class="campo-grupo">
-                        <label for="senha">Criar Senha</label>
-                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required minlength="6">
-                    </div>
-
-                    <button type="submit" class="btn-registrar">Criar Conta</button>
-
-                    <script src="register.js"></script>
-                </form>
-            </div>
-            <div class="bem-vindo-container">
-                <div class="bem-vindo-logo">
-                    <img src="logo.png" alt="Tech Fit">
+    <div class="registro-container">
+        <div class="registro-card">
+            <h2 class="titulo">Criar Conta</h2>
+            <form class="formulario" id="formRegistro">
+                <!-- ADICIONE ISSO DEPOIS DO CAMPO UNIDADE -->
+                <div class="campo-grupo">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
                 </div>
-                <h2 class="bem-vindo-titulo">Bem-vindo à Tech Fit</h2>
-                <p class="bem-vindo-texto">Faça seu cadastro e se matricule em um plano.</p>
+
+                 
+
+                <div class="campo-grupo">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="nascimento">Data de Nascimento</label>
+                    <input type="date" id="nascimento" name="nascimento" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="cpf">CPF</label>
+                    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required maxlength="14">
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="telefone">Telefone</label>
+                    <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="endereco">Endereço</label>
+                    <input type="text" id="endereco" name="endereco" placeholder="Digite seu endereço completo" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="sexo">Sexo</label>
+                    <select id="sexo" name="sexo" required>
+                        <option value="">Selecione</option>
+                        <option value="MASCULINO">Masculino</option>
+                        <option value="FEMININO">Feminino</option>
+                        <option value="OUTRO">Outro</option>
+                        <option value="NAO_DECLARAR">Prefiro não declarar</option>
+                    </select>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="plano">Plano</label>
+                    <select id="plano" name="plano" required>
+                        <option value="">Selecione um plano</option>
+                        <option value="1">Básico - R$ 89/mês</option>
+                        <option value="2">Premium - R$ 129/mês</option>
+                        <option value="3">Elite - R$ 180/mês</option>
+                    </select>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="unidade">Unidade Preferida</label>
+                <select id="unidade" name="unidade" required>
+                       <option value="">Selecione uma unidade</option>
+                       <option value="1">Tech Fit Centro</option>
+                       <option value="2">Tech Fit Taquaral</option>
+                       <option value="3">Tech Fit Barão Geraldo</option>
+                       <option value="4">Tech Fit São Bernardo</option>
+                       <option value="5">Tech Fit Cambuí</option>
+                       <!-- Adicione outras unidades conforme necessário -->
+                </select>
+                 </div>
+
+                <div class="campo-grupo">
+                    <label for="senha">Criar Senha</label>
+                    <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required minlength="6">
+                    <small style="color: #888; font-size: 12px; margin-top: 5px; display: block;">
+                        Mínimo 6 caracteres com letras maiúsculas, minúsculas, números e símbolos
+                    </small>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="confirmar_senha">Confirmar Senha</label>
+                    <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha" required>
+                </div>
+
+                <button type="submit" class="btn-registrar">Criar Conta</button>
+            </form>
+        </div>
+        <div class="bem-vindo-container">
+            <div class="bem-vindo-logo">
+                <img src="logo.png" alt="Tech Fit">
             </div>
+            <h2 class="bem-vindo-titulo">Bem-vindo à Tech Fit</h2>
+            <p class="bem-vindo-texto">Faça seu cadastro e comece sua transformação!</p>
         </div>
     </div>
+</div>
+
+<script src="register.js"></script>
 <!-- ============================================================================================-->
 
     
