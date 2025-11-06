@@ -1,0 +1,199 @@
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(circle at 20% 20%, #ff2626, #000);
+            /* criar a degradê circular*/
+            color: #fff;
+            display: flex;
+            
+            min-height: 100vh;
+            overflow-x: hidden;
+            /*escondido*/
+        }
+
+        /*Sidebar*/
+        .sidebar {
+            width: 18vw;
+            /* define a largura do sidebar*/
+            background: rgba(20, 20, 20, 0.9);
+            /* fundo quase opaco 90% (0.9) de opacidade*/
+            backdrop-filter: blur(10px);
+            /* coloca um filtro no background, desfocando o fundo*/
+            border-right: 1px solid rgba(255, 38, 38, 0.3);
+            /* borda na direita na cor vinho*/
+            box-shadow: 0 0 20px rgba(255, 38, 38, 0.3);
+            /*borda no sidebar dando destaque*/
+            padding: 20px 20px;
+            /*espaçamento dentro do sidebar*/
+            display: flex;
+            flex-direction: column;
+            /* deixa os itens como colunas*/
+            justify-content: space-between;
+            /* adiciona espaço entre eles*/
+            position: fixed;
+            /* fixa a sidebar na tela mesmo ao rolar*/
+            height: 100vh;
+            /*ocupa 100% da altura da tela*/
+            left: 0;
+            /* canto esquerdo*/
+            top: 0;
+            /* canto superior */
+
+        }
+
+        .logo-sidebar {
+            height: 10vh;
+            width: auto;
+            text-align: center;
+
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(90deg, #d8807d, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 38, 38, 0.4);
+            margin-bottom: -75px;
+        }
+
+        .nav-ul {
+            list-style: none;
+        }
+
+        .nav-li {
+            display:flex;
+            font-size: 1rem;
+            align-items: center;
+            gap: 2em;
+            padding: 1.5rem 2rem;
+            margin-top: 0.3em;
+            margin-bottom: 0px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #ccc;
+            text-align: left;
+        }
+
+        .nav-li:hover {
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 38, 38, 0.5);
+            transform: translateX(5px);
+        }
+
+        #sair {
+            list-style: none;
+        }
+
+        #sair li {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        #sair li:hover {
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 38, 38, 0.5);
+            transform: translateX(5px);
+
+        }
+
+        .animated-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 16px 36px;
+            border: 4px solid;
+            border-color: transparent;
+            font-size: 16px;
+            background-color: inherit;
+            border-radius: 100px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 0 0 2px #ff2626;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button svg {
+            position: absolute;
+            width: 24px;
+            fill: white;
+            z-index: 9;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button .arr-1 {
+            right: 16px;
+        }
+
+        .animated-button .arr-2 {
+            left: -25%;
+        }
+
+        .animated-button .circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(90deg, #ff2626, #7a0000);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button .text {
+            position: relative;
+            z-index: 1;
+            transform: translateX(-12px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .animated-button:hover {
+            box-shadow: 0 0 0 12px transparent;
+            color: white;
+            border-radius: 12px;
+        }
+
+        .animated-button:hover .arr-1 {
+            right: -25%;
+        }
+
+        .animated-button:hover .arr-2 {
+            left: 16px;
+        }
+
+        .animated-button:hover .text {
+            transform: translateX(12px);
+        }
+
+        .animated-button:hover svg {
+            fill: white;
+        }
+
+        .animated-button:active {
+            scale: 0.95;
+            box-shadow: 0 0 0 4px 622BFF;
+        }
+
+        .animated-button:hover .circle {
+            width: 220px;
+            height: 220px;
+            opacity: 1;
+        }

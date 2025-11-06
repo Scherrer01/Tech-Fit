@@ -1,0 +1,208 @@
+ @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+ /* Reset e base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  .open-sans {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400; /* ou outro valor entre 300 e 800 */
+  font-style: normal;
+  }
+
+    body {
+      background: radial-gradient(circle at 20% 20%, #a31a1a, #000);
+      font-family: 'Open Sans', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    /* Efeito de partículas de fundo */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 300%;
+      height: 300%;
+      background: repeating-radial-gradient(circle, rgba(255, 255, 255, 0.03) 0, rgba(255, 255, 255, 0.03) 1px, transparent 1px, transparent 100px);
+      animation: rotate 50s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Container principal */
+    .container {
+      background: rgb(20, 20, 20);
+      border: 1px solid rgba(247, 164, 164, 0.3);
+      border-radius: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 30em;
+      padding: 50px 30px;
+      box-shadow: 0 0 25px rgba(134, 21, 21, 0.4);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Logo */
+    .logo{
+      width: 110px;
+      margin: 0 auto;
+      filter: drop-shadow(1 2 3px #ff2626);
+      transition: transform 0.5s ease;
+    }
+
+    img:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Título */
+    .title {
+      font-family: "Open sans";
+      text-align: center;
+      color: #ff2626;
+      font-size: 36px;
+      font-weight: bold ;
+    }
+
+    .label {
+      display: block;
+      margin-top: 15px;
+      font-size: 15px;
+      color: #ccc;
+    }
+
+    .input {
+      margin-top: 8px;
+      width: 80%;
+      padding: 12px;
+      border: none;
+      border-radius: 30px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      box-shadow: 0 0 10px #ff2626;
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    /* Botão principal */
+    .btn-login {
+      margin-top: 35px;
+      padding: 14px 40px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff2626, #7a0000);
+      border: none;
+      border-radius: 50px;
+      color: #fff;
+      font-size: 16px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 38, 38, 0.5);
+      transition: all 0.4s ease;
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(90deg, #ff4040, #a30000);
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(255, 38, 38, 0.8);
+    }
+
+    .btn-login:active {
+      transform: scale(0.98);
+    }
+    .mensagem-sucesso {
+      margin-top: 10px;
+  color: #4caf50;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.mensagem-erro {
+  margin-top: 10px;
+  color: #ff2626;
+  font-weight: bold;
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+    padding: 40px 20px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .input {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .btn-login {
+    padding: 12px 30px;
+    font-size: 15px;
+  }
+
+  img {
+    width: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+    padding: 30px 15px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .input {
+    width: 100%;
+    font-size: 13px;
+  }
+
+  .btn-login {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+
+  img {
+    width: 80px;
+  }
+}

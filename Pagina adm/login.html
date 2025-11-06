@@ -173,7 +173,7 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="login">
     <img src="justgorila.png" alt="Logo TechFit">
     <h1>TechFit</h1>
 
@@ -191,24 +191,30 @@
   </div>
 
   <script>
-function fazerLogin() {
-  const email = document.getElementById("username").value;
+
+
+  function fazerLogin(){
+  const username = document.getElementById("username").value;
   const senha = document.getElementById("senha").value;
-  const mensagem = document.getElementById("mensagem-login");
+  const mensagem = document.querySelector("#mensagem-login")
 
   const senhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
 
-  if (senhaForte.test(senha)) {
-    mensagem.innerText = "✅ Login bem-sucedido! Redirecionando...";
-    mensagem.style.color = "#4cff4c";
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2000);
-  } else {
-    mensagem.innerText = "❌ Senha fraca.";
-    mensagem.style.color = "#ff2626";
-  }
-}
+      if(senhaForte.test(senha)){
+        mensagem.innerHTML = "Login realizado com sucesso!"
+        mensagem.style = "color: green"
+        setTimeout(() => {
+          window.location.href = 'index.html';
+
+        }, 3000);
+      }else{
+
+      mensagem.innerHTML = "Senha fraca!"
+      mensagem.style = "color: red"
+  
+      }
+
+    }
 
 
     function toggleSenha() {

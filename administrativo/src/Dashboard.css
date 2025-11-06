@@ -1,0 +1,177 @@
+.dashboard {
+  margin-left:5vw;
+  padding: 2rem;
+  width: 100%;
+  animation: fadeIn 0.8s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====== CARDS ====== */
+.top-stats {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.2rem;
+  width: 15vw;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  border: 2px solid #323232;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title-text {
+  color: #222;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.percent {
+  display: flex;
+  align-items: center;
+  color: #16a34a;
+  font-weight: bold;
+  gap: 0.2rem;
+}
+
+.data {
+  margin-top: 0.8rem;
+}
+
+.data p {
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  color: #1f2937;
+  margin: 0.8rem 0;
+}
+
+.data-span {
+  color: #1f2937;
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.range {
+  position: relative;
+  background: #e5e7eb;
+  width: 100%;
+  height: 0.5rem;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #ff2626;
+  width: 86%;
+  height: 100%;
+}
+
+/* ====== CHARTS ====== */
+.charts {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.chart-container {
+  background: rgba(20, 20, 20, 0.85);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 38, 38, 0.3);
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 38, 38, 0.2);
+}
+
+h3 {
+  margin-bottom: 15px;
+  font-size: 22px;
+  color: #ff5a5a;
+  text-shadow: 0 0 8px rgba(255, 38, 38, 0.3);
+}
+
+/* ====== TABLE ====== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(20, 20, 20, 0.85);
+  border: 1px solid rgba(255, 38, 38, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(255, 38, 38, 0.2);
+}
+
+thead {
+  background: rgba(255, 38, 38, 0.2);
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  color: #fff;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+tbody tr:hover {
+  background: rgba(255, 38, 38, 0.15);
+}
+
+.professores h3 {
+  color: #ff5a5a;
+  margin-bottom: 1rem;
+}
+
+/* ====== RESPONSIVO ====== */
+@media (max-width: 1024px) {
+  .dashboard {
+    margin-left: 0;
+  }
+
+  .charts {
+    grid-template-columns: 1fr;
+  }
+
+  .top-stats {
+    justify-content: center;
+  }
+}
