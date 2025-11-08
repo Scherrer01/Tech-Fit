@@ -1,8 +1,13 @@
-function inputs(props){
-    return(
-        <input className='input' {...props}/>
-    )
+function Inputs({ type, placeholder, value, onChange, required }) {
+  return (
+    <input
+      className='input'
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+    />
+  );
 }
 
-
-export default inputs
+export default Inputs;

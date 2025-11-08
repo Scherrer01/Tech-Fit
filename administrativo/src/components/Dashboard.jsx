@@ -12,7 +12,7 @@ function Dashboard() {
         </div>
         <div className="chart-container">
           <h3>Relação de Alunos</h3>
-          <canvas id="pieChart"></canvas>
+          <canvas id="pieChart"></canvas> 
         </div>
       </section>
 

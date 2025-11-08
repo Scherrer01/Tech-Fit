@@ -34,7 +34,32 @@
   font-size: 1rem;
 }
 
-.percent {
+.percent-alunos {
+  display: flex;
+  align-items: center;
+  color: #16a34a;
+  font-weight: bold;
+  gap: 0.2rem;
+}
+
+.percent-funcionarios {
+  display: flex;
+  align-items: center;
+  color: #16a34a;
+  font-weight: bold;
+  gap: 0.2rem;
+}
+.percent-cancelamentos {
+  display: flex;
+  align-items: center;
+  color: #16a34a;
+  font-weight: bold;
+  gap: 0.2rem;
+}
+.percent-cancelamentos svg{
+  transform: rotate(180deg);
+}
+.percent-modalidades {
   display: flex;
   align-items: center;
   color: #16a34a;
