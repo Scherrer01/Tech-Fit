@@ -36,11 +36,10 @@ function App() {
 
       if (data.status === 'sucesso') {
         setMensagem(`Bem-vindo, ${usuario}! Redirecionando...`);
-        setTimeout(() => {
           const query = new URLSearchParams();
           query.set("title", usuario);
           navigate(`/index?${query.toString()}`);
-        }, 1500);
+        
       } else {
         setMensagem("Usuário ou senha inválidos. Tente novamente.");
       }

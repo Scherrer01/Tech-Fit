@@ -1,5 +1,6 @@
 /* ====== CARDS ====== */
 .top-stats {
+  margin-left: 10vw;
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
@@ -8,6 +9,7 @@
 }
 
 .card {
+
   background: #ffffff;
   border-radius: 16px;
   padding: 1.2rem;

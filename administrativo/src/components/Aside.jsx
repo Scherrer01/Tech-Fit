@@ -2,12 +2,13 @@ import "../sidebar.css"
 import { useNavigate } from 'react-router-dom';
 
 
-
-
 function Aside() {
   const navigate =useNavigate()
   function sair (){
       navigate('/');
+      }
+      function irPara(patch){
+        navigate(patch)
       }
   return (
     <aside className="sidebar">
@@ -18,22 +19,14 @@ function Aside() {
 
       <nav style={{ marginTop: "40px" }}>
         <ul className="nav-ul">
-          <li className="nav-li">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-house-fill"
-              viewBox="0 0 16 16"
-            >
-              <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z" />
-              <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z" />
-            </svg>{"Home"}
-            
+          <li onClick={()=> irPara('/index')} className="nav-li">
+           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
+            </svg>
+            Dashboard
           </li>
 
-          <li className="nav-li">
+          <li onClick={()=>irPara('/Alunos')} className="nav-li">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -49,7 +42,7 @@ function Aside() {
             
           </li>
 
-          <li className="nav-li">
+          <li  onClick={()=> irPara('/Agendas')}className="nav-li">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -63,7 +56,7 @@ function Aside() {
             
           </li>
 
-          <li className="nav-li">
+          <li onClick={()=> irPara('/Colaboradores')} className="nav-li">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -77,7 +70,7 @@ function Aside() {
             
           </li>
 
-          <li className="nav-li">
+          <li onClick={()=> irPara('/Financeiro')} className="nav-li">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -92,7 +85,7 @@ function Aside() {
             
           </li>
 
-          <li className="nav-li">
+          <li  onClick={()=> irPara('/Configuracoes')} className="nav-li">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
