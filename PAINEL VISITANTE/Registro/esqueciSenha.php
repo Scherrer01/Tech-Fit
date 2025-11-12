@@ -1,30 +1,33 @@
+<?php
+require_once '../config.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="esqueciSenha.css">
+    <link rel="stylesheet" href="<?php echo asset('css', 'esqueciSenha.css'); ?>">
     <title>Recuperar Senha - Tech Fit</title>
 </head>
 <body>
 <!-- ============================================================================================-->
     <!-- Cabeçalho padrão -->
- <header class="cabecalho">
-    <div class="logo-container">
-        <div class="logo">
-            <img src="logo.png" alt="Tech Fit">
+    <header class="cabecalho">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="<?php echo asset('image', 'logo.png'); ?>" alt="Tech Fit">
+            </div>
+            <h1>Tech <span class="color-accent">Fit</span></h1>
         </div>
-        <h1>Tech <span class="color-accent">Fit</span></h1>
-    </div>
-    <nav>
-        <ul>
-            <li><a href="home.html">Planos</a></li>
-            <li><a href="sobre-nos.html">Sobre Nós</a></li>
-            <li><a href="contato.html">Contato</a></li>
-            <li id="login"><a href="login.html">Login</a></li>
-        </ul>
-    </nav>
-</header>
+        <nav>
+            <ul>
+                <li><a href="<?php echo HOME_URL; ?>">Início</a></li>
+                <li><a href="<?php echo PLANOS_URL; ?>">Planos</a></li>
+                <li><a href="<?php echo SOBRE_URL; ?>">Sobre nós</a></li>
+                <li id="login"><a href="<?php echo LOGIN_URL; ?>">Login</a></li>
+            </ul>
+        </nav>
+    </header>
 <!-- ============================================================================================-->
 
 <!-- ============================================================================================-->
@@ -43,11 +46,11 @@
                     <button type="submit" class="btn-recuperar">Enviar Instruções</button>
 
                     <div class="voltar-login">
-                        <a href="login.html" class="btn-voltar">← Voltar para o Login</a>
+                        <a href="<?php echo LOGIN_URL; ?>" class="btn-voltar">← Voltar para o Login</a>
                     </div>
                 </form>
 
-                <!-- Etapa 2 - Código de Verificação (inicialmente oculta) -->
+                <!-- Etapa 2 - Código de Verificação -->
                 <div class="etapa-codigo" id="etapaCodigo" style="display: none;">
                     <h3 class="codigo-titulo">Verifique seu E-mail</h3>
                     <p class="codigo-descricao">Enviamos um código de 6 dígitos para: <span id="emailDestino" class="email-destino"></span></p>
@@ -73,7 +76,7 @@
                     <button type="button" class="btn-verificar" id="btnVerificar">Verificar Código</button>
                 </div>
 
-                <!-- Etapa 3 - Nova Senha (inicialmente oculta) -->
+                <!-- Etapa 3 - Nova Senha -->
                 <div class="etapa-nova-senha" id="etapaNovaSenha" style="display: none;">
                     <h3 class="nova-senha-titulo">Criar Nova Senha</h3>
                     <p class="nova-senha-descricao">Digite sua nova senha abaixo.</p>
@@ -96,17 +99,17 @@
                     <button type="button" class="btn-redefinir" id="btnRedefinir">Redefinir Senha</button>
                 </div>
 
-                <!-- Sucesso (inicialmente oculta) -->
+                <!-- Sucesso -->
                 <div class="sucesso-mensagem" id="sucessoMensagem" style="display: none;">
                     <div class="sucesso-icon">✓</div>
                     <h3 class="sucesso-titulo">Senha Redefinida!</h3>
                     <p class="sucesso-descricao">Sua senha foi redefinida com sucesso. Agora você pode fazer login com sua nova senha.</p>
-                    <a href="login.html" class="btn-login-sucesso">Fazer Login</a>
+                    <a href="<?php echo LOGIN_URL; ?>" class="btn-login-sucesso">Fazer Login</a>
                 </div>
             </div>
             <div class="bem-vindo-container">
                 <div class="bem-vindo-logo">
-                    <img src="logo.png" alt="Tech Fit">
+                    <img src="<?php echo asset('image', 'logo.png'); ?>" alt="Tech Fit">
                 </div>
                 <h2 class="bem-vindo-titulo">Recupere seu Acesso</h2>
                 <p class="bem-vindo-texto">Siga os passos para redefinir sua senha e voltar aos treinos.</p>
@@ -115,6 +118,6 @@
     </div>
 <!-- ============================================================================================-->
 
-<script src="esqueciSenha.js"></script>
+<script src="<?php echo asset('js', 'esqueciSenha.js'); ?>"></script>
 </body>
 </html>

@@ -91,26 +91,38 @@ document.addEventListener('DOMContentLoaded', function() {
         btnEnviar.textContent = 'Enviando...';
         btnEnviar.disabled = true;
 
-        setTimeout(() => {
-            // Gerar código aleatório de 6 dígitos
-            codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
-            console.log('Código gerado (para testes):', codigoGerado); // Remover em produção
-            
-            // Atualizar interface para etapa do código
-            emailDestino.textContent = emailUsuario;
-            formRecuperacao.style.display = 'none';
-            etapaCodigo.style.display = 'block';
-            
-            // Iniciar contador para reenvio
-            iniciarContador();
+        // Envia para o PHP via AJAX
+        const formData = new FormData();
+        formData.append('email', emailUsuario);
+        formData.append('acao', 'solicitar_recuperacao');
+
+        fetch('processa_recuperacao.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Atualizar interface para etapa do código
+                emailDestino.textContent = emailUsuario;
+                formRecuperacao.style.display = 'none';
+                etapaCodigo.style.display = 'block';
+                
+                // Iniciar contador para reenvio
+                iniciarContador();
+            } else {
+                mostrarErro(emailInput, data.message || 'Erro ao enviar e-mail');
+            }
             
             btnEnviar.textContent = textoOriginal;
             btnEnviar.disabled = false;
-            
-            // Em produção, aqui você enviaria o email:
-            // enviarEmailReal(emailUsuario, codigoGerado);
-            
-        }, 1500);
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            mostrarErro(emailInput, 'Erro de conexão. Tente novamente.');
+            btnEnviar.textContent = textoOriginal;
+            btnEnviar.disabled = false;
+        });
     }
 
     function validarEmail() {
@@ -139,25 +151,41 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Simulação de verificação do código
+        // Verificação do código via PHP
         btnVerificar.textContent = 'Verificando...';
         btnVerificar.disabled = true;
 
-        setTimeout(() => {
-            if (codigoDigitado === codigoGerado) {
+        const formData = new FormData();
+        formData.append('email', emailUsuario);
+        formData.append('codigo', codigoDigitado);
+        formData.append('acao', 'verificar_codigo');
+
+        fetch('processa_recuperacao.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 // Código correto - avançar para próxima etapa
                 etapaCodigo.style.display = 'none';
                 etapaNovaSenha.style.display = 'block';
                 pararContador();
             } else {
                 // Código incorreto
-                mostrarErroCodigo('Código inválido. Tente novamente.');
+                mostrarErroCodigo(data.message || 'Código inválido. Tente novamente.');
                 limparInputsCodigo();
             }
             
             btnVerificar.textContent = 'Verificar Código';
             btnVerificar.disabled = false;
-        }, 1000);
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            mostrarErroCodigo('Erro de conexão. Tente novamente.');
+            btnVerificar.textContent = 'Verificar Código';
+            btnVerificar.disabled = false;
+        });
     }
 
     function reenviarCodigoVerificacao(event) {
@@ -167,22 +195,35 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Gerar novo código
-        codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
-        console.log('Novo código gerado (para testes):', codigoGerado); // Remover em produção
-        
-        // Limpar inputs e focar no primeiro
-        limparInputsCodigo();
-        codigoInputs[0].focus();
-        
-        // Reiniciar contador
-        tempoRestante = 60;
-        iniciarContador();
-        
-        // Em produção, reenviar email:
-        // enviarEmailReal(emailUsuario, codigoGerado);
-        
-        mostrarMensagemTemporaria('Código reenviado com sucesso!', 'sucesso');
+        // Reenviar código via PHP
+        const formData = new FormData();
+        formData.append('email', emailUsuario);
+        formData.append('acao', 'reenviar_codigo');
+
+        fetch('processa_recuperacao.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Limpar inputs e focar no primeiro
+                limparInputsCodigo();
+                codigoInputs[0].focus();
+                
+                // Reiniciar contador
+                tempoRestante = 60;
+                iniciarContador();
+                
+                mostrarMensagemTemporaria('Código reenviado com sucesso!', 'sucesso');
+            } else {
+                mostrarMensagemTemporaria(data.message || 'Erro ao reenviar código', 'erro');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            mostrarMensagemTemporaria('Erro de conexão', 'erro');
+        });
     }
 
     function iniciarContador() {
@@ -213,37 +254,36 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Simulação de redefinição de senha
+        // Enviar nova senha para o PHP
         btnRedefinir.textContent = 'Redefinindo...';
         btnRedefinir.disabled = true;
 
-        setTimeout(() => {
-            // Em produção, aqui você enviaria a nova senha para o servidor:
-            /*
-            fetch('/api/redefinir-senha', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: emailUsuario,
-                    novaSenha: novaSenhaInput.value
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    mostrarTelaSucesso();
-                } else {
-                    mostrarErro('Erro ao redefinir senha. Tente novamente.');
-                }
-            });
-            */
+        const formData = new FormData();
+        formData.append('email', emailUsuario);
+        formData.append('novaSenha', novaSenhaInput.value);
+        formData.append('acao', 'redefinir_senha');
 
-            // Simulação de sucesso
-            mostrarTelaSucesso();
+        fetch('processa_recuperacao.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                mostrarTelaSucesso();
+            } else {
+                mostrarErro(novaSenhaInput, data.message || 'Erro ao redefinir senha. Tente novamente.');
+            }
             
-        }, 1500);
+            btnRedefinir.textContent = 'Redefinir Senha';
+            btnRedefinir.disabled = false;
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            mostrarErro(novaSenhaInput, 'Erro de conexão. Tente novamente.');
+            btnRedefinir.textContent = 'Redefinir Senha';
+            btnRedefinir.disabled = false;
+        });
     }
 
     function validarNovaSenha() {
@@ -423,6 +463,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .codigo-digito:focus {
             border-color: #007bff;
             outline: none;
+        }
+        
+        .btn-recuperar:disabled,
+        .btn-verificar:disabled,
+        .btn-redefinir:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
     `;
     document.head.appendChild(style);

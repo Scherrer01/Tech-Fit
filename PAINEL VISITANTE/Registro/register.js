@@ -1,11 +1,11 @@
-// register.js - VERSÃO COMPLETA E CORRIGIDA COM SELEÇÃO DE UNIDADE
+// register.js - VERSÃO ATUALIZADA PARA PHP
 document.addEventListener('DOMContentLoaded', function() {
     const formRegistro = document.getElementById('formRegistro');
     const inputCPF = document.getElementById('cpf');
     const inputSenha = document.getElementById('senha');
     const inputNascimento = document.getElementById('nascimento');
     const inputTelefone = document.getElementById('telefone');
-    const selectUnidade = document.getElementById('unidade');
+    const inputConfirmarSenha = document.getElementById('confirmar_senha');
 
     // Máscara para CPF
     inputCPF.addEventListener('input', function(e) {
@@ -34,9 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.value = value.substring(0, 15);
         }
     });
-
-    // Carregar unidades disponíveis
-    carregarUnidades();
 
     // Validação de CPF
     function validarCPF(cpf) {
@@ -116,110 +113,157 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Carregar unidades do banco
-    async function carregarUnidades() {
-        try {
-            const response = await fetch('buscar_unidades.php');
-            const data = await response.json();
-            
-            if (data.success) {
-                selectUnidade.innerHTML = '<option value="">Selecione uma unidade</option>';
-                
-                data.unidades.forEach(unidade => {
-                    const option = document.createElement('option');
-                    option.value = unidade.ID_UNIDADE;
-                    option.textContent = `${unidade.NOME_UNIDADE}`;
-                    selectUnidade.appendChild(option);
-                });
-            } else {
-                // Fallback para unidades fixas se a API falhar
-                carregarUnidadesFallback();
-            }
-        } catch (error) {
-            console.error('Erro ao carregar unidades:', error);
-            // Fallback em caso de erro
-            carregarUnidadesFallback();
+    // Mostrar mensagem de sucesso
+    function mostrarSucesso(campo, mensagem) {
+        const sucessoAnterior = campo.parentNode.querySelector('.mensagem-sucesso');
+        if (sucessoAnterior) {
+            sucessoAnterior.remove();
         }
-    }
-
-    // Fallback com unidades fixas
-    function carregarUnidadesFallback() {
-        const unidadesFallback = [
-            { ID_UNIDADE: 1, NOME_UNIDADE: 'Tech Fit Centro' },
-            { ID_UNIDADE: 2, NOME_UNIDADE: 'Tech Fit Taquaral' },
-            { ID_UNIDADE: 3, NOME_UNIDADE: 'Tech Fit Barão Geraldo' },
-            { ID_UNIDADE: 4, NOME_UNIDADE: 'Tech Fit São Bernardo' },
-            { ID_UNIDADE: 5, NOME_UNIDADE: 'Tech Fit Cambuí' },
-            { ID_UNIDADE: 6, NOME_UNIDADE: 'Tech Fit Paulínia' },
-            { ID_UNIDADE: 7, NOME_UNIDADE: 'Tech Fit Americana' },
-            { ID_UNIDADE: 8, NOME_UNIDADE: 'Tech Fit Hortolândia' },
-            { ID_UNIDADE: 9, NOME_UNIDADE: 'Tech Fit Limeira' },
-            { ID_UNIDADE: 10, NOME_UNIDADE: 'Tech Fit Sumaré' }
-        ];
         
-        selectUnidade.innerHTML = '<option value="">Selecione uma unidade</option>';
-        unidadesFallback.forEach(unidade => {
-            const option = document.createElement('option');
-            option.value = unidade.ID_UNIDADE;
-            option.textContent = unidade.NOME_UNIDADE;
-            selectUnidade.appendChild(option);
-        });
+        campo.style.borderColor = '#27ae60';
+        
+        const mensagemSucesso = document.createElement('span');
+        mensagemSucesso.className = 'mensagem-sucesso';
+        mensagemSucesso.style.color = '#27ae60';
+        mensagemSucesso.style.fontSize = '12px';
+        mensagemSucesso.style.marginTop = '5px';
+        mensagemSucesso.style.display = 'block';
+        mensagemSucesso.textContent = mensagem;
+        
+        campo.parentNode.appendChild(mensagemSucesso);
     }
 
-    // Validação em tempo real
+    // Validação em tempo real do CPF
     inputCPF.addEventListener('blur', function() {
         if (this.value && !validarCPF(this.value)) {
             mostrarErro(this, 'CPF inválido');
+        } else if (this.value && validarCPF(this.value)) {
+            removerErro(this);
+            mostrarSucesso(this, 'CPF válido');
+            setTimeout(() => {
+                removerErro(this); // Remove a mensagem de sucesso também
+            }, 2000);
         } else {
             removerErro(this);
         }
     });
 
+    // Validação em tempo real da senha
     inputSenha.addEventListener('input', function() {
         if (this.value && !validarSenha(this.value)) {
             mostrarErro(this, 'A senha deve ter pelo menos 6 caracteres, incluindo letras maiúsculas, minúsculas, números e símbolos');
+        } else if (this.value && validarSenha(this.value)) {
+            removerErro(this);
+            mostrarSucesso(this, 'Senha forte!');
         } else {
             removerErro(this);
         }
     });
 
+    // Validação em tempo real da confirmação de senha
+    inputConfirmarSenha.addEventListener('input', function() {
+        const senha = inputSenha.value;
+        const confirmarSenha = this.value;
+        
+        if (confirmarSenha && senha !== confirmarSenha) {
+            mostrarErro(this, 'As senhas não coincidem');
+        } else if (confirmarSenha && senha === confirmarSenha) {
+            removerErro(this);
+            mostrarSucesso(this, 'Senhas coincidem!');
+            setTimeout(() => {
+                removerErro(this);
+            }, 2000);
+        } else {
+            removerErro(this);
+        }
+    });
+
+    // Validação em tempo real da idade
     inputNascimento.addEventListener('change', function() {
         const idade = validarIdade(this.value);
         if (idade < 16) {
             mostrarErro(this, 'É necessário ter pelo menos 16 anos para se cadastrar');
         } else {
             removerErro(this);
+            mostrarSucesso(this, `Idade válida: ${idade} anos`);
+            setTimeout(() => {
+                removerErro(this);
+            }, 2000);
         }
     });
 
-    // Validação da unidade
-    selectUnidade.addEventListener('change', function() {
-        if (!this.value) {
-            mostrarErro(this, 'Selecione uma unidade');
+    // Validação em tempo real do email
+    const inputEmail = document.getElementById('email');
+    inputEmail.addEventListener('blur', function() {
+        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (this.value && !regexEmail.test(this.value)) {
+            mostrarErro(this, 'E-mail inválido');
+        } else if (this.value && regexEmail.test(this.value)) {
+            removerErro(this);
+            mostrarSucesso(this, 'E-mail válido');
+            setTimeout(() => {
+                removerErro(this);
+            }, 2000);
         } else {
             removerErro(this);
         }
     });
 
-    // Validação do formulário
+    // Validação em tempo real do telefone
+    inputTelefone.addEventListener('blur', function() {
+        const telefoneLimpo = this.value.replace(/\D/g, '');
+        if (telefoneLimpo && telefoneLimpo.length < 10) {
+            mostrarErro(this, 'Telefone inválido');
+        } else if (telefoneLimpo && telefoneLimpo.length >= 10) {
+            removerErro(this);
+            mostrarSucesso(this, 'Telefone válido');
+            setTimeout(() => {
+                removerErro(this);
+            }, 2000);
+        } else {
+            removerErro(this);
+        }
+    });
+
+    // Validação do formulário antes do envio
     formRegistro.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
         let formValido = true;
         
+        // Limpar todas as mensagens de erro anteriores
+        const mensagensErro = formRegistro.querySelectorAll('.mensagem-erro');
+        mensagensErro.forEach(erro => erro.remove());
+        
+        // Resetar bordas
+        const inputs = formRegistro.querySelectorAll('input, select');
+        inputs.forEach(input => input.style.borderColor = '');
+
         // Validação dos campos obrigatórios
         const camposObrigatorios = formRegistro.querySelectorAll('[required]');
         camposObrigatorios.forEach(campo => {
             if (!campo.value.trim()) {
                 mostrarErro(campo, 'Este campo é obrigatório');
                 formValido = false;
+                
+                // Scroll para o primeiro campo com erro
+                if (formValido === false) {
+                    campo.focus();
+                    formValido = null; // Para evitar múltiplos focus
+                }
             }
         });
+
+        if (!formValido) {
+            e.preventDefault();
+            return;
+        }
 
         // Validação específica do CPF
         if (inputCPF.value && !validarCPF(inputCPF.value)) {
             mostrarErro(inputCPF, 'CPF inválido');
             formValido = false;
+            inputCPF.focus();
+            e.preventDefault();
+            return;
         }
 
         // Validação da idade
@@ -228,6 +272,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (idade < 16) {
                 mostrarErro(inputNascimento, 'É necessário ter pelo menos 16 anos para se cadastrar');
                 formValido = false;
+                inputNascimento.focus();
+                e.preventDefault();
+                return;
             }
         }
 
@@ -235,6 +282,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (inputSenha.value && !validarSenha(inputSenha.value)) {
             mostrarErro(inputSenha, 'A senha deve ter pelo menos 6 caracteres, incluindo letras maiúsculas, minúsculas, números e símbolos');
             formValido = false;
+            inputSenha.focus();
+            e.preventDefault();
+            return;
         }
 
         // Validação do email
@@ -243,6 +293,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (email && !regexEmail.test(email)) {
             mostrarErro(document.getElementById('email'), 'E-mail inválido');
             formValido = false;
+            document.getElementById('email').focus();
+            e.preventDefault();
+            return;
         }
 
         // Validação de confirmação de senha
@@ -251,43 +304,42 @@ document.addEventListener('DOMContentLoaded', function() {
         if (senha && confirmarSenha && senha !== confirmarSenha) {
             mostrarErro(document.getElementById('confirmar_senha'), 'As senhas não coincidem');
             formValido = false;
+            document.getElementById('confirmar_senha').focus();
+            e.preventDefault();
+            return;
         }
 
-        // Validação da unidade
-        if (!selectUnidade.value) {
-            mostrarErro(selectUnidade, 'Selecione uma unidade');
+        // Validação do telefone
+        const telefoneLimpo = inputTelefone.value.replace(/\D/g, '');
+        if (telefoneLimpo && telefoneLimpo.length < 10) {
+            mostrarErro(inputTelefone, 'Telefone inválido');
             formValido = false;
+            inputTelefone.focus();
+            e.preventDefault();
+            return;
         }
 
+        // Se todas as validações passarem, mostrar loading
         if (formValido) {
-            processarCadastro();
+            const btnSubmit = formRegistro.querySelector('button[type="submit"]');
+            const originalText = btnSubmit.textContent;
+            
+            btnSubmit.textContent = 'Cadastrando...';
+            btnSubmit.disabled = true;
+            
+            // O formulário será enviado normalmente para o PHP
+            // O loading será mostrado até a página recarregar
+            
+            // Caso queira fazer algo antes do envio, pode adicionar aqui
+            console.log('Formulário válido, enviando para o servidor...');
         }
     });
-
-    // Função para processar o cadastro
-    function processarCadastro() {
-        const dadosUsuario = {
-            nome: document.getElementById('nome').value,
-            email: document.getElementById('email').value,
-            nascimento: document.getElementById('nascimento').value,
-            cpf: document.getElementById('cpf').value.replace(/\D/g, ''),
-            telefone: document.getElementById('telefone').value.replace(/\D/g, ''),
-            endereco: document.getElementById('endereco').value,
-            sexo: document.getElementById('sexo').value,
-            id_plano: document.getElementById('plano').value,
-            id_unidade: document.getElementById('unidade').value,
-            senha: document.getElementById('senha').value,
-            confirmar_senha: document.getElementById('confirmar_senha').value
-        };
-
-        // Salvar dados temporariamente e redirecionar para pagamento
-        localStorage.setItem('dadosCadastroTechFit', JSON.stringify(dadosUsuario));
-        window.location.href = 'pagamento.html';
-    }
 
     // Prevenir colar em campos específicos
     inputCPF.addEventListener('paste', function(e) {
         e.preventDefault();
+        mostrarErro(this, 'Cole não é permitido neste campo. Digite manualmente.');
+        setTimeout(() => removerErro(this), 3000);
     });
 
     // Foco nos campos com erro
@@ -304,29 +356,84 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Validação adicional do telefone
-    inputTelefone.addEventListener('blur', function() {
-        const telefoneLimpo = this.value.replace(/\D/g, '');
-        if (telefoneLimpo && telefoneLimpo.length < 10) {
-            mostrarErro(this, 'Telefone inválido');
-        } else {
-            removerErro(this);
-        }
-    });
-
-    // Preenchimento automático do endereço baseado no CEP (opcional)
-    function buscarCEP(cep) {
-        cep = cep.replace(/\D/g, '');
-        if (cep.length === 8) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById('endereco').value = 
-                            `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
-                    }
-                })
-                .catch(error => console.log('Erro ao buscar CEP:', error));
+    // Função para buscar CEP automático (opcional)
+    function buscarCEP() {
+        // Adicione um campo CEP se quiser usar esta função
+        const inputCEP = document.getElementById('cep');
+        if (inputCEP) {
+            inputCEP.addEventListener('blur', function() {
+                const cep = this.value.replace(/\D/g, '');
+                if (cep.length === 8) {
+                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.erro) {
+                                document.getElementById('endereco').value = 
+                                    `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+                            }
+                        })
+                        .catch(error => console.log('Erro ao buscar CEP:', error));
+                }
+            });
         }
     }
+
+    // Inicializar busca de CEP se o campo existir
+    buscarCEP();
+
+    // Efeito de foco nos campos
+    const todosCampos = formRegistro.querySelectorAll('input, select');
+    todosCampos.forEach(campo => {
+        campo.addEventListener('focus', function() {
+            this.style.borderColor = '#3498db';
+            this.style.boxShadow = '0 0 5px rgba(52, 152, 219, 0.3)';
+        });
+        
+        campo.addEventListener('blur', function() {
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
+        });
+    });
+
+    // Mostrar/ocultar senha (opcional)
+    function togglePasswordVisibility() {
+        const toggleSenha = document.createElement('span');
+        toggleSenha.innerHTML = '👁️';
+        toggleSenha.style.position = 'absolute';
+        toggleSenha.style.right = '10px';
+        toggleSenha.style.top = '50%';
+        toggleSenha.style.transform = 'translateY(-50%)';
+        toggleSenha.style.cursor = 'pointer';
+        toggleSenha.style.fontSize = '16px';
+        
+        const toggleConfirmar = toggleSenha.cloneNode(true);
+        
+        // Adicionar ao campo senha
+        const campoSenha = inputSenha.parentNode;
+        campoSenha.style.position = 'relative';
+        campoSenha.appendChild(toggleSenha);
+        
+        // Adicionar ao campo confirmar senha
+        const campoConfirmar = inputConfirmarSenha.parentNode;
+        campoConfirmar.style.position = 'relative';
+        campoConfirmar.appendChild(toggleConfirmar);
+        
+        // Funcionalidade
+        toggleSenha.addEventListener('click', function() {
+            const type = inputSenha.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputSenha.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '👁️' : '🔒';
+        });
+        
+        toggleConfirmar.addEventListener('click', function() {
+            const type = inputConfirmarSenha.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputConfirmarSenha.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '👁️' : '🔒';
+        });
+    }
+
+    // Inicializar toggle de senha
+    togglePasswordVisibility();
+
+    console.log('Tech Fit - Sistema de cadastro inicializado!');
 });

@@ -1,3 +1,41 @@
+<?php
+session_start();
+
+// Verificar se o usuário veio do cadastro
+if (!isset($_SESSION['dados_cadastro'])) {
+    header('Location: register.php?erro=Acesso inválido. Complete o cadastro primeiro.');
+    exit;
+}
+
+$dados = $_SESSION['dados_cadastro'];
+
+// Buscar informações do plano no banco
+include 'database.php';
+
+$plano_info = [];
+$valor_plano = 0;
+
+try {
+    $database = new Database();
+    $conn = $database->getConnection();
+    
+    if ($conn) {
+        $sql = "SELECT NOME_PLANO, VALOR FROM PLANOS WHERE ID_PLANO = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$dados['id_plano']]);
+        $plano_info = $stmt->fetch();
+        
+        if ($plano_info) {
+            $valor_plano = $plano_info['VALOR'];
+        }
+    }
+} catch (Exception $e) {
+    // Em caso de erro, usar valores padrão
+    $plano_info = ['NOME_PLANO' => 'Plano Selecionado', 'VALOR' => 0];
+    $valor_plano = 0;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -7,47 +45,42 @@
     <title>Pagamento - Tech Fit</title>
 </head>
 <body>
-    <header class="cabecalho">
-        <div class="logo-container">
-            <div class="logo">
-                <img src="logo.png" alt="Tech Fit">
-            </div>
-            <h1>Tech <span class="color-accent">Fit</span></h1>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="/Planos/planos.html">Planos</a></li>
-                <li><a href="/Sobre Nós/sobreNós.html">Sobre Nós</a></li>
-                <li><a href="/Contato/contato.html">Contato</a></li>
-                <li id="login"><a href="/Login/login.html">Login</a></li>
-            </ul>
-        </nav>
-    </header>
-
     <div class="container">
         <div class="pagamento-container">
             <div class="pagamento-card">
                 <h2 class="titulo">Finalizar Pagamento</h2>
                 
+                <?php if (isset($_GET['sucesso'])): ?>
+                    <div class="mensagem-sucesso">
+                        <?php echo htmlspecialchars($_GET['sucesso']); ?>
+                    </div>
+                <?php endif; ?>
+                
                 <div class="resumo-compra">
                     <h3>Resumo da Compra</h3>
-                    <div id="resumo-plano" class="resumo-item">
-                        <!-- Preenchido via JavaScript -->
+                    <div class="resumo-item">
+                        <p><strong>Plano:</strong> <?php echo htmlspecialchars($plano_info['NOME_PLANO']); ?></p>
+                        <p><strong>Valor mensal:</strong> R$ <?php echo number_format($valor_plano, 2, ',', '.'); ?></p>
+                        <p><strong>Aluno:</strong> <?php echo htmlspecialchars($dados['nome']); ?></p>
+                        <p><strong>Email:</strong> <?php echo htmlspecialchars($dados['email']); ?></p>
                     </div>
                     <div class="total">
-                        <strong>Total: <span id="valor-total">R$ 0,00</span></strong>
+                        <strong>Total: R$ <?php echo number_format($valor_plano, 2, ',', '.'); ?></strong>
                     </div>
                 </div>
 
-                <form class="formulario-pagamento" id="formPagamento">
+                <form class="formulario-pagamento" id="formPagamento" action="processar_pagamento.php" method="POST">
+                    <input type="hidden" name="id_aluno" value="<?php echo $dados['id_aluno']; ?>">
+                    <input type="hidden" name="id_plano" value="<?php echo $dados['id_plano']; ?>">
+                    <input type="hidden" name="valor" value="<?php echo $valor_plano; ?>">
+
                     <div class="campo-grupo">
                         <label for="tipo_pagamento">Forma de Pagamento</label>
                         <select id="tipo_pagamento" name="tipo_pagamento" required>
                             <option value="">Selecione</option>
                             <option value="PIX">PIX</option>
-                            <option value="Crédito">Cartão de Crédito</option>
-                            <option value="Débito">Cartão de Débito</option>
-                            <option value="Boleto">Boleto Bancário</option>
+                            <option value="CREDITO">Cartão de Crédito</option>
+                            <option value="DEBITO">Cartão de Débito</option>
                         </select>
                     </div>
 
@@ -98,16 +131,8 @@
                         </div>
                     </div>
 
-                    <!-- Instruções Dinheiro -->
-                    <div id="instrucoes-dinheiro" class="secao-pagamento hidden">
-                        <div class="info-pagamento">
-                            <h4>Pagamento em Dinheiro</h4>
-                            <p>Dirija-se até uma de nossas unidades para efetuar o pagamento em até 3 dias.</p>
-                        </div>
-                    </div>
-
                     <div class="botoes-acao">
-                        <button type="button" class="btn-voltar" onclick="window.history.back()">← Voltar</button>
+                        <button type="button" class="btn-voltar" onclick="window.location.href='register.php'">← Voltar para Cadastro</button>
                         <button type="submit" class="btn-finalizar" id="btnFinalizar">
                             Finalizar Pagamento
                         </button>
@@ -125,10 +150,10 @@
                 <div class="beneficios">
                     <h4>Você receberá:</h4>
                     <ul>
-                        <li>✓ Acesso imediato à academia</li>
-                        <li>✓ Carteirinha digital</li>
-                        <li>✓ App exclusivo</li>
-                        <li>✓ Suporte 24/7</li>
+                        <li>Acesso imediato à academia</li>
+                        <li>Carteirinha digital</li>
+                        <li>Suporte 24/7</li>
+                        <li>Avaliação física gratuita</li>
                     </ul>
                 </div>
             </div>

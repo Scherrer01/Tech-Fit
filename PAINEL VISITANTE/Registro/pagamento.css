@@ -9,6 +9,7 @@
 body {
     background: linear-gradient(to right, #FF2626, #282828 90%);
     min-height: 100vh;
+    color: white;
 }
 
 /* CABEÇALHO (mesmo estilo do register) */
