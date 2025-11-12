@@ -42,7 +42,7 @@ export default function VerticalBars() {
   return (
     
       <div className='chart-container-bar'>
-        <h3>Alunos por Mês 2025</h3>
+        <h3 className='barsChat-title'>Alunos por Mês 2025</h3>
         <BarChart
           dataset={dataset}
           xAxis={[{ scaleType: 'band', dataKey: 'month' }]}

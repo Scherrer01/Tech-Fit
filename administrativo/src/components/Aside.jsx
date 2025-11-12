@@ -1,4 +1,4 @@
-import "../sidebar.css"
+import "../style/sidebar.css"
 import { useNavigate } from 'react-router-dom';
 
 

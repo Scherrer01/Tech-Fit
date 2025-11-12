@@ -1,7 +1,7 @@
 
 import Aside from "../components/Aside"
 import Dashboard from "../components/Dashboard"
-import Alunos from "./Alunos"
+
 
 
 

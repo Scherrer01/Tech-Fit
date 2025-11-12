@@ -1,4 +1,4 @@
-import "../Dashboard.css"
+import "../style/Dashboard.css"
 import Card from "./Card";
 import Charts from "./ChartsBars";
 import ChartsPie from "./ChartsPie"

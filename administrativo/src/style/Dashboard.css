@@ -126,12 +126,19 @@
   border-radius: 20px;
   border: 1px solid rgba(255, 38, 38, 0.3);
   display: grid;
-  align-items: center;
   text-align: center;
   box-shadow: 0 0 20px rgba(255, 38, 38, 0.2);
 }
 
-h3 {
+.piechart-title{
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+  font-size: 22px;
+  color: #ff5a5a;
+  text-shadow: 0 0 8px rgba(255, 38, 38, 0.3);
+
+}
+.barsChat-title{
   font-size: 22px;
   color: #ff5a5a;
   text-shadow: 0 0 8px rgba(255, 38, 38, 0.3);

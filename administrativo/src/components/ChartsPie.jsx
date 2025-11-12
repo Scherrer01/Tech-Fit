@@ -5,7 +5,7 @@ export default function PieActiveArc() {
   return (
     <div className="chart-container-pie">
       <div>
-        <h3>Modalidades mais praticadas</h3>
+        <h3 className='piechart-title'>Modalidades mais praticadas</h3>
         <PieChart
           series={[
             {
