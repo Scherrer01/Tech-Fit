@@ -1,18 +1,10 @@
-<?php
 
-// URLs - ajustadas para a pasta Registro
-$home_url = $base_path . 'Home/home.php';
-$planos_url = $base_path . 'Planos/planos.php';
-$sobre_url = $base_path . 'Sobre Nós/sobreNós.php';
-$login_url = 'Painel Visitante/login.php';
-$pagamento_url = 'pagamento.php'; // Na mesma pasta
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo $css_path; ?>register.css">
+    <link rel="stylesheet" href="register.css">
     <title>Cadastro - Tech Fit</title>
 </head>
 <body>
@@ -21,7 +13,7 @@ $pagamento_url = 'pagamento.php'; // Na mesma pasta
     <header class="cabecalho">
         <div class="logo-container">
             <div class="logo">
-                <img src="<?php echo $images_path; ?>logo.png" alt="Tech Fit">
+                <img src="logo.png" alt="">
             </div>
             <h1>Tech <span class="color-accent">Fit</span></h1>
         </div>
@@ -41,7 +33,6 @@ $pagamento_url = 'pagamento.php'; // Na mesma pasta
         <div class="registro-container">
             <div class="registro-card">
                 <h2 class="registro-titulo">Criar <span class="color-accent">Conta</span></h2>
-                <p class="registro-descricao">Preencha os dados abaixo para criar sua conta.</p>
                 
                 <form class="formulario" id="formRegistro">
                     <div class="campo-grupo">
@@ -64,7 +55,7 @@ $pagamento_url = 'pagamento.php'; // Na mesma pasta
                         <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Confirme sua senha" required>
                     </div>
 
-                    <button type="submit" class="btn-registro">Criar Conta</button>
+                    <button type="submit" class="btn-registrar">Criar Conta</button>
 
                     <div class="login-link">
                         <p>Já tem uma conta? <a href="<?php echo $login_url; ?>">Faça login aqui</a></p>
@@ -73,7 +64,7 @@ $pagamento_url = 'pagamento.php'; // Na mesma pasta
             </div>
             <div class="bem-vindo-container">
                 <div class="bem-vindo-logo">
-                    <img src="<?php echo $images_path; ?>logo.png" alt="Tech Fit">
+                    <img src="logo.png" alt="">
                 </div>
                 <h2 class="bem-vindo-titulo">Junte-se a Nós</h2>
                 <p class="bem-vindo-texto">Crie sua conta e comece sua transformação fitness hoje mesmo.</p>
