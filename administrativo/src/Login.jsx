@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import './App.css'
+import './style/Login.css'
 import Inputs from './components/Inputs'
 
 function App() {

@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.jsx';
+import Login from './Login.jsx';
 import './index.css';
 import Alunos from './pages/Alunos.jsx';
 import Index from './pages/index.jsx';
@@ -17,7 +17,7 @@ import Configuracoes from './pages/Configuracoes.jsx';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <Login />,
   },
   {
     path: '/index',
