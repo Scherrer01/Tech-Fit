@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import Login from './Login.jsx';
+import Login from './pages/Login.jsx';
 import './index.css';
 import Alunos from './pages/Alunos.jsx';
 import Index from './pages/index.jsx';

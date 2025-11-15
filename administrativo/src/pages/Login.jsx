@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import './style/Login.css'
-import Inputs from './components/Inputs'
+import '../style/Login.css'
+import Inputs from '../components/Inputs'
 
-function App() {
+function Login() {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
   const [mensagem, setMensagem] = useState('');
@@ -52,6 +52,8 @@ function App() {
       }
 
   return (
+    <main className='loginPai'> 
+
     <form className="container" onSubmit={onLoginClick}>
       <img className="logo" src="/justgorila.png" alt="Logo-TechFit" />
       <h1 className="title">Tech Fit</h1>
@@ -63,7 +65,7 @@ function App() {
         value={usuario}
         onChange={(e) => setUsuario(e.target.value)}
         required
-      />
+        />
 
       <label className='label' htmlFor="senha">Senha:</label>
       <Inputs
@@ -72,7 +74,7 @@ function App() {
         value={senha}
         onChange={(e) => setSenha(e.target.value)}
         required
-      />
+        />
 
       <p id="mensagem-login" className={mensagem.includes('Bem-vindo') ? 'mensagem-sucesso' : 'mensagem-erro'}>
         {mensagem}
@@ -80,7 +82,8 @@ function App() {
 
       <button className="btn-login" type='submit'>Entrar</button>
     </form>
+        </main>
   );
 }
 
-export default App;
+export default Login;

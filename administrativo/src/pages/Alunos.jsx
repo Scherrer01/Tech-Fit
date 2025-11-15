@@ -1,9 +1,11 @@
 import Button from "../components/Button";
 import Aside from "../components/Aside";
+import Inputs from "../components/Inputs";
 
-import TableWithoutBorder from "../components/Table";
+import Table from "../components/Table";
 
 function Alunos() {
+
   return (
         <main style={{ marginLeft: "18vw", padding: "2rem", position: 'relative', zIndex: 5 }}>
       <Aside />
@@ -11,9 +13,10 @@ function Alunos() {
         <Button variant="update">Editar Aluno</Button>
         <Button variant="create">Criar Aluno</Button>
         <Button variant="delete">Excluir Aluno</Button>
+        <Inputs className="max-w-40" placeholder="Insira o pelo ID"/>
       </div>
       <div>
-        <TableWithoutBorder></TableWithoutBorder>
+        <Table></Table>
       </div>
     </main>
   );

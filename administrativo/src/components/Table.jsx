@@ -1,25 +1,38 @@
-import Inputs from "../components/Inputs";
+
+import { useEffect, useState } from "react";
 
 function Table (){
+   const [alunos, setAlunos]= useState([]);
+
+  useEffect(()=>{
+    fetch("http://localhost:8000/tableAlunos.php",{
+      method: 'GET',})
+      .then((res) => res.json())
+      .then((data) => setAlunos(data))
+      .catch(err => console.error(err))
+  }, []);
+  
     return(
-<table className="table-auto w-auto border-collapse border border-gray-300">
+<table className="table-auto w-full border-collapse border border-gray-300">
   <thead className="bg-red-950 text-white">
     <tr>
       <th className="px-4 py-2 border-2">ID</th>
       <th className="px-4 py-2 border-2">Nome</th>
       <th className="px-4 py-2 border-2">Email</th>
       <th className="px-4 py-2 border-2">Status</th>
-      <th className="px-4 py-2 border-2">Ações</th>
+      
     </tr>  
   </thead>
   <tbody>
-    <tr className="bg-red-950">
-      <td className="px-4 py-2">01</td>
-      <td className="px-4 py-2">Henrique Delgado</td>
-      <td className="px-4 py-2">Henrique@gmail.com</td>
-      <td className="px-4 py-2">ATIVO</td>
-      <td className="px-4 py-2">...</td>
+    {alunos.map((aluno)=>(
+
+      <tr className="bg-red-950">
+      <td className="px-4 py-2 w-6 border-2">{aluno.ID}</td>
+      <td className="px-4 py-2 text-center border-2" >{aluno.NOME}</td>
+      <td className="px-4 py-2 text-center border-2">{aluno.EMAIL}</td>
+      <td className="px-4 py-2 text-center border-2">{aluno.STATUS}</td>
     </tr>
+    ))}
   </tbody>
 </table>
 
