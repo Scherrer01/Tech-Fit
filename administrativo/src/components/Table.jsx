@@ -19,6 +19,8 @@ function Table (){
       <th className="px-4 py-2 border-2">ID</th>
       <th className="px-4 py-2 border-2">Nome</th>
       <th className="px-4 py-2 border-2">Email</th>
+      <th className="px-4 py-2 border-2">Telefone</th>
+      <th className="px-4 py-2 border-2">sexo</th>
       <th className="px-4 py-2 border-2">Status</th>
       
     </tr>  
@@ -26,11 +28,13 @@ function Table (){
   <tbody>
     {alunos.map((aluno)=>(
 
-      <tr className="bg-red-950">
-      <td className="px-4 py-2 w-6 border-2">{aluno.ID}</td>
+      <tr key={aluno.ID_ALUNO} className="bg-red-950">
+      <td className="px-4 py-2 w-6 border-2">{aluno.ID_ALUNO}</td>
       <td className="px-4 py-2 text-center border-2" >{aluno.NOME}</td>
       <td className="px-4 py-2 text-center border-2">{aluno.EMAIL}</td>
-      <td className="px-4 py-2 text-center border-2">{aluno.STATUS}</td>
+      <td className="px-4 py-2 text-center border-2">{aluno.TELEFONE}</td>
+      <td className="px-4 py-2 text-center border-2">{aluno.SEXO}</td>
+      <td className="px-4 py-2 text-center border-2">{aluno.STATUS_ALUNO}</td>
     </tr>
     ))}
   </tbody>

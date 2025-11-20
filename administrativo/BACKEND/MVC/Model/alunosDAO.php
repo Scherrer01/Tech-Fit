@@ -69,20 +69,20 @@ class AlunoDAO{
         // percorre cada linha retornada pelo banco
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
             // cria um novo objeto Alunos com os dados da linha atual
-            $result[] = new Alunos(
-                $row['id_aluno'],
-                $row['nome'],
-                $row['endereco'],
-                $row['nascimento'],
-                $row['telefone'],
-                $row['CPF'],
-                $row['sexo'],
-                $row['email'],
-                $row['senha_hash'],
-                $row['status_aluno'],
-                $row['criado_em'],
-                $row['id_plano'],
-            );
+        $result[] = [
+            'ID_ALUNO' => $row['ID_ALUNO'],
+            'NOME' => $row['NOME'],
+            'ENDERECO' => $row['ENDERECO'],
+            'NASCIMENTO' => $row['NASCIMENTO'],
+            'TELEFONE' => $row['TELEFONE'],
+            'CPF' => $row['CPF'],
+            'SEXO' => $row['SEXO'],
+            'EMAIL' => $row['EMAIL'],
+            'SENHA_HASH' => $row['SENHA_HASH'],
+            'STATUS_ALUNO' => $row['STATUS_ALUNO'],
+            'CRIADO_EM' => $row['CRIADO_EM'],
+            'ID_PLANO' => $row['ID_PLANO']
+        ];
         }
         // retorna o array com todos os objetos Alunos criados
         return $result; 

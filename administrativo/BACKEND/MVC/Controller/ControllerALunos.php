@@ -14,10 +14,6 @@ class ControllerALunos{
     public function ler (){
         return $this->dao->lerAlunosAll();
     }
-    // read - ler apenas algumas informações  basicas
-    public function lerBasico(){
-        return $this->dao->lerAlunosBasico();
-    }
     public function criar($nome, $endereco,$nascimento, $telefone, $CPF, $sexo, $email ,$senha_hash,$statusAluno, $Id_plano, $criado_em){
         $aluno = new Alunos(null,$nome, $endereco, $nascimento, $telefone,$CPF, $sexo, $email, $senha_hash, $statusAluno, $Id_plano, null);
         $this->dao->criarAlunos($aluno);

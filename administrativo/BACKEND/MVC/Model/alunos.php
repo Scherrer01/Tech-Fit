@@ -97,9 +97,6 @@ class Alunos{
     }
 
     public function setEmail($email){
-        if(!filter_var($email,FILTER_VALIDATE_EMAIL)){
-            throw new InvalidArgumentException("Email inválido!");
-        }
         $this->email = $email;
         return $this;
     }
@@ -149,10 +146,6 @@ class Alunos{
 
     public function setNascimento($nascimento)
     {
-         $d = DateTime::createFromFormat("Y-m-d", $nascimento);
-        if (!$d || $d->format("Y-m-d") !== $nascimento) {
-            throw new InvalidArgumentException("Data de nascimento inválida!");
-        }
         $this->nascimento = $nascimento;
         return $this;
     }

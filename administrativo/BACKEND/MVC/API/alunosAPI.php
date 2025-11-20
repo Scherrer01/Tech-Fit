@@ -24,7 +24,7 @@ switch($method){
             $result = $controller->buscarAlunos($nome);
         // senão exibe todos os alunos 
         }else{
-            $result =$controller->ler();
+            $result = $controller->ler();
         }
         http_response_code(200); // responsa para ok, essencial para API restful
         echo json_encode($result);
