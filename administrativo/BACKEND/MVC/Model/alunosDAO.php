@@ -88,27 +88,6 @@ class AlunoDAO{
         return $result; 
     }
 
-    // método que retorna apenas alguns dados básicos (para exibir em tabelas no front-end)
-    public function lerAlunosBasico(){
-        // consulta apenas os campos necessários
-        $stmt = $this->conn->query('SELECT id_aluno, nome, email, telefone, status_aluno FROM alunos ORDER BY id_aluno');
-        $result = []; // cria o array vazio
-
-        // percorre cada linha retornada
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
-            // em vez de criar objetos Alunos, aqui criamos arrays simples com os dados básicos
-            $result[] = [
-                'id_aluno' => $row['id_aluno'],
-                'nome'     => $row['nome'],
-                'email'    => $row['email'],
-                'telefone' => $row['telefone'],
-                'status'   => $row['status_aluno']
-            ];  
-        }
-        // retorna o array com os dados básicos
-        return $result; 
-    }
-    
     //Atualizar alunos
     public function atualizarAlunos($idAlunos, $novoNome,$novoEndereco,$novoEmail,$novoNascimento, $novoTelefone, $novoCPF,$novoSexo,$novoSenhaAluno,$NovoStatus){
 

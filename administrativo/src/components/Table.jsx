@@ -5,7 +5,7 @@ function Table (){
    const [alunos, setAlunos]= useState([]);
 
   useEffect(()=>{
-    fetch("http://localhost:8000/tableAlunos.php",{
+    fetch("http://localhost:8000/alunosAPI.php", {
       method: 'GET',})
       .then((res) => res.json())
       .then((data) => setAlunos(data))
