@@ -35,6 +35,7 @@ class AlunoDAO{
 
     // método para inserir um novo aluno no banco
     public function criarAlunos(Alunos $alunos){
+        $id_plano = 1;
         // usamos parâmetros nomeados (:NOME, :CPF, etc.) para evitar SQL Injection
         $sql = "INSERT INTO ALUNOS 
             (NOME, ENDERECO, NASCIMENTO, TELEFONE, CPF, SEXO, EMAIL, SENHA_HASH, STATUS_ALUNO, ID_PLANO, CRIADO_EM)
@@ -55,7 +56,7 @@ class AlunoDAO{
             ':EMAIL'       => $alunos->getEmail(),
             ':SENHA_HASH'  => $alunos->getSenhaHash(), 
             ':STATUS_ALUNO'=> $alunos->getStatus_aluno(),
-            ':ID_PLANO'    => $alunos->getId_plano(),
+            ':ID_PLANO'    => $id_plano,
             ':CRIADO_EM'   => $alunos->getCriado_em()
         ]);
     }

@@ -30,7 +30,6 @@ function Alunos() {
       <div>
         <Table />
       </div>
-      {/* componente PopUpAlunos */}
       <PopUpAlunos isOpen={PopUPOpen} onClose={() => setPopUp(false)} mode={PopUpMode} />
     </main>
   );

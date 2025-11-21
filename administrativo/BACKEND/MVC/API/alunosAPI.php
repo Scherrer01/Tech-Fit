@@ -1,4 +1,12 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header('Content-Type: application/json');
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 // arquivo responsavél por ser a API entre o frontend e backend do projeto
 
 require_once __DIR__ . '/../Controller/ControllerALunos.php';
@@ -6,10 +14,6 @@ require_once __DIR__ . '/../Controller/ControllerALunos.php';
 $controller = new ControllerALunos();
 
 //CORS para a comunicação com o react
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
-header('Content-Type: application/json');
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
 
 // Captura o método da busca (fetch) do nosso frontend
