@@ -23,10 +23,15 @@ switch($method){
     // metodo for get 
     case 'GET':
         // caso a busca seja pelo nome, roda a buscaAlunos
-        if(isset($_GET['nome'])){
-            $nome =$_GET['nome'];
+        if(isset($_GET['id'])){
+            $nome =$_GET['id'];
+            $result = $controller->buscarAlunosPorID($id);
+            //Buscar por nome
+        }  elseif (isset($_GET['nome'])) {
+            $nome = $_GET['nome'];
             $result = $controller->buscarAlunos($nome);
-        // senão exibe todos os alunos 
+
+            // senão exibe todos os alunos 
         }else{
             $result = $controller->ler();
         }

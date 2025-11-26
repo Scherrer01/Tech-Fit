@@ -144,5 +144,11 @@ class AlunoDAO{
         }
         return $result; // retorna os resultados da busca pelo nome 
     }
+    public function buscarAlunosPorID($id) {
+    $sql = "SELECT * FROM alunos WHERE idAlunos = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }
 ?>

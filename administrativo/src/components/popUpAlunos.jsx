@@ -90,7 +90,7 @@ function PopUpAlunos({ isOpen, onClose, mode = "create", alunoId }) {
       const url = "http://localhost:8000/alunosAPI.php";
       const method = mode === "create" ? "POST" : "PUT";
 
-      // 🔥 CORREÇÃO CRÍTICA: Mudar de ID_PLANO para Id_plano
+      
       const payload = {
         nome: formData.nome.trim(),
         endereco: formData.endereco.trim(),
@@ -307,7 +307,7 @@ function PopUpAlunos({ isOpen, onClose, mode = "create", alunoId }) {
             </button>
             <button 
               type="submit" 
-              className="px-4 py-2 bg-red-800 text-white rounded disabled:bg-gray-600"
+              className="px-4 py-2 bg-red-800 text-white rounded disabled:bg-green-500"
               disabled={loading || !formData.plano}
             >
               {loading ? "Salvando..." : (mode === "create" ? "Criar" : "Salvar")}
