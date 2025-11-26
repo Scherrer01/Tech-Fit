@@ -131,10 +131,8 @@ try {
                         <label for="sexo">Sexo *</label>
                         <select id="sexo" name="sexo" required>
                             <option value="">Selecione...</option>
-                            <option value="NAO_DECLARAR" <?php echo (isset($_POST['sexo']) && $_POST['sexo'] == 'NAO_DECLARAR') ? 'selected' : ''; ?>>Não declarar</option>
                             <option value="MASCULINO" <?php echo (isset($_POST['sexo']) && $_POST['sexo'] == 'MASCULINO') ? 'selected' : ''; ?>>Masculino</option>
                             <option value="FEMININO" <?php echo (isset($_POST['sexo']) && $_POST['sexo'] == 'FEMININO') ? 'selected' : ''; ?>>Feminino</option>
-                            <option value="OUTRO" <?php echo (isset($_POST['sexo']) && $_POST['sexo'] == 'OUTRO') ? 'selected' : ''; ?>>Outro</option>
                         </select>
                     </div>
 

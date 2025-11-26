@@ -1,4 +1,4 @@
-// register.js - VERSÃO ATUALIZADA PARA PHP
+// register.js - FORMATAÇÃO CORRIGIDA
 document.addEventListener('DOMContentLoaded', function() {
     const formRegistro = document.getElementById('formRegistro');
     const inputCPF = document.getElementById('cpf');
@@ -7,32 +7,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputTelefone = document.getElementById('telefone');
     const inputConfirmarSenha = document.getElementById('confirmar_senha');
 
-    // Máscara para CPF
+    // ✅ FORMATADOR DE CPF ENQUANTO DIGITA - CORRIGIDO
     inputCPF.addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
         
-        if (value.length <= 11) {
-            value = value.replace(/(\d{3})(\d)/, '$1.$2');
-            value = value.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-            value = value.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
-            e.target.value = value.substring(0, 14);
+        // Limita a 11 dígitos
+        value = value.substring(0, 11);
+        
+        // Aplica a formatação progressivamente
+        if (value.length > 9) {
+            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        } else if (value.length > 6) {
+            value = value.replace(/(\d{3})(\d{3})(\d{0,3})/, '$1.$2.$3');
+        } else if (value.length > 3) {
+            value = value.replace(/(\d{3})(\d{0,3})/, '$1.$2');
         }
+        
+        e.target.value = value;
     });
 
-    // Máscara para telefone
+    // ✅ FORMATADOR DE TELEFONE ENQUANTO DIGITA - CORRIGIDO
     inputTelefone.addEventListener('input', function(e) {
         let value = e.target.value.replace(/\D/g, '');
         
-        if (value.length <= 11) {
-            if (value.length <= 10) {
-                value = value.replace(/(\d{2})(\d)/, '($1) $2');
-                value = value.replace(/(\d{4})(\d)/, '$1-$2');
-            } else {
-                value = value.replace(/(\d{2})(\d)/, '($1) $2');
-                value = value.replace(/(\d{5})(\d)/, '$1-$2');
-            }
-            e.target.value = value.substring(0, 15);
+        // Limita a 11 dígitos
+        value = value.substring(0, 11);
+        
+        // Aplica a formatação progressivamente
+        if (value.length >= 10) {
+            // Celular: (11) 99999-9999
+            value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        } else if (value.length >= 6) {
+            // Fixo: (11) 9999-9999
+            value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else if (value.length >= 3) {
+            // Apenas DDD: (11) 
+            value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+        } else if (value.length > 0) {
+            // Apenas início: (11
+            value = '(' + value;
         }
+        
+        e.target.value = value;
     });
 
     // Validação de CPF
@@ -133,15 +149,34 @@ document.addEventListener('DOMContentLoaded', function() {
         campo.parentNode.appendChild(mensagemSucesso);
     }
 
-    // Validação em tempo real do CPF
+    // ✅ VALIDAÇÃO EM TEMPO REAL DO CPF (formatado)
     inputCPF.addEventListener('blur', function() {
-        if (this.value && !validarCPF(this.value)) {
+        const cpfLimpo = this.value.replace(/\D/g, '');
+        
+        if (cpfLimpo && !validarCPF(this.value)) {
             mostrarErro(this, 'CPF inválido');
-        } else if (this.value && validarCPF(this.value)) {
+        } else if (cpfLimpo && validarCPF(this.value)) {
             removerErro(this);
             mostrarSucesso(this, 'CPF válido');
             setTimeout(() => {
-                removerErro(this); // Remove a mensagem de sucesso também
+                removerErro(this);
+            }, 2000);
+        } else {
+            removerErro(this);
+        }
+    });
+
+    // ✅ VALIDAÇÃO EM TEMPO REAL DO TELEFONE (formatado)
+    inputTelefone.addEventListener('blur', function() {
+        const telefoneLimpo = this.value.replace(/\D/g, '');
+        
+        if (telefoneLimpo && telefoneLimpo.length < 10) {
+            mostrarErro(this, 'Telefone inválido (mínimo 10 dígitos)');
+        } else if (telefoneLimpo && telefoneLimpo.length >= 10) {
+            removerErro(this);
+            mostrarSucesso(this, 'Telefone válido');
+            setTimeout(() => {
+                removerErro(this);
             }, 2000);
         } else {
             removerErro(this);
@@ -209,22 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Validação em tempo real do telefone
-    inputTelefone.addEventListener('blur', function() {
-        const telefoneLimpo = this.value.replace(/\D/g, '');
-        if (telefoneLimpo && telefoneLimpo.length < 10) {
-            mostrarErro(this, 'Telefone inválido');
-        } else if (telefoneLimpo && telefoneLimpo.length >= 10) {
-            removerErro(this);
-            mostrarSucesso(this, 'Telefone válido');
-            setTimeout(() => {
-                removerErro(this);
-            }, 2000);
-        } else {
-            removerErro(this);
-        }
-    });
-
     // Validação do formulário antes do envio
     formRegistro.addEventListener('submit', function(e) {
         let formValido = true;
@@ -257,8 +276,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Validação específica do CPF
-        if (inputCPF.value && !validarCPF(inputCPF.value)) {
+        // ✅ VALIDAÇÃO DO CPF (limpo - sem formatação)
+        const cpfLimpo = inputCPF.value.replace(/\D/g, '');
+        if (cpfLimpo && !validarCPF(inputCPF.value)) {
             mostrarErro(inputCPF, 'CPF inválido');
             formValido = false;
             inputCPF.focus();
@@ -309,10 +329,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Validação do telefone
+        // ✅ VALIDAÇÃO DO TELEFONE (limpo - sem formatação)
         const telefoneLimpo = inputTelefone.value.replace(/\D/g, '');
         if (telefoneLimpo && telefoneLimpo.length < 10) {
-            mostrarErro(inputTelefone, 'Telefone inválido');
+            mostrarErro(inputTelefone, 'Telefone inválido (mínimo 10 dígitos)');
             formValido = false;
             inputTelefone.focus();
             e.preventDefault();
@@ -327,16 +347,18 @@ document.addEventListener('DOMContentLoaded', function() {
             btnSubmit.textContent = 'Cadastrando...';
             btnSubmit.disabled = true;
             
-            // O formulário será enviado normalmente para o PHP
-            // O loading será mostrado até a página recarregar
-            
-            // Caso queira fazer algo antes do envio, pode adicionar aqui
             console.log('Formulário válido, enviando para o servidor...');
         }
     });
 
     // Prevenir colar em campos específicos
     inputCPF.addEventListener('paste', function(e) {
+        e.preventDefault();
+        mostrarErro(this, 'Cole não é permitido neste campo. Digite manualmente.');
+        setTimeout(() => removerErro(this), 3000);
+    });
+
+    inputTelefone.addEventListener('paste', function(e) {
         e.preventDefault();
         mostrarErro(this, 'Cole não é permitido neste campo. Digite manualmente.');
         setTimeout(() => removerErro(this), 3000);
@@ -356,31 +378,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Função para buscar CEP automático (opcional)
-    function buscarCEP() {
-        // Adicione um campo CEP se quiser usar esta função
-        const inputCEP = document.getElementById('cep');
-        if (inputCEP) {
-            inputCEP.addEventListener('blur', function() {
-                const cep = this.value.replace(/\D/g, '');
-                if (cep.length === 8) {
-                    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (!data.erro) {
-                                document.getElementById('endereco').value = 
-                                    `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
-                            }
-                        })
-                        .catch(error => console.log('Erro ao buscar CEP:', error));
-                }
-            });
-        }
-    }
-
-    // Inicializar busca de CEP se o campo existir
-    buscarCEP();
-
     // Efeito de foco nos campos
     const todosCampos = formRegistro.querySelectorAll('input, select');
     todosCampos.forEach(campo => {
@@ -395,45 +392,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Mostrar/ocultar senha (opcional)
-    function togglePasswordVisibility() {
-        const toggleSenha = document.createElement('span');
-        toggleSenha.innerHTML = '👁️';
-        toggleSenha.style.position = 'absolute';
-        toggleSenha.style.right = '10px';
-        toggleSenha.style.top = '50%';
-        toggleSenha.style.transform = 'translateY(-50%)';
-        toggleSenha.style.cursor = 'pointer';
-        toggleSenha.style.fontSize = '16px';
-        
-        const toggleConfirmar = toggleSenha.cloneNode(true);
-        
-        // Adicionar ao campo senha
-        const campoSenha = inputSenha.parentNode;
-        campoSenha.style.position = 'relative';
-        campoSenha.appendChild(toggleSenha);
-        
-        // Adicionar ao campo confirmar senha
-        const campoConfirmar = inputConfirmarSenha.parentNode;
-        campoConfirmar.style.position = 'relative';
-        campoConfirmar.appendChild(toggleConfirmar);
-        
-        // Funcionalidade
-        toggleSenha.addEventListener('click', function() {
-            const type = inputSenha.getAttribute('type') === 'password' ? 'text' : 'password';
-            inputSenha.setAttribute('type', type);
-            this.innerHTML = type === 'password' ? '👁️' : '🔒';
-        });
-        
-        toggleConfirmar.addEventListener('click', function() {
-            const type = inputConfirmarSenha.getAttribute('type') === 'password' ? 'text' : 'password';
-            inputConfirmarSenha.setAttribute('type', type);
-            this.innerHTML = type === 'password' ? '👁️' : '🔒';
-        });
-    }
-
-    // Inicializar toggle de senha
-    togglePasswordVisibility();
-
-    console.log('Tech Fit - Sistema de cadastro inicializado!');
+    console.log('Tech Fit - Sistema de cadastro com formatação automática inicializado!');
 });
