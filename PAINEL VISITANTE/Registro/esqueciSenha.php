@@ -6,7 +6,7 @@ require_once '../config.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo asset('css', 'esqueciSenha.css'); ?>">
+    <link rel="stylesheet" href="esqueciSenha.css">
     <title>Recuperar Senha - Tech Fit</title>
 </head>
 <body>

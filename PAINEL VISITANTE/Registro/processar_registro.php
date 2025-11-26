@@ -13,7 +13,7 @@ try {
     
     foreach ($camposObrigatorios as $campo) {
         if (empty($_POST[$campo])) {
-            throw new Exception("O campo $campo é obrigatório");
+            throw new Exception("O campo " . ucfirst(str_replace('_', ' ', $campo)) . " é obrigatório");
         }
     }
     
@@ -45,10 +45,14 @@ try {
     if (strlen($cpf) !== 11) {
         throw new Exception("CPF inválido");
     }
-    
+
     // Conectar ao banco
     $database = new Database();
     $conn = $database->getConnection();
+    
+    if (!$conn) {
+        throw new Exception("Erro de conexão com o banco de dados. Tente novamente.");
+    }
     
     // Verificar se email já existe
     $checkEmail = $conn->prepare("SELECT ID_ALUNO FROM ALUNOS WHERE EMAIL = ?");
@@ -64,46 +68,75 @@ try {
         throw new Exception("Este CPF já está cadastrado");
     }
     
+    // Verificar se plano existe
+    $checkPlano = $conn->prepare("SELECT ID_PLANO, VALOR FROM PLANOS WHERE ID_PLANO = ?");
+    $checkPlano->execute([$_POST['id_plano']]);
+    $plano = $checkPlano->fetch();
+    if (!$plano) {
+        throw new Exception("Plano selecionado não existe");
+    }
+    
+    // Verificar se unidade existe
+    $checkUnidade = $conn->prepare("SELECT ID_UNIDADE FROM UNIDADES WHERE ID_UNIDADE = ?");
+    $checkUnidade->execute([$_POST['id_unidade']]);
+    if (!$checkUnidade->fetch()) {
+        throw new Exception("Unidade selecionada não existe");
+    }
+    
     // Hash da senha
     $senha_hash = password_hash($_POST['senha'], PASSWORD_DEFAULT);
     
-    // Inserir aluno
-    $sql = "INSERT INTO ALUNOS (
-        NOME, ENDERECO, NASCIMENTO, TELEFONE, CPF, SEXO, EMAIL, SENHA_HASH, ID_PLANO, STATUS_ALUNO
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'ATIVO')";
+    // Iniciar transação
+    $conn->beginTransaction();
     
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        $_POST['nome'],
-        $_POST['endereco'],
-        $_POST['nascimento'],
-        $_POST['telefone'],
-        $cpf,
-        $_POST['sexo'],
-        $_POST['email'],
-        $senha_hash,
-        $_POST['id_plano']
-    ]);
-    
-    $id_aluno = $conn->lastInsertId();
-    
-    // Inserir na tabela PERTENCE (relacionamento com unidade)
-    $sql_pertence = "INSERT INTO PERTENCE (ID_UNIDADE, ID_ALUNO) VALUES (?, ?)";
-    $stmt_pertence = $conn->prepare($sql_pertence);
-    $stmt_pertence->execute([$_POST['id_unidade'], $id_aluno]);
-    
-    // Salvar dados na sessão para pagamento
-    $_SESSION['dados_cadastro'] = [
-        'id_aluno' => $id_aluno,
-        'nome' => $_POST['nome'],
-        'email' => $_POST['email'],
-        'id_plano' => $_POST['id_plano'],
-        'id_unidade' => $_POST['id_unidade']
-    ];
-    
-    // Redirecionar para pagamento
-    header('Location: pagamento.php?sucesso=Cadastro realizado! Agora finalize o pagamento.');
-    exit;
+    try {
+        // Inserir aluno (mas com status INATIVO até o pagamento)
+        $sql = "INSERT INTO ALUNOS (
+            NOME, ENDERECO, NASCIMENTO, TELEFONE, CPF, SEXO, EMAIL, SENHA_HASH, ID_PLANO, STATUS_ALUNO
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'INATIVO')"; // ✅ Status INATIVO até pagamento
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            $_POST['nome'],
+            $_POST['endereco'],
+            $_POST['nascimento'],
+            $_POST['telefone'],
+            $cpf,
+            $_POST['sexo'],
+            $_POST['email'],
+            $senha_hash,
+            $_POST['id_plano']
+        ]);
+        
+        $id_aluno = $conn->lastInsertId();
+        
+        // Inserir na tabela PERTENCE (relacionamento com unidade)
+        $sql_pertence = "INSERT INTO PERTENCE (ID_UNIDADE, ID_ALUNO) VALUES (?, ?)";
+        $stmt_pertence = $conn->prepare($sql_pertence);
+        $stmt_pertence->execute([$_POST['id_unidade'], $id_aluno]);
+        
+        // Commit da transação
+        $conn->commit();
+        
+        // ✅ AGORA VAI PARA PAGAMENTO (fluxo correto)
+        $_SESSION['dados_cadastro'] = [
+            'id_aluno' => $id_aluno,
+            'nome' => $_POST['nome'],
+            'email' => $_POST['email'],
+            'id_plano' => $_POST['id_plano'],
+            'id_unidade' => $_POST['id_unidade'],
+            'valor_plano' => $plano['VALOR'] // Valor do plano para pagamento
+        ];
+        
+        // Redirecionar para PAGAMENTO
+        header('Location: /pagamento.php?sucesso=Cadastro realizado! Agora finalize o pagamento.');
+        exit;
+        
+    } catch (Exception $e) {
+        // Rollback em caso de erro
+        $conn->rollBack();
+        throw $e;
+    }
     
 } catch (Exception $e) {
     // Em caso de erro, redirecionar de volta com os dados preenchidos
@@ -111,19 +144,4 @@ try {
     header("Location: register.php?erro=" . urlencode($e->getMessage()) . "&" . $dados_anteriores);
     exit;
 }
-
-// No processar_registro.php, após inserir o aluno:
-
-// Salvar dados na sessão para pagamento
-$_SESSION['dados_cadastro'] = [
-    'id_aluno' => $id_aluno,
-    'nome' => $_POST['nome'],
-    'email' => $_POST['email'],
-    'id_plano' => $_POST['id_plano'],
-    'id_unidade' => $_POST['id_unidade']
-];
-
-// Redirecionar para pagamento
-header('Location: Pagamento/pagamento.php?sucesso=Cadastro realizado! Agora finalize o pagamento.');
-exit;
 ?>

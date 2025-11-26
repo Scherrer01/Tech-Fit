@@ -17,7 +17,7 @@ define('SOBRE_URL', BASE_PATH . 'Sobre Nós/sobreNós.php');
 
 // URLs do Painel Visitante
 define('LOGIN_URL', 'login.php'); // Relativo à pasta Login
-define('REGISTRO_URL', '../Registro/register.php'); // De Login para Registro
+define('REGISTRO_URL', '/register.php'); // De Login para Registro
 define('ESQUECI_SENHA_URL', 'esqueciSenha.php'); // Relativo à pasta Login
 
 // Assets

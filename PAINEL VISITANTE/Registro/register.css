@@ -361,3 +361,36 @@ h2 {
     background-color: #282828;
     color: white;
 }
+
+/* Mensagens de sucesso/erro */
+.mensagem {
+    padding: 15px;
+    margin: 20px auto;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    max-width: 600px;
+}
+
+.mensagem.erro {
+    background-color: #fee;
+    border: 1px solid #e74c3c;
+    color: #c0392b;
+}
+
+.mensagem.sucesso {
+    background-color: #efe;
+    border: 1px solid #27ae60;
+    color: #229954;
+}
+
+/* Campos com erro */
+.campo-grupo input.error,
+.campo-grupo select.error {
+    border-color: #e74c3c !important;
+}
+
+.campo-grupo input.success,
+.campo-grupo select.success {
+    border-color: #27ae60 !important;
+}

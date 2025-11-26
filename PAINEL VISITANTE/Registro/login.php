@@ -1,5 +1,12 @@
 <?php
+session_start();
 require_once '../config.php';
+
+// Verificar se há mensagem de sucesso do cadastro
+$mensagem_sucesso = '';
+if (isset($_GET['sucesso'])) {
+    $mensagem_sucesso = htmlspecialchars($_GET['sucesso']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -32,13 +39,22 @@ require_once '../config.php';
 
 <!-- ============================================================================================-->
   <div class="container">
+        <!-- Mensagem de sucesso do cadastro -->
+        <?php if ($mensagem_sucesso): ?>
+            <div class="mensagem-sucesso">
+                ✅ <?php echo $mensagem_sucesso; ?>
+            </div>
+        <?php endif; ?>
+
         <div class="login-container">
             <div class="login-card">
                 <h2 class="login-titulo">Acesse sua <span class="color-accent">Conta</span></h2>
+                
                 <form class="formulario" id="formLogin" method="POST">
                     <div class="campo-grupo">
                         <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required
+                               value="<?php echo isset($_SESSION['cadastro_sucesso']['email']) ? htmlspecialchars($_SESSION['cadastro_sucesso']['email']) : ''; ?>">
                     </div>
 
                     <div class="campo-grupo">
@@ -68,6 +84,16 @@ require_once '../config.php';
                 </div>
                 <h2 class="bem-vindo-titulo">Bem-vindo de Volta</h2>
                 <p class="bem-vindo-texto">Acesse sua conta e continue sua jornada fitness.</p>
+                
+                <?php if (isset($_SESSION['cadastro_sucesso'])): ?>
+                <div class="novo-cadastro-info">
+                    <h3>🎉 Novo por aqui?</h3>
+                    <p>Seu cadastro foi realizado! Use o email e senha cadastrados para fazer login.</p>
+                </div>
+                <?php 
+                    // Limpar a sessão após mostrar
+                    unset($_SESSION['cadastro_sucesso']);
+                endif; ?>
             </div>
         </div>
     </div>
