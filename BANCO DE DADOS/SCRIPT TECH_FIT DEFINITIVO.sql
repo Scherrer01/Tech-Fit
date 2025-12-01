@@ -158,6 +158,35 @@ CREATE TABLE TEM (
   CONSTRAINT fk_tem_modalidade FOREIGN KEY (ID_MODALIDADE) REFERENCES MODALIDADES(ID_MODALIDADE),
   CONSTRAINT fk_tem_funcionario FOREIGN KEY (ID_FUNCIONARIO) REFERENCES FUNCIONARIOS(ID_FUNCIONARIO));
   
+  INSERT INTO PLANOS (NOME_PLANO, VALOR, BENEFICIOS, DURACAO_MES) VALUES
+('Básico', 89.00, 'Acesso à academia, Área de musculação, 1 aula coletiva por semana', 1),
+('Premium', 129.00, 'Todos os benefícios do plano Básico, Aulas ilimitadas, Área de cardio', 1),
+('Elite', 180.00, 'Todos os benefícios do plano Premium, Personal trainer, Avaliação física', 1);
+
+INSERT INTO UNIDADES (NOME_UNIDADE, ENDERECO_UNIDADE, TELEFONE_UNIDADE) VALUES
+-- São Paulo - Capital
+('Tech Fit Paulista', 'Avenida Paulista, 1000 - Cerqueira César, São Paulo - SP', '(11) 2222-3333'),
+('Tech Fit Ibirapuera', 'Rua Vergueiro, 1500 - Vila Mariana, São Paulo - SP', '(11) 2222-4444'),
+('Tech Fit Morumbi', 'Avenida Morumbi, 2500 - Morumbi, São Paulo - SP', '(11) 2222-5555'),
+('Tech Fit Pinheiros', 'Rua dos Pinheiros, 800 - Pinheiros, São Paulo - SP', '(11) 2222-6666'),
+
+-- Interior de São Paulo
+('Tech Fit Limeira', 'Rua Dr. Trajano Barros de Camargo, 150 - Centro, Limeira - SP', '(19) 3304-7800'),
+('Tech Fit Campinas', 'Avenida John Boyd Dunlop, 350 - Jardim Ipaussurama, Campinas - SP', '(19) 3304-7801'),
+('Tech Fit São José dos Campos', 'Av. Dr. Nelson D''Ávila, 2200 - Vila das Acácias, São José dos Campos - SP', '(12) 3304-7802'),
+('Tech Fit Ribeirão Preto', 'Rua Álvares Cabral, 1800 - Centro, Ribeirão Preto - SP', '(16) 3304-7803'),
+
+-- Outros estados
+('Tech Fit Rio de Janeiro', 'Avenida Atlântica, 2000 - Copacabana, Rio de Janeiro - RJ', '(21) 3304-7804'),
+('Tech Fit Belo Horizonte', 'Avenida do Contorno, 8000 - Lourdes, Belo Horizonte - MG', '(31) 3304-7805'),
+('Tech Fit Curitiba', 'Rua XV de Novembro, 1200 - Centro, Curitiba - PR', '(41) 3304-7806'),
+('Tech Fit Porto Alegre', 'Avenida Ipiranga, 1500 - Praia de Belas, Porto Alegre - RS', '(51) 3304-7807'),
+('Tech Fit Brasília', 'SHIS QI 15 Bloco E - Lago Sul, Brasília - DF', '(61) 3304-7808'),
+('Tech Fit Salvador', 'Avenida Tancredo Neves, 1500 - Caminho das Árvores, Salvador - BA', '(71) 3304-7809'),
+('Tech Fit Fortaleza', 'Av. Beira Mar, 3000 - Meireles, Fortaleza - CE', '(85) 3304-7810');
+
+
+  
   
 
   
