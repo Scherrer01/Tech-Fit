@@ -89,10 +89,12 @@ switch($method){
 
         case 'DELETE':
             $data = json_decode(file_get_contents("php://input"), true);
-            $controller->excluir($data['idAlunos']);
-
-            http_response_code(200); // tudo ok com a exclusão
-            echo json_encode(["message"=> "Aluno excluido com sucesso"]);
+        
+            if (is_array($data) && isset($data['idAlunos'])) {
+                $controller->excluir($data['idAlunos']);
+            } else {
+                echo json_encode(["success" => false, "error" => "ID não informado corretamente"]);
+            }
         break;
         
         default:

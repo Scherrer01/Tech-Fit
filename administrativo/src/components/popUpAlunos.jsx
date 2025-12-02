@@ -101,7 +101,7 @@ function PopUpAlunos({ isOpen, onClose, mode = "create", alunoId }) {
         email: formData.email.trim(),
         senha_hash: formData.senha.trim(),
         statusAluno: "ativo",
-        Id_plano: planoId, // 🔥 MUDOU AQUI - agora corresponde à API
+        Id_plano: planoId, // MUDOU AQUI - agora corresponde à API
       };
 
       // Adicionar idAlunos apenas no modo edição

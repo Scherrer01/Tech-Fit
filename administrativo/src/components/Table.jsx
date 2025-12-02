@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
-import PopUpAlunos from "../components/PopUpAlunos"; // certifique-se de importar
+import PopUpAlunos from "../components/popUpAlunos"; // certifique-se de importar
 
 function Table() {
   const [alunos, setAlunos] = useState([]);
@@ -28,21 +28,25 @@ function Table() {
       .catch((err) => console.error(err));
   }, []);
 
-  const handleDelete = (id) => {
-    if (window.confirm("Tem certeza que deseja excluir este aluno?")) {
-      fetch(`http://localhost:8000/alunosAPI.php?id=${id}`, {
-        method: "DELETE",
+const handleDelete = (id) => {
+  if (window.confirm("Tem certeza que deseja excluir este aluno?")) {
+    fetch("http://localhost:8000/alunosAPI.php", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({idAlunos: id }),
+    })
+      .then(() => {
+        setAlunos(alunos.filter((aluno) => aluno.ID_ALUNO !== id));
       })
-        .then(() => {
-          setAlunos(alunos.filter((aluno) => aluno.ID_ALUNO !== id));
-        })
-        .catch((err) => console.error(err));
-    }
-  };
+      .catch((err) => console.error(err));
+  }
+};
 
   return (
     <>
-      <table className="table-auto w-full border-collapse border border-gray-300">
+      <table className="table-auto w-full border-collapse border border-gray-300 min-h-screen overflow-auto">
         <thead className="bg-red-950 text-white">
           <tr>
             <th className="px-4 py-2 border-2">ID</th>

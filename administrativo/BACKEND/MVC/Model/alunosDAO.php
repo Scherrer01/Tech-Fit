@@ -122,10 +122,8 @@ class AlunoDAO{
 
     // Delete alunos
     public function deletarALunos($id_aluno){
-        $stmt = $this->conn->prepare('DELETE FROM alunos WHERE ID_ALUNO =:id_aluno');
-        $stmt ->execute([
-            ':id_aluno' => $id_aluno,
-        ]);
+        $stmt = $this->conn->prepare('DELETE FROM alunos WHERE ID_ALUNO = ?');
+        $stmt ->execute([$id_aluno]);
     }
 
     // Buscar alunos pelo nome 
