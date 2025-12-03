@@ -127,23 +127,23 @@ class AlunoDAO{
     }
 
     // Buscar alunos pelo nome 
-    public function buscarAlunos ($nome){
-        $stmt = $this->conn->prepare("SELECT id_aluno, nome, email, telefone, status_aluno FROM alunos WHERE NOME LIKE :nome"); // select para busca em alunos o nome inserido 
-        $stmt ->execute([':nome'=>"%$nome%"]); // define que o parametro de busca nome é a variavel recebida pela função 
-        $result = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            $result[] = [
-                'id_aluno' => $row['id_aluno'],
-                'nome'     => $row['nome'],
-                'email'    => $row['email'],
-                'telefone' => $row['telefone'],
-                'status'   => $row['status_aluno']
-            ];  
-        }
-        return $result; // retorna os resultados da busca pelo nome 
+public function buscarAlunos($nome){
+    $stmt = $this->conn->prepare("
+        SELECT * FROM alunos WHERE NOME LIKE :nome
+    ");
+    
+    $stmt->execute([':nome'=>"%$nome%"]);
+
+    $result = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        $result[] = $row; // devolve tudo
     }
+
+    return $result;
+}
+
     public function buscarAlunosPorID($id) {
-    $sql = "SELECT * FROM alunos WHERE idAlunos = ?";
+    $sql = "SELECT * FROM alunos WHERE ID_ALUNO = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);

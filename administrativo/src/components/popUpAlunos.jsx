@@ -18,35 +18,42 @@ function PopUpAlunos({ isOpen, onClose, mode = "create", alunoId }) {
   const [loading, setLoading] = useState(false);
 
   // Buscar aluno no modo edição
-  useEffect(() => {
-    if (isOpen && mode === "edit" && alunoId) {
-      const fetchAluno = async () => {
-        try {
-          setLoading(true);
-          const response = await fetch(`http://localhost:8000/alunosAPI.php?id=${alunoId}`);
-          const result = await response.json();
-          console.log("Dados recebidos da API:", result);
-          
-          setFormData({
-            nome: result.nome || "",
-            endereco: result.endereco || "",
-            nascimento: result.nascimento || "",
-            telefone: result.telefone || "",
-            cpf: result.cpf || result.CPF || "",
-            sexo: result.sexo || "",
-            email: result.email || "",
-            senha: "", // Sempre vazio por segurança
-            plano: result.Id_plano?.toString() || result.ID_PLANO?.toString() || result.plano?.toString() || "",
-          });
-          
-        } catch (error) {
-          console.error("Erro ao buscar aluno:", error);
-          setMensagem("Erro ao carregar dados do aluno.");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchAluno();
+useEffect(() => {
+  if (isOpen && mode === "edit" && alunoId) {
+    const fetchAluno = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `http://localhost:8000/alunosAPI.php?idAlunos=${alunoId}`,
+          {
+            method: "GET"
+          }
+        );
+
+        const result = await response.json();
+        console.log("Dados recebidos da API:", result);
+
+        setFormData({
+          nome: result.NOME || "",
+          endereco: result.ENDERECO || "",
+          nascimento: result.NASCIMENTO || "",
+          telefone: result.TELEFONE || "",
+          cpf: result.CPF || "",
+          sexo: result.SEXO || "",
+          email: result.EMAIL || "",
+          senha: "",
+          plano: result.ID_PLANO || "",
+        });
+        
+      } catch (error) {
+        console.error("Erro ao buscar aluno:", error);
+        setMensagem("Erro ao carregar dados do aluno.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAluno();
     } else if (isOpen && mode === "create") {
       setFormData({
         nome: "",
@@ -142,7 +149,7 @@ function PopUpAlunos({ isOpen, onClose, mode = "create", alunoId }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-black p-6 rounded-lg w-full max-w-4xl shadow-lg">
-        <h2 className="text-xl font-bold mb-6 text-red-800 text-center">
+        <h2 className="text-xl font-bold mb-6 text-white text-center">
           {mode === "create" ? "Criar Aluno" : "Editar Aluno"}
         </h2>
 

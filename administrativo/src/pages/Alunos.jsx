@@ -21,7 +21,6 @@ function Alunos() {
         <Button variant="create" onClick={() => openPopUp("create")}>
           Criar Aluno
         </Button>
-        <Inputs className="max-w-40" placeholder="Buscar" />
       </div>
       <div>
         <Table />
