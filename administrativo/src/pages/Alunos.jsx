@@ -1,7 +1,7 @@
 import Button from "../components/Button";
 import Aside from "../components/Aside";
 import Inputs from "../components/Inputs";
-import PopUpAlunos from "../components/popUpAlunos"; // nome em maiúsculo
+import PopUpAlunos from "../components/popUpAlunos"; 
 import Table from "../components/Table";
 import { useState } from "react";
 
@@ -18,14 +18,9 @@ function Alunos() {
     <main style={{ marginLeft: "18vw", padding: "2rem", position: "relative", zIndex: 5 }}>
       <Aside />
       <div className="flex gap-3 mb-4">
-        <Button variant="update" onClick={() => openPopUp("update")}>
-          Editar Aluno
-        </Button>
         <Button variant="create" onClick={() => openPopUp("create")}>
           Criar Aluno
         </Button>
-        <Button variant="delete">Excluir Aluno</Button>
-        <Inputs className="max-w-40" placeholder="Buscar" />
       </div>
       <div>
         <Table />

@@ -45,5 +45,9 @@ public function criar($nome, $endereco, $nascimento, $telefone, $CPF, $sexo, $em
     public function buscarAlunos($nome){
         return $this->dao->buscarAlunos($nome);
     }
+        public function buscarAlunosPorID($id){
+        return $this->dao->buscarAlunosPorID($id);
+    }
+    
 }
 ?>

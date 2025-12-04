@@ -2,7 +2,7 @@ function Inputs({
   type = "text",
   placeholder = "",
   value,
-  onChange,
+  onChange={onChange},
   required = false,
   className = "",
   defaultValue,
