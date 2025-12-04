@@ -1,3 +1,6 @@
+﻿<?php
+// contato.php
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -10,16 +13,16 @@
     <header class="cabecalho">
         <div class="logo-container">
             <div class="logo">
-                <img src="logo.png" alt="Tech Fit">
+                <img src="../../logo.png" alt="Tech Fit">
             </div>
             <h1>Tech <span class="color-accent">Fit</span></h1>
         </div>
         <nav>
             <ul>
-                <li><a href="/Home/home.html">Início</a></li>
-                <li><a href="/Planos/planos.html">Planos</a></li>
-                <li><a href="/Sobre Nós/sobreNós.html">Sobre nós</a></li>
-                <li id="login"><a href="/Login/login.html">Login</a></li>
+                <li><a href="/Home/home.php">InÃ­cio</a></li>
+                <li><a href="/Planos/planos.php">Planos</a></li>
+                <li><a href="/Sobre NÃ³s/sobreNÃ³s.php">Sobre nÃ³s</a></li>
+                <li id="login"><a href="/Login/login.php">Login</a></li>
             </ul>
         </nav>
     </header>
@@ -29,7 +32,7 @@
         <section class="contact-hero">
             <div class="hero-content">
                 <h2>Entre em Contato</h2>
-                <p>Estamos aqui para ajudar você a alcançar seus objetivos. Fale conosco!</p>
+                <p>Estamos aqui para ajudar vocÃª a alcanÃ§ar seus objetivos. Fale conosco!</p>
             </div>
         </section>
 
@@ -41,36 +44,36 @@
                     <div class="contact-info">
                         <h3>Nossos Canais</h3>
                         <div class="contact-item">
-                            <div class="contact-icon">📞</div>
+                            <div class="contact-icon">ðŸ“ž</div>
                             <div class="contact-details">
                                 <h4>Telefone</h4>
                                 <p>(19) 98704-4392</p>
-                                <span>Segunda a Sexta, 8h às 18h</span>
+                                <span>Segunda a Sexta, 8h Ã s 18h</span>
                             </div>
                         </div>
                         <div class="contact-item">
-                            <div class="contact-icon">✉️</div>
+                            <div class="contact-icon">âœ‰ï¸</div>
                             <div class="contact-details">
                                 <h4>E-mail</h4>
                                 <p>diogo.scherrer@gmail.com</p>
-                                <span>Respondemos em até 24h</span>
+                                <span>Respondemos em atÃ© 24h</span>
                             </div>
                         </div>
                         <div class="contact-item">
-                            <div class="contact-icon">📍</div>
+                            <div class="contact-icon">ðŸ“</div>
                             <div class="contact-details">
-                                <h4>Endereço</h4>
+                                <h4>EndereÃ§o</h4>
                                 <p>Rua Fitness, 123 - Centro</p>
                                 <span>Limeira - SP</span>
                             </div>
                         </div>
                         <div class="contact-item">
-                            <div class="contact-icon">🕒</div>
+                            <div class="contact-icon">ðŸ•’</div>
                             <div class="contact-details">
-                                <h4>Horário de Funcionamento</h4>
-                                <p>Segunda a Sexta: 5h às 23h</p>
-                                <p>Sábados: 6h às 20h</p>
-                                <p>Domingos: 7h às 14h</p>
+                                <h4>HorÃ¡rio de Funcionamento</h4>
+                                <p>Segunda a Sexta: 5h Ã s 23h</p>
+                                <p>SÃ¡bados: 6h Ã s 20h</p>
+                                <p>Domingos: 7h Ã s 14h</p>
                             </div>
                         </div>
                     </div>
@@ -95,10 +98,10 @@
                                 <label for="subject">Assunto</label>
                                 <select id="subject" name="subject" required>
                                     <option value="">Selecione um assunto</option>
-                                    <option value="planos">Informações sobre Planos</option>
-                                    <option value="duvidas">Dúvidas</option>
-                                    <option value="sugestoes">Sugestões</option>
-                                    <option value="reclamacoes">Reclamações</option>
+                                    <option value="planos">InformaÃ§Ãµes sobre Planos</option>
+                                    <option value="duvidas">DÃºvidas</option>
+                                    <option value="sugestoes">SugestÃµes</option>
+                                    <option value="reclamacoes">ReclamaÃ§Ãµes</option>
                                     <option value="outros">Outros</option>
                                 </select>
                             </div>
@@ -119,20 +122,20 @@
                 <h2>Perguntas Frequentes</h2>
                 <div class="faq-grid">
                     <div class="faq-item">
-                        <h4>Quais são os horários de pico da academia?</h4>
-                        <p>Os horários de maior movimento são das 6h às 8h, 12h às 14h e 18h às 20h. Recomendamos estes horários para quem gosta de treinar com mais pessoas.</p>
+                        <h4>Quais sÃ£o os horÃ¡rios de pico da academia?</h4>
+                        <p>Os horÃ¡rios de maior movimento sÃ£o das 6h Ã s 8h, 12h Ã s 14h e 18h Ã s 20h. Recomendamos estes horÃ¡rios para quem gosta de treinar com mais pessoas.</p>
                     </div>
                     <div class="faq-item">
-                        <h4>Preciso de avaliação física antes de começar?</h4>
-                        <p>Sim, todos os novos alunos passam por uma avaliação física completa com nossos profissionais para criar um plano de treino personalizado.</p>
+                        <h4>Preciso de avaliaÃ§Ã£o fÃ­sica antes de comeÃ§ar?</h4>
+                        <p>Sim, todos os novos alunos passam por uma avaliaÃ§Ã£o fÃ­sica completa com nossos profissionais para criar um plano de treino personalizado.</p>
                     </div>
                     <div class="faq-item">
                         <h4>Oferecem aula experimental?</h4>
-                        <p>Sim! Oferecemos uma aula experimental gratuita para você conhecer nossa estrutura e metodologia antes de se matricular.</p>
+                        <p>Sim! Oferecemos uma aula experimental gratuita para vocÃª conhecer nossa estrutura e metodologia antes de se matricular.</p>
                     </div>
                     <div class="faq-item">
-                        <h4>Posso congelar minha matrícula?</h4>
-                        <p>Sim, oferecemos a opção de congelamento por até 3 meses ao ano, mediante apresentação de justificativa.</p>
+                        <h4>Posso congelar minha matrÃ­cula?</h4>
+                        <p>Sim, oferecemos a opÃ§Ã£o de congelamento por atÃ© 3 meses ao ano, mediante apresentaÃ§Ã£o de justificativa.</p>
                     </div>
                 </div>
             </div>
@@ -150,9 +153,9 @@
                             <p>Limeira - SP</p>
                             <p>CEP: 01234-567</p>
                             <div class="map-features">
-                                <span>🚗 Estacionamento gratuito</span>
-                                <span>🚇 Próximo ao SENAI</span>
-                                <span>♿ Acessível</span>
+                                <span>ðŸš— Estacionamento gratuito</span>
+                                <span>ðŸš‡ PrÃ³ximo ao SENAI</span>
+                                <span>â™¿ AcessÃ­vel</span>
                             </div>
                         </div>
                     </div>
@@ -169,11 +172,11 @@
                     <div class="footer-logo">
                         <div class="logo-container">
                             <div class="logo">
-                                <img src="logo.png" alt="Tech Fit">
+                                <img src="../../logo.png" alt="Tech Fit">
                             </div>
                             <h2>Tech <span class="color-accent">Fit</span></h2>
                         </div>
-                        <p>Transformando vidas através da tecnologia e fitness.</p>
+                        <p>Transformando vidas atravÃ©s da tecnologia e fitness.</p>
                     </div>
                     <div class="social-links">
                         <a href="#" class="whatsapp">
@@ -199,20 +202,20 @@
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Horários</h4>
+                    <h4>HorÃ¡rios</h4>
                     <ul>
-                        <li>Segunda a Sexta: 5h às 23h</li>
-                        <li>Sábados: 6h às 20h</li>
-                        <li>Domingos: 7h às 14h</li>
-                        <li>Feriados: 7h às 12h</li>
+                        <li>Segunda a Sexta: 5h Ã s 23h</li>
+                        <li>SÃ¡bados: 6h Ã s 20h</li>
+                        <li>Domingos: 7h Ã s 14h</li>
+                        <li>Feriados: 7h Ã s 12h</li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Contato</h4>
                     <ul>
-                        <li>📍 Rua Fitness, 123 - Centro</li>
-                        <li>📞 (19) 98704-4392</li>
-                        <li>✉️ diogo.scherrer@gmail.com</li>
+                        <li>ðŸ“ Rua Fitness, 123 - Centro</li>
+                        <li>ðŸ“ž (19) 98704-4392</li>
+                        <li>âœ‰ï¸ diogo.scherrer@gmail.com</li>
                     </ul>
                 </div>
             </div>
@@ -232,3 +235,4 @@
     </script>
 </body>
 </html>
+

@@ -1,3 +1,6 @@
+﻿<?php
+// aulas.php
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,32 +11,32 @@
 </head>
 <body>
     <!-- ================================================================================= -->
-    <!-- CABEÇALHO -->
+    <!-- CABEÃ‡ALHO -->
     <header class="cabecalho">
         <div class="logo-container">
             <div class="logo">
-                <img src="logo.png" alt="Tech Fit">
+                <img src="../../logo.png" alt="Tech Fit">
             </div>
             <h1>Tech <span class="color-accent">Fit</span></h1>
         </div>
         <nav>
             <ul>
-            <li><a href="/PAINEL ALUNO/index.html">início</a></li>
-            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.html">Modalidades</a></li>
-            <li><a href="/PAINEL ALUNO/UNIDADES/unidades.html">Unidades</a></li>
-            <li><a href="/PAINEL ALUNO/PLANOS/plano.html">Planos</a></li>
-            <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.html">Minha conta</a></li>
+            <li><a href="/PAINEL ALUNO/index.php">iní­cio</a></li>
+            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.php">Modalidades</a></li>
+            <li><a href="/PAINEL ALUNO/UNIDADES/unidades.php">Unidades</a></li>
+            <li><a href="/PAINEL ALUNO/PLANOS/plano.php">Planos</a></li>
+            <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
             </ul>
         </nav>
     </header>
     <!-- ================================================================================= -->
 
-    <!-- Conteúdo Principal -->
+    <!-- ConteÃºdo Principal -->
     <main class="aulas-container">
-        <!-- Cabeçalho da Página -->
+        <!-- CabeÃ§alho da PÃ¡gina -->
         <section class="page-header">
             <h1>Aulas Tech Fit</h1>
-            <p>Acompanhe suas aulas agendadas e histórico de treinos</p>
+            <p>Acompanhe suas aulas agendadas e histÃ³rico de treinos</p>
         </section>
 
         <!-- Filtros e Busca -->
@@ -41,7 +44,7 @@
             <div class="filters-container">
                 <div class="search-box">
                     <input type="text" placeholder="Buscar aula...">
-                    <button>🔍</button>
+                    <button>ðŸ”</button>
                 </div>
                 <div class="filter-buttons">
                     <button class="filter-btn active">Todas</button>
@@ -52,7 +55,7 @@
             </div>
         </section>
 
-        <!-- Todas as Aulas Disponíveis -->
+        <!-- Todas as Aulas DisponÃ­veis -->
 <section class="available-classes">
     
     <div class="classes-grid">
@@ -61,11 +64,11 @@
             <div class="class-image cardio"></div>
             <div class="class-info">
                 <h3>Cardio</h3>
-                <p>Aula de alta intensidade com monitoramento cardíaco em tempo real</p>
+                <p>Aula de alta intensidade com monitoramento cardÃ­aco em tempo real</p>
                 <div class="class-meta">
-                    <span>⏱ 45min</span>
-                    <span>🔥 Alta Intensidade</span>
-                    <span>👨‍🏫 Prof. Carlos</span>
+                    <span>â± 45min</span>
+                    <span>ðŸ”¥ Alta Intensidade</span>
+                    <span>ðŸ‘¨â€ðŸ« Prof. Carlos</span>
                 </div>
             </div>
             <div class="class-schedule">
@@ -88,17 +91,17 @@
         <div class="class-card available">
             <div class="class-image strength"></div>
             <div class="class-info">
-                <h3>Força & Potência</h3>
-                <p>Treino focado em ganho de massa muscular e força máxima</p>
+                <h3>ForÃ§a & PotÃªncia</h3>
+                <p>Treino focado em ganho de massa muscular e forÃ§a mÃ¡xima</p>
                 <div class="class-meta">
-                    <span>⏱ 60min</span>
-                    <span>💪 Forte</span>
-                    <span>👩‍🏫 Prof. Ana</span>
+                    <span>â± 60min</span>
+                    <span>ðŸ’ª Forte</span>
+                    <span>ðŸ‘©â€ðŸ« Prof. Ana</span>
                 </div>
             </div>
             <div class="class-schedule">
                 <div class="schedule-item">
-                    <span>Terça - 19:00</span>
+                    <span>TerÃ§a - 19:00</span>
                     <button class="schedule-btn">Agendar</button>
                 </div>
                 <div class="schedule-item">
@@ -106,7 +109,7 @@
                     <button class="schedule-btn">Agendar</button>
                 </div>
                 <div class="schedule-item">
-                    <span>Sábado - 10:00</span>
+                    <span>SÃ¡bado - 10:00</span>
                     <button class="schedule-btn">Agendar</button>
                 </div>
             </div>
@@ -117,11 +120,11 @@
             <div class="class-image yoga"></div>
             <div class="class-info">
                 <h3>Yoga</h3>
-                <p>Prática de yoga com auxílio do professor</p>
+                <p>PrÃ¡tica de yoga com auxÃ­lio do professor</p>
                 <div class="class-meta">
-                    <span>⏱ 50min</span>
-                    <span>🧘‍♀️ Relaxante</span>
-                    <span>👨‍🏫 Prof. João</span>
+                    <span>â± 50min</span>
+                    <span>ðŸ§˜â€â™€ï¸ Relaxante</span>
+                    <span>ðŸ‘¨â€ðŸ« Prof. JoÃ£o</span>
                 </div>
             </div>
             <div class="class-schedule">
@@ -147,14 +150,14 @@
                 <h3>Muay Thai</h3>
                 <p>Treino de Muay Thai com tecnologia de impacto e performance</p>
                 <div class="class-meta">
-                    <span>⏱ 55min</span>
-                    <span>🥊 Intenso</span>
-                    <span>👩‍🏫 Prof. Maria</span>
+                    <span>â± 55min</span>
+                    <span>ðŸ¥Š Intenso</span>
+                    <span>ðŸ‘©â€ðŸ« Prof. Maria</span>
                 </div>
             </div>
             <div class="class-schedule">
                 <div class="schedule-item">
-                    <span>Terça - 18:30</span>
+                    <span>TerÃ§a - 18:30</span>
                     <button class="schedule-btn">Agendar</button>
                 </div>
                 <div class="schedule-item">
@@ -162,7 +165,7 @@
                     <button class="schedule-btn">Agendar</button>
                 </div>
                 <div class="schedule-item">
-                    <span>Sábado - 11:00</span>
+                    <span>SÃ¡bado - 11:00</span>
                     <button class="schedule-btn">Agendar</button>
                 </div>
             </div>
@@ -173,11 +176,11 @@
             <div class="class-image zumba"></div>
             <div class="class-info">
                 <h3>Zumba</h3>
-                <p>Dança, diversão e queima calórica com tecnologia de monitoramento</p>
+                <p>DanÃ§a, diversÃ£o e queima calÃ³rica com tecnologia de monitoramento</p>
                 <div class="class-meta">
-                    <span>⏱ 50min</span>
-                    <span>💃 Cardio Dance</span>
-                    <span>👩‍🏫 Prof. Carla</span>
+                    <span>â± 50min</span>
+                    <span>ðŸ’ƒ Cardio Dance</span>
+                    <span>ðŸ‘©â€ðŸ« Prof. Carla</span>
                 </div>
             </div>
             <div class="class-schedule">
@@ -196,21 +199,21 @@
             </div>
         </div>
 
-        <!-- Aula 6 - Core Tech - Definição Abdominal -->
+        <!-- Aula 6 - Core Tech - DefiniÃ§Ã£o Abdominal -->
         <div class="class-card available">
             <div class="class-image abs"></div>
             <div class="class-info">
                 <h3>Abdominal</h3>
-                <p>Treino específico para fortalecimento e definição do abdômen</p>
+                <p>Treino especÃ­fico para fortalecimento e definiÃ§Ã£o do abdÃ´men</p>
                 <div class="class-meta">
-                    <span>⏱ 45min</span>
-                    <span>💪 Definição</span>
-                    <span>👨‍🏫 Prof. Marcos</span>
+                    <span>â± 45min</span>
+                    <span>ðŸ’ª DefiniÃ§Ã£o</span>
+                    <span>ðŸ‘¨â€ðŸ« Prof. Marcos</span>
                 </div>
             </div>
             <div class="class-schedule">
                 <div class="schedule-item">
-                    <span>Terça - 07:00</span>
+                    <span>TerÃ§a - 07:00</span>
                     <button class="schedule-btn">Agendar</button>
                 </div>
                 <div class="schedule-item">
@@ -218,7 +221,7 @@
                     <button class="schedule-btn">Agendar</button>
                 </div>
                 <div class="schedule-item">
-                    <span>Sábado - 10:30</span>
+                    <span>SÃ¡bado - 10:30</span>
                     <button class="schedule-btn">Agendar</button>
                 </div>
             </div>
@@ -226,58 +229,58 @@
     </div>
 </section>
 
-        <!-- Histórico de Aulas -->
+        <!-- HistÃ³rico de Aulas -->
         <section class="class-history">
-            <h2>Histórico de Aulas</h2>
+            <h2>HistÃ³rico de Aulas</h2>
             <div class="history-table">
                 <div class="table-header">
                     <span>Aula</span>
                     <span>Data</span>
                     <span>Professor</span>
                     <span>Status</span>
-                    <span>Avaliação</span>
+                    <span>AvaliaÃ§Ã£o</span>
                 </div>
                 <div class="table-row">
                     <span>Cardio Tech</span>
                     <span>15/03/2024 - 18:00</span>
                     <span>Prof. Carlos</span>
-                    <span class="status completed">Concluída</span>
-                    <span>⭐⭐⭐⭐⭐</span>
+                    <span class="status completed">ConcluÃ­da</span>
+                    <span>â­â­â­â­â­</span>
                 </div>
                 <div class="table-row">
-                    <span>Força & Potência</span>
+                    <span>ForÃ§a & PotÃªncia</span>
                     <span>13/03/2024 - 19:30</span>
                     <span>Prof. Ana</span>
-                    <span class="status completed">Concluída</span>
-                    <span>⭐⭐⭐⭐</span>
+                    <span class="status completed">ConcluÃ­da</span>
+                    <span>â­â­â­â­</span>
                 </div>
                 <div class="table-row">
                     <span>Yoga Tech</span>
                     <span>11/03/2024 - 08:00</span>
-                    <span>Prof. João</span>
-                    <span class="status completed">Concluída</span>
-                    <span>⭐⭐⭐⭐⭐</span>
+                    <span>Prof. JoÃ£o</span>
+                    <span class="status completed">ConcluÃ­da</span>
+                    <span>â­â­â­â­â­</span>
                 </div>
                 <div class="table-row">
                     <span>Muay Thai</span>
                     <span>08/03/2024 - 18:30</span>
                     <span>Prof. Maria</span>
-                    <span class="status completed"> Concluída</span>
-                    <span>⭐⭐⭐⭐⭐</span>
+                    <span class="status completed"> ConcluÃ­da</span>
+                    <span>â­â­â­â­â­</span>
                 </div>
                 <div class="table-row">
                     <span>Zumba</span>
                     <span>06/03/2024 - 19:00</span>
                     <span>Prof. Carlos</span>
-                    <span class="status completed"> Concluída</span>
-                    <span>⭐⭐⭐</span>
+                    <span class="status completed"> ConcluÃ­da</span>
+                    <span>â­â­â­</span>
                 </div>
                 <div class="table-row">
                     <span>Abdominal</span>
                     <span>10/03/2024 - 19:30</span>
                     <span>Prof. Ana</span>
-                    <span class="status completed"> Concluída</span>
-                    <span>⭐⭐⭐⭐</span>
+                    <span class="status completed"> ConcluÃ­da</span>
+                    <span>â­â­â­â­</span>
                 </div>
             </div>
         </section>
@@ -292,11 +295,11 @@
                     <div class="footer-logo">
                         <div class="logo-container">
                             <div class="logo">
-                                <img src="logo.png" alt="Tech Fit">
+                               <img src="../../logo.png" alt="Tech Fit">
                             </div>
                             <h2>Tech <span class="color-accent">Fit</span></h2>
                         </div>
-                        <p>Transformando vidas através da tecnologia e fitness.</p>
+                        <p>Transformando vidas atravÃ©s da tecnologia e fitness.</p>
                     </div>
                     <div class="social-links">
                         <a href="#" class="whatsapp">
@@ -322,20 +325,20 @@
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Horários</h4>
+                    <h4>HorÃ¡rios</h4>
                     <ul>
-                        <li>Segunda a Sexta: 5h às 23h</li>
-                        <li>Sábados: 6h às 20h</li>
-                        <li>Domingos: 7h às 14h</li>
-                        <li>Feriados: 7h às 12h</li>
+                        <li>Segunda a Sexta: 5h Ã s 23h</li>
+                        <li>SÃ¡bados: 6h Ã s 20h</li>
+                        <li>Domingos: 7h Ã s 14h</li>
+                        <li>Feriados: 7h Ã s 12h</li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Contato</h4>
                     <ul>
-                        <li>📍 Rua Fitness, 123 - Centro</li>
-                        <li>📞 (19) 98704-4392</li>
-                        <li>✉️ diogo.scherrer@gmail.com</li>
+                        <li>ðŸ“ Rua Fitness, 123 - Centro</li>
+                        <li>ðŸ“ž (19) 98704-4392</li>
+                        <li>âœ‰ï¸ diogo.scherrer@gmail.com</li>
                     </ul>
                 </div>
             </div>
@@ -346,3 +349,4 @@
     </footer>
 </body>
 </html>
+

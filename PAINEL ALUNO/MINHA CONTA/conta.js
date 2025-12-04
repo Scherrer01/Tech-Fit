@@ -1,84 +1,27 @@
 // ==============================================================
-// MINHA CONTA - TECH FIT
+// MINHA CONTA - TECH FIT - FUNCIONALIDADES DE INTERFACE APENAS
 // ==============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos principais
+    // Elementos principais - APENAS PARA NAVEGAÇÃO
     const navItems = document.querySelectorAll('.nav-item');
     const contentSections = document.querySelectorAll('.content-section');
     
-    // Dados do usuário (simulados)
-    const userData = {
-        nome: 'João Silva',
-        email: 'joao.silva@email.com',
-        telefone: '(19) 98765-4321',
-        dataNascimento: '15/03/1990',
-        cpf: '123.456.789-00',
-        unidade: 'Tech Fit Centro - Campinas',
-        plano: 'Black Tech - R$ 199,90/mês',
-        memberId: 'TF202400123',
-        memberSince: 'Jan/2024'
-    };
-
-    // Dados das aulas (simulados)
-    const aulasData = {
-        proximaAula: {
-            nome: 'Cardio Tech',
-            horario: 'Hoje 18:00',
-            professor: 'Prof. Carlos'
-        },
-        aulasRealizadas: 12,
-        frequencia: '85%',
-        proximasAulas: [
-            {
-                nome: 'Cardio Tech',
-                data: 'Hoje - 18:00 às 18:45',
-                professor: 'Prof. Carlos'
-            },
-            {
-                nome: 'Força & Potência',
-                data: 'Amanhã - 19:00 às 20:00',
-                professor: 'Prof. Ana'
-            }
-        ]
-    };
-
-    // Dados de progresso (simulados)
-    const progressoData = {
-        peso: { atual: 68, variacao: -2 },
-        gordura: { atual: 15, variacao: -3 },
-        cintura: { atual: 42, variacao: -5 },
-        sequencia: { atual: 28, variacao: 5 }
-    };
-
-    // Dados de pagamentos (simulados)
-    const pagamentosData = {
-        planoAtual: 'Black Tech',
-        valor: 'R$ 199,90',
-        status: 'Ativo',
-        proximoPagamento: '10/04/2024',
-        historico: [
-            { data: '10/03/2024', valor: 'R$ 199,90', status: 'Pago' },
-            { data: '10/02/2024', valor: 'R$ 199,90', status: 'Pago' },
-            { data: '10/01/2024', valor: 'R$ 199,90', status: 'Pago' }
-        ]
-    };
-
     // ==============================================================
-    // INICIALIZAÇÃO
+    // INICIALIZAÇÃO - APENAS FUNCIONALIDADES DE UI
     // ==============================================================
 
     function init() {
         setupNavigation();
-        loadUserData();
-        loadAulasData();
-        loadProgressoData();
-        loadPagamentosData();
         setupEventListeners();
+        setupAulasEventListeners();
+        addCSSAnimations();
+        
+        console.log('Tech Fit - Interface carregada com sucesso!');
     }
 
     // ==============================================================
-    // NAVEGAÇÃO ENTRE SEÇÕES
+    // NAVEGAÇÃO ENTRE SEÇÕES - APENAS UI
     // ==============================================================
 
     function setupNavigation() {
@@ -95,8 +38,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Mostra a seção correspondente
                 const targetId = this.getAttribute('href').substring(1);
                 showSection(targetId);
+                
+                // Atualizar URL sem recarregar a página (opcional)
+                history.pushState(null, null, `#${targetId}`);
             });
         });
+        
+        // Verificar hash na URL inicial
+        const hash = window.location.hash.substring(1);
+        if (hash) {
+            const targetNav = document.querySelector(`.nav-item[href="#${hash}"]`);
+            if (targetNav) {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                targetNav.classList.add('active');
+                showSection(hash);
+            }
+        }
     }
 
     function showSection(sectionId) {
@@ -110,150 +67,49 @@ document.addEventListener('DOMContentLoaded', function() {
         if (targetSection) {
             targetSection.classList.add('active');
             
-            // Animação de entrada
+            // Animação de entrada suave
             targetSection.style.opacity = '0';
-            targetSection.style.transform = 'translateY(20px)';
+            targetSection.style.transform = 'translateY(10px)';
             
             setTimeout(() => {
-                targetSection.style.transition = 'all 0.3s ease';
+                targetSection.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
                 targetSection.style.opacity = '1';
                 targetSection.style.transform = 'translateY(0)';
-            }, 50);
+            }, 10);
         }
     }
 
     // ==============================================================
-    // CARREGAMENTO DE DADOS
-    // ==============================================================
-
-    function loadUserData() {
-        // Atualiza informações do perfil na sidebar
-        document.querySelector('.user-profile h3').textContent = userData.nome;
-        document.querySelector('.member-since').textContent = `Membro desde: ${userData.memberSince}`;
-        
-        // Atualiza informações detalhadas do perfil
-        document.querySelector('.profile-info h3').textContent = userData.nome;
-        document.querySelector('.member-id').textContent = `ID: ${userData.memberId}`;
-        
-        // Preenche os detalhes do perfil
-        const detailItems = {
-            'joao.silva@email.com': userData.email,
-            '(19) 98765-4321': userData.telefone,
-            '15/03/1990': userData.dataNascimento,
-            '123.456.789-00': userData.cpf,
-            'Tech Fit Centro - Campinas': userData.unidade,
-            'Black Tech - R$ 199,90/mês': userData.plano
-        };
-        
-        // Atualiza cada item de detalhe
-        document.querySelectorAll('.detail-item p').forEach((p, index) => {
-            const keys = Object.keys(detailItems);
-            if (keys[index]) {
-                p.textContent = detailItems[keys[index]];
-            }
-        });
-    }
-
-    function loadAulasData() {
-        // Atualiza resumo de aulas
-        document.querySelector('.summary-card:nth-child(1) p').textContent = 
-            `${aulasData.proximaAula.nome} - ${aulasData.proximaAula.horario}`;
-        
-        document.querySelector('.summary-card:nth-child(2) p').textContent = 
-            `${aulasData.aulasRealizadas} este mês`;
-        
-        document.querySelector('.summary-card:nth-child(3) p').textContent = 
-            `${aulasData.frequencia} de presença`;
-        
-        // Atualiza lista de próximas aulas
-        const classList = document.querySelector('.class-list');
-        classList.innerHTML = '';
-        
-        aulasData.proximasAulas.forEach(aula => {
-            const classItem = document.createElement('div');
-            classItem.className = 'class-item';
-            classItem.innerHTML = `
-                <div class="class-info">
-                    <h4>${aula.nome}</h4>
-                    <p>${aula.data}</p>
-                    <span class="instructor">${aula.professor}</span>
-                </div>
-                <div class="class-actions">
-                    <button class="btn-small primary">${aula.data.includes('Hoje') ? 'Entrar' : 'Lembrar'}</button>
-                    <button class="btn-small secondary">Cancelar</button>
-                </div>
-            `;
-            classList.appendChild(classItem);
-        });
-        
-        // Adiciona event listeners para os botões das aulas
-        setupAulasEventListeners();
-    }
-
-    function loadProgressoData() {
-        // Atualiza estatísticas
-        document.querySelector('.stat-card:nth-child(1) .stat-value').innerHTML = 
-            `${progressoData.peso.atual}<span>kg</span>`;
-        document.querySelector('.stat-card:nth-child(1) .stat-trend').textContent = 
-            `${progressoData.peso.variacao > 0 ? '+' : ''}${progressoData.peso.variacao}kg`;
-        
-        document.querySelector('.stat-card:nth-child(2) .stat-value').innerHTML = 
-            `${progressoData.gordura.atual}<span>%</span>`;
-        document.querySelector('.stat-card:nth-child(2) .stat-trend').textContent = 
-            `${progressoData.gordura.variacao > 0 ? '+' : ''}${progressoData.gordura.variacao}%`;
-        
-        document.querySelector('.stat-card:nth-child(3) .stat-value').innerHTML = 
-            `${progressoData.cintura.atual}<span>cm</span>`;
-        document.querySelector('.stat-card:nth-child(3) .stat-trend').textContent = 
-            `${progressoData.cintura.variacao > 0 ? '+' : ''}${progressoData.cintura.variacao}cm`;
-        
-        document.querySelector('.stat-card:nth-child(4) .stat-value').innerHTML = 
-            `${progressoData.sequencia.atual}<span>dias</span>`;
-        document.querySelector('.stat-card:nth-child(4) .stat-trend').textContent = 
-            `+${progressoData.sequencia.variacao}`;
-    }
-
-    function loadPagamentosData() {
-        // Atualiza informações do plano atual
-        document.querySelector('.plan-name').textContent = pagamentosData.planoAtual;
-        document.querySelector('.plan-price').innerHTML = 
-            `${pagamentosData.valor}<span>/mês</span>`;
-        document.querySelector('.next-payment strong').textContent = pagamentosData.proximoPagamento;
-        
-        // Atualiza histórico de pagamentos
-        const paymentList = document.querySelector('.payment-list');
-        paymentList.innerHTML = '';
-        
-        pagamentosData.historico.forEach(pagamento => {
-            const paymentItem = document.createElement('div');
-            paymentItem.className = 'payment-item';
-            paymentItem.innerHTML = `
-                <div class="payment-date">${pagamento.data}</div>
-                <div class="payment-amount">${pagamento.valor}</div>
-                <div class="payment-status ${pagamento.status.toLowerCase()}">${pagamento.status}</div>
-            `;
-            paymentList.appendChild(paymentItem);
-        });
-    }
-
-    // ==============================================================
-    // EVENT LISTENERS
+    // EVENT LISTENERS - APENAS PARA INTERAÇÃO
     // ==============================================================
 
     function setupEventListeners() {
         // Botões de edição do perfil
-        document.querySelector('.profile-actions .btn-primary').addEventListener('click', editarPerfil);
-        document.querySelector('.profile-actions .btn-secondary').addEventListener('click', alterarSenha);
+        const btnEditarPerfil = document.querySelector('.profile-actions .btn-primary');
+        const btnAlterarSenha = document.querySelector('.profile-actions .btn-secondary');
         
-        // Botão de editar avatar
-        document.querySelector('.edit-avatar').addEventListener('click', editarAvatar);
+        if (btnEditarPerfil) {
+            btnEditarPerfil.addEventListener('click', editarPerfil);
+        }
+        
+        if (btnAlterarSenha) {
+            btnAlterarSenha.addEventListener('click', alterarSenha);
+        }
+        
+        // Botão de editar avatar (se existir)
+        const btnEditAvatar = document.querySelector('.edit-avatar');
+        if (btnEditAvatar) {
+            btnEditAvatar.addEventListener('click', editarAvatar);
+        }
         
         // Toggles de configurações
         document.querySelectorAll('.toggle input').forEach(toggle => {
             toggle.addEventListener('change', function() {
                 const setting = this.closest('.setting-item').querySelector('h4').textContent;
-                console.log(`${setting}: ${this.checked ? 'Ativado' : 'Desativado'}`);
-                showNotification(`${setting} ${this.checked ? 'ativado' : 'desativado'} com sucesso!`);
+                showNotification(`${setting} ${this.checked ? 'ativado' : 'desativado'}`, 'info');
+                
+                // Aqui você poderia fazer uma requisição AJAX para salvar a preferência
+                // saveSetting(setting, this.checked);
             });
         });
         
@@ -261,24 +117,30 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.setting-item .btn-small').forEach(btn => {
             btn.addEventListener('click', function() {
                 const setting = this.closest('.setting-item').querySelector('h4').textContent;
-                showNotification(`Abrindo configurações de ${setting}`);
+                showNotification(`Abrindo configurações de ${setting}`, 'info');
             });
         });
+        
+        // Botões de ação nas aulas
+        setupAulasEventListeners();
     }
 
     function setupAulasEventListeners() {
-        // Botões das aulas
+        // Botões "Entrar" ou "Lembrar" das aulas
         document.querySelectorAll('.class-actions .btn-small.primary').forEach(btn => {
             btn.addEventListener('click', function() {
                 const aulaNome = this.closest('.class-item').querySelector('h4').textContent;
-                if (this.textContent === 'Entrar') {
+                if (this.textContent.includes('Entrar')) {
                     entrarNaAula(aulaNome);
-                } else {
+                } else if (this.textContent.includes('Lembrar')) {
                     lembrarAula(aulaNome);
+                } else if (this.textContent.includes('Ver')) {
+                    verDetalhesAula(aulaNome);
                 }
             });
         });
         
+        // Botões "Cancelar" das aulas
         document.querySelectorAll('.class-actions .btn-small.secondary').forEach(btn => {
             btn.addEventListener('click', function() {
                 const aulaNome = this.closest('.class-item').querySelector('h4').textContent;
@@ -288,114 +150,134 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==============================================================
-    // FUNÇÕES DE AÇÃO
+    // FUNÇÕES DE AÇÃO - APENAS NOTIFICAÇÕES/INTERAÇÃO
     // ==============================================================
 
     function editarPerfil() {
-        showNotification('Abrindo editor de perfil...');
-        // Aqui você implementaria a lógica para abrir um modal de edição
-        setTimeout(() => {
-            showNotification('Perfil atualizado com sucesso!', 'success');
-        }, 1000);
+        showNotification('Redirecionando para edição de perfil...', 'info');
+        // Aqui você poderia redirecionar para a página de edição
+        // window.location.href = 'editar_perfil.php';
     }
 
     function alterarSenha() {
-        showNotification('Abrindo alteração de senha...');
-        // Aqui você implementaria a lógica para alterar senha
+        showNotification('Redirecionando para alteração de senha...', 'info');
+        // Aqui você poderia redirecionar para a página de alteração de senha
+        // window.location.href = 'alterar_senha.php';
     }
 
     function editarAvatar() {
-        showNotification('Abrindo seletor de avatar...');
-        // Aqui você implementaria a lógica para alterar o avatar
+        showNotification('Selecionar nova foto de perfil', 'info');
+        // Aqui você poderia abrir um seletor de arquivos
+        // const input = document.createElement('input');
+        // input.type = 'file';
+        // input.accept = 'image/*';
+        // input.click();
     }
 
     function entrarNaAula(nomeAula) {
-        showNotification(`Entrando na aula: ${nomeAula}`, 'success');
-        // Aqui você implementaria a lógica para entrar na aula
+        showNotification(`Preparando entrada na aula: ${nomeAula}`, 'success');
+        // Aqui você poderia iniciar a aula ou redirecionar
+    }
+
+    function verDetalhesAula(nomeAula) {
+        showNotification(`Mostrando detalhes da aula: ${nomeAula}`, 'info');
+        // Aqui você poderia abrir um modal com detalhes
     }
 
     function lembrarAula(nomeAula) {
-        showNotification(`Lembrete ativado para: ${nomeAula}`);
-        // Aqui você implementaria a lógica para ativar lembrete
+        showNotification(`Lembrete ativado para: ${nomeAula}`, 'info');
+        // Aqui você poderia ativar notificações no navegador
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(`Lembrete: ${nomeAula}`);
+        }
     }
 
     function cancelarAula(nomeAula) {
-        if (confirm(`Tem certeza que deseja cancelar a aula "${nomeAula}"?`)) {
-            showNotification(`Aula "${nomeAula}" cancelada com sucesso!`, 'warning');
-            // Aqui você implementaria a lógica para cancelar a aula
+        if (confirm(`Tem certeza que deseja cancelar sua inscrição na aula "${nomeAula}"?`)) {
+            showNotification(`Inscrição na aula "${nomeAula}" cancelada`, 'warning');
+            // Aqui você poderia fazer uma requisição AJAX para cancelar
+            // cancelarInscricaoAula(aulaId);
         }
     }
 
     // ==============================================================
-    // FUNÇÕES UTILITÁRIAS
+    // FUNÇÕES UTILITÁRIAS - NOTIFICAÇÕES
     // ==============================================================
 
     function showNotification(mensagem, tipo = 'info') {
-        // Remove notificação existente
-        const existingNotification = document.querySelector('.notification');
-        if (existingNotification) {
-            existingNotification.remove();
-        }
+        // Cores por tipo
+        const colors = {
+            'success': '#4CAF50',
+            'warning': '#FF9800',
+            'error': '#F44336',
+            'info': '#2196F3'
+        };
         
-        // Cria nova notificação
+        // Criar elemento de notificação
         const notification = document.createElement('div');
-        notification.className = `notification ${tipo}`;
+        notification.className = 'techfit-notification';
         notification.innerHTML = `
             <span>${mensagem}</span>
-            <button class="notification-close">&times;</button>
+            <button class="techfit-notification-close">&times;</button>
         `;
         
-        // Estilos da notificação
+        // Estilos
         notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: ${tipo === 'success' ? '#4CAF50' : tipo === 'warning' ? '#FF9800' : '#2196F3'};
+            background: ${colors[tipo] || colors.info};
             color: white;
-            padding: 15px 20px;
+            padding: 12px 20px;
             border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 9999;
             display: flex;
             align-items: center;
             gap: 15px;
-            animation: slideIn 0.3s ease;
+            font-size: 14px;
+            max-width: 350px;
+            animation: techfitNotificationSlideIn 0.3s ease;
         `;
         
         // Botão de fechar
-        notification.querySelector('.notification-close').addEventListener('click', () => {
-            notification.remove();
+        const closeBtn = notification.querySelector('.techfit-notification-close');
+        closeBtn.style.cssText = `
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+        `;
+        
+        closeBtn.addEventListener('click', () => {
+            notification.style.animation = 'techfitNotificationSlideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
         });
         
         document.body.appendChild(notification);
         
-        // Remove automaticamente após 5 segundos
+        // Remover automaticamente após 5 segundos
         setTimeout(() => {
             if (notification.parentNode) {
-                notification.remove();
+                notification.style.animation = 'techfitNotificationSlideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
             }
         }, 5000);
     }
 
-    function formatarData(data) {
-        return new Date(data).toLocaleDateString('pt-BR');
-    }
-
-    function formatarMoeda(valor) {
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(valor);
-    }
-
     // ==============================================================
-    // ANIMAÇÕES CSS
+    // ANIMAÇÕES CSS - APENAS EFEITOS VISUAIS
     // ==============================================================
 
     function addCSSAnimations() {
         const style = document.createElement('style');
         style.textContent = `
-            @keyframes slideIn {
+            /* Animações de notificação */
+            @keyframes techfitNotificationSlideIn {
                 from {
                     transform: translateX(100%);
                     opacity: 0;
@@ -406,65 +288,117 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            .stat-card {
-                transition: all 0.3s ease;
+            @keyframes techfitNotificationSlideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
             }
             
-            .class-item {
-                transition: all 0.3s ease;
+            /* Efeitos hover suaves */
+            .nav-item:hover {
+                transform: translateX(5px);
+                transition: transform 0.2s ease;
             }
             
             .class-item:hover {
-                transform: translateX(5px);
-            }
-            
-            .btn-primary, .btn-secondary {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
                 transition: all 0.3s ease;
             }
             
-            .btn-primary:hover {
+            .btn-primary:hover, .btn-secondary:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(255, 38, 38, 0.3);
+                transition: transform 0.2s ease;
             }
             
-            .btn-secondary:hover {
-                transform: translateY(-2px);
+            .btn-small:hover {
+                transform: translateY(-1px);
+                transition: transform 0.2s ease;
+            }
+            
+            .summary-card:hover {
+                transform: translateY(-3px);
+                transition: all 0.3s ease;
+            }
+            
+            .stat-card:hover {
+                transform: translateY(-3px);
+                transition: all 0.3s ease;
+            }
+            
+            /* Transição suave entre seções */
+            .content-section {
+                transition: opacity 0.3s ease, transform 0.3s ease;
             }
         `;
         document.head.appendChild(style);
     }
 
     // ==============================================================
+    // FUNÇÕES EXTRAS - VALIDAÇÃO DE FORMULÁRIOS
+    // ==============================================================
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    function formatarTelefone(telefone) {
+        // Remove tudo que não é número
+        const numeros = telefone.replace(/\D/g, '');
+        
+        // Formata como (XX) XXXXX-XXXX
+        if (numeros.length === 11) {
+            return numeros.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        } else if (numeros.length === 10) {
+            return numeros.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+        }
+        return telefone;
+    }
+
+    // ==============================================================
     // INICIALIZAÇÃO FINAL
     // ==============================================================
 
-    // Adiciona animações CSS
-    addCSSAnimations();
-    
     // Inicializa a aplicação
     init();
     
-    console.log('Tech Fit - Minha Conta carregada com sucesso!');
+    // Adiciona listener para o botão de logout se existir
+    const logoutBtn = document.querySelector('a[href*="logout"]');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            if (!confirm('Tem certeza que deseja sair?')) {
+                e.preventDefault();
+            }
+        });
+    }
 });
 
 // ==============================================================
-// FUNÇÕES GLOBAIS (caso precise acessar de outros arquivos)
+// FUNÇÕES GLOBAIS (opcionais)
 // ==============================================================
 
-function logout() {
-    if (confirm('Tem certeza que deseja sair?')) {
-        // Aqui você implementaria a lógica de logout
-        window.location.href = '/Login/login.html';
+// Função para alternar modo escuro/claro
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    return isDark;
+}
+
+// Verificar preferência de modo escuro
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+}
+
+// Função para rolar até uma seção
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
     }
-}
-
-function exportarDados() {
-    showNotification('Exportando dados do usuário...');
-    // Aqui você implementaria a lógica para exportar dados
-}
-
-// Função para atualizar dados em tempo real (pode ser chamada por WebSockets, etc.)
-function atualizarDadosUsuario(novosDados) {
-    Object.assign(userData, novosDados);
-    loadUserData();
 }

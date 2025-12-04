@@ -1,5 +1,5 @@
-<?php
-// processar_login.php
+﻿<?php
+// processar_login.php - Versão completa
 session_start();
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -48,15 +48,8 @@ $conn = $database->getConnection();
 
 try {
     // Buscar aluno pelo email
-    $query = "SELECT 
-                ID_ALUNO, 
-                NOME, 
-                EMAIL, 
-                SENHA_HASH, 
-                STATUS_ALUNO,
-                ID_PLANO
-              FROM ALUNOS 
-              WHERE EMAIL = :email";
+    $query = "SELECT ID_ALUNO, NOME, EMAIL, SENHA_HASH, STATUS_ALUNO, ID_PLANO 
+              FROM ALUNOS WHERE EMAIL = :email";
     
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':email', $email);
@@ -71,7 +64,7 @@ try {
     
     // Verificar status do aluno
     if ($aluno['STATUS_ALUNO'] !== 'ATIVO') {
-        echo json_encode(['success' => false, 'message' => 'Conta inativa. Entre em contato com a academia.']);
+        echo json_encode(['success' => false, 'message' => 'Conta inativa']);
         exit;
     }
     
@@ -81,13 +74,12 @@ try {
         exit;
     }
     
-    // Login bem-sucedido - criar sessão
+    // Login bem-sucedido
     $_SESSION['logado'] = true;
     $_SESSION['id_aluno'] = $aluno['ID_ALUNO'];
     $_SESSION['nome_aluno'] = $aluno['NOME'];
     $_SESSION['email_aluno'] = $aluno['EMAIL'];
     $_SESSION['plano_aluno'] = $aluno['ID_PLANO'];
-    $_SESSION['login_time'] = time();
     
     echo json_encode([
         'success' => true,
@@ -97,6 +89,6 @@ try {
     
 } catch (PDOException $e) {
     error_log("Erro no login: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Erro no servidor: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Erro no banco de dados']);
 }
 ?>

@@ -1,3 +1,6 @@
+﻿<?php
+// unidades.php
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,32 +11,32 @@
 </head>
 <body>
     <!-- ================================================================================= -->
-    <!-- CABEÇALHO -->
+    <!-- CABEÃÇALHO -->
     <header class="cabecalho">
         <div class="logo-container">
             <div class="logo">
-                <img src="logo.png" alt="Tech Fit">
+                <img src="../../logo.png" alt="Tech Fit">
             </div>
             <h1>Tech <span class="color-accent">Fit</span></h1>
         </div>
         <nav>
             <ul>
-            <li><a href="/PAINEL ALUNO/index.html">início</a></li>
-            <li><a href="/PAINEL ALUNO/AULAS/aulas.html">Aulas</a></li>
-            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.html">Modalidades</a></li>
-            <li><a href="/PAINEL ALUNO/PLANOS/plano.html">Planos</a></li>
-            <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.html">Minha conta</a></li>
+            <li><a href="/PAINEL ALUNO/index.php">iní­cio</a></li>
+            <li><a href="/PAINEL ALUNO/AULAS/aulas.php">Aulas</a></li>
+            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.php">Modalidades</a></li>
+            <li><a href="/PAINEL ALUNO/PLANOS/plano.php">Planos</a></li>
+            <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
             </ul>
         </nav>
     </header>
     <!-- ================================================================================= -->
 
-    <!-- Conteúdo Principal -->
+    <!-- ConteÃºdo Principal -->
     <main class="unidades-container">
-        <!-- Cabeçalho da Página -->
+        <!-- CabeÃ§alho da PÃ¡gina -->
         <section class="page-header">
             <h1>Nossas Unidades</h1>
-            <p>Encontre a Tech Fit mais perto de você</p>
+            <p>Encontre a Tech Fit mais perto de vocÃª</p>
         </section>
 
         <!-- Filtros por Cidade -->
@@ -41,7 +44,7 @@
             <div class="filters-container">
                 <div class="search-box">
                     <input type="text" placeholder="Buscar unidade...">
-                    <button>🔍</button>
+                    <button>ðŸ”</button>
                 </div>
             </div>
         </section>
@@ -56,43 +59,43 @@
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
+                    <span class="icon">ðŸ“</span>
                     <span>Rua das Palmeiras, 120 - Centro, Campinas/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3333-1100</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">🏊‍♂️</span>
+                        <span class="feature-icon">ðŸŠâ€â™‚ï¸</span>
                         <span>Piscina</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🥊</span>
-                        <span>Área de Lutas</span>
+                        <span class="feature-icon">ðŸ¥Š</span>
+                        <span>Ãrea de Lutas</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário Luxo</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio Luxo</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
                         <span>Esteiras Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💻</span>
+                        <span class="feature-icon">ðŸ’»</span>
                         <span>Wi-Fi 5G</span>
                     </div>
                 </div>
@@ -108,43 +111,43 @@
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Av. Júlio de Mesquita, 55 - Taquaral, Campinas/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Av. JÃºlio de Mesquita, 55 - Taquaral, Campinas/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3344-2200</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">🏊‍♂️</span>
+                        <span class="feature-icon">ðŸŠâ€â™‚ï¸</span>
                         <span>Piscina</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação Tech</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🅿️</span>
+                        <span class="feature-icon">ðŸ…¿ï¸</span>
                         <span>Estacionamento</span>
                     </div>
                 </div>
@@ -152,51 +155,51 @@
         </div>
     </div>
 
-    <!-- Tech Fit Barão Geraldo -->
+    <!-- Tech Fit BarÃ£o Geraldo -->
     <div class="unidade-card">
         <div class="unidade-header">
-            <h3>Tech Fit Barão Geraldo</h3>
+            <h3>Tech Fit BarÃ£o Geraldo</h3>
         </div>
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Av. Santa Isabel, 980 - Barão Geraldo, Campinas/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Av. Santa Isabel, 980 - BarÃ£o Geraldo, Campinas/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3355-3300</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🥊</span>
-                        <span>Área de Lutas</span>
+                        <span class="feature-icon">ðŸ¥Š</span>
+                        <span>Ãrea de Lutas</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💻</span>
+                        <span class="feature-icon">ðŸ’»</span>
                         <span>Wi-Fi</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🅿️</span>
+                        <span class="feature-icon">ðŸ…¿ï¸</span>
                         <span>Estacionamento</span>
                     </div>
                 </div>
@@ -204,47 +207,47 @@
         </div>
     </div>
 
-    <!-- Tech Fit São Bernardo -->
+    <!-- Tech Fit SÃ£o Bernardo -->
     <div class="unidade-card">
         <div class="unidade-header">
-            <h3>Tech Fit São Bernardo</h3>
+            <h3>Tech Fit SÃ£o Bernardo</h3>
         </div>
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Rua Álvares Machado, 210 - São Bernardo, Campinas/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Rua Ãlvares Machado, 210 - SÃ£o Bernardo, Campinas/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3366-4400</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💻</span>
+                        <span class="feature-icon">ðŸ’»</span>
                         <span>Wi-Fi</span>
                     </div>
                 </div>
@@ -252,51 +255,51 @@
         </div>
     </div>
 
-    <!-- Tech Fit Cambuí -->
+    <!-- Tech Fit CambuÃ­ -->
     <div class="unidade-card">
         <div class="unidade-header">
-            <h3>Tech Fit Cambuí</h3>
+            <h3>Tech Fit CambuÃ­</h3>
         </div>
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Rua Coronel Quirino, 450 - Cambuí, Campinas/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Rua Coronel Quirino, 450 - CambuÃ­, Campinas/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3377-5500</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">🏊‍♂️</span>
+                        <span class="feature-icon">ðŸŠâ€â™‚ï¸</span>
                         <span>Piscina</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação Tech</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário Luxo</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio Luxo</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
                         <span>Esteiras Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🥗</span>
+                        <span class="feature-icon">ðŸ¥—</span>
                         <span>Juice Bar</span>
                     </div>
                 </div>
@@ -304,43 +307,43 @@
         </div>
     </div>
 
-    <!-- Tech Fit Paulínia -->
+    <!-- Tech Fit PaulÃ­nia -->
     <div class="unidade-card">
         <div class="unidade-header">
-            <h3>Tech Fit Paulínia</h3>
+            <h3>Tech Fit PaulÃ­nia</h3>
         </div>
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Av. José Paulino, 1800 - Centro, Paulínia/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Av. JosÃ© Paulino, 1800 - Centro, PaulÃ­nia/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3388-6600</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🅿️</span>
+                        <span class="feature-icon">ðŸ…¿ï¸</span>
                         <span>Estacionamento</span>
                     </div>
                 </div>
@@ -356,43 +359,43 @@
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Rua dos Lírios, 230 - Jardim São Paulo, Americana/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Rua dos LÃ­rios, 230 - Jardim SÃ£o Paulo, Americana/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3399-7700</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">🏊‍♂️</span>
+                        <span class="feature-icon">ðŸŠâ€â™‚ï¸</span>
                         <span>Piscina</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💻</span>
+                        <span class="feature-icon">ðŸ’»</span>
                         <span>Wi-Fi</span>
                     </div>
                 </div>
@@ -400,51 +403,51 @@
         </div>
     </div>
 
-    <!-- Tech Fit Hortolândia -->
+    <!-- Tech Fit HortolÃ¢ndia -->
     <div class="unidade-card">
         <div class="unidade-header">
-            <h3>Tech Fit Hortolândia</h3>
+            <h3>Tech Fit HortolÃ¢ndia</h3>
         </div>
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Av. Santana, 540 - Jardim Amanda, Hortolândia/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Av. Santana, 540 - Jardim Amanda, HortolÃ¢ndia/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3400-8800</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🥊</span>
-                        <span>Área de Lutas</span>
+                        <span class="feature-icon">ðŸ¥Š</span>
+                        <span>Ãrea de Lutas</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💻</span>
+                        <span class="feature-icon">ðŸ’»</span>
                         <span>Wi-Fi</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🅿️</span>
+                        <span class="feature-icon">ðŸ…¿ï¸</span>
                         <span>Estacionamento</span>
                     </div>
                 </div>
@@ -460,43 +463,43 @@
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
+                    <span class="icon">ðŸ“</span>
                     <span>Rua Presidente Vargas, 910 - Centro, Limeira/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3411-9900</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">🏊‍♂️</span>
+                        <span class="feature-icon">ðŸŠâ€â™‚ï¸</span>
                         <span>Piscina</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação Tech</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário Luxo</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio Luxo</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
                         <span>Esteiras Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🥗</span>
+                        <span class="feature-icon">ðŸ¥—</span>
                         <span>Juice Bar</span>
                     </div>
                 </div>
@@ -504,47 +507,47 @@
         </div>
     </div>
 
-    <!-- Tech Fit Sumaré -->
+    <!-- Tech Fit SumarÃ© -->
     <div class="unidade-card">
         <div class="unidade-header">
-            <h3>Tech Fit Sumaré</h3>
+            <h3>Tech Fit SumarÃ©</h3>
         </div>
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Av. 3 de Maio, 700 - Centro, Sumaré/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Av. 3 de Maio, 700 - Centro, SumarÃ©/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3422-1000</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💻</span>
+                        <span class="feature-icon">ðŸ’»</span>
                         <span>Wi-Fi</span>
                     </div>
                 </div>
@@ -560,43 +563,43 @@
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
+                    <span class="icon">ðŸ“</span>
                     <span>Rua 13 de Maio, 350 - Centro, Valinhos/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3423-1100</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🥊</span>
-                        <span>Área de Lutas</span>
+                        <span class="feature-icon">ðŸ¥Š</span>
+                        <span>Ãrea de Lutas</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💻</span>
+                        <span class="feature-icon">ðŸ’»</span>
                         <span>Wi-Fi</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🅿️</span>
+                        <span class="feature-icon">ðŸ…¿ï¸</span>
                         <span>Estacionamento</span>
                     </div>
                 </div>
@@ -612,43 +615,43 @@
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Av. Independência, 780 - Centro, Vinhedo/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Av. IndependÃªncia, 780 - Centro, Vinhedo/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3424-1200</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">🏊‍♂️</span>
+                        <span class="feature-icon">ðŸŠâ€â™‚ï¸</span>
                         <span>Piscina</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação Tech</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🅿️</span>
+                        <span class="feature-icon">ðŸ…¿ï¸</span>
                         <span>Estacionamento</span>
                     </div>
                 </div>
@@ -656,47 +659,47 @@
         </div>
     </div>
 
-    <!-- Tech Fit Jaguariúna -->
+    <!-- Tech Fit JaguariÃºna -->
     <div class="unidade-card">
         <div class="unidade-header">
-            <h3>Tech Fit Jaguariúna</h3>
+            <h3>Tech Fit JaguariÃºna</h3>
         </div>
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Rua São Paulo, 230 - Centro, Jaguariúna/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Rua SÃ£o Paulo, 230 - Centro, JaguariÃºna/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3425-1300</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💻</span>
+                        <span class="feature-icon">ðŸ’»</span>
                         <span>Wi-Fi</span>
                     </div>
                 </div>
@@ -712,43 +715,43 @@
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
+                    <span class="icon">ðŸ“</span>
                     <span>Av. 21 de Abril, 450 - Centro, Pedreira/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3426-1400</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">🏊‍♂️</span>
+                        <span class="feature-icon">ðŸŠâ€â™‚ï¸</span>
                         <span>Piscina</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🧘‍♀️</span>
+                        <span class="feature-icon">ðŸ§˜â€â™€ï¸</span>
                         <span>Studio Yoga</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação Tech</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário Luxo</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio Luxo</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
                         <span>Esteiras Tech</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🥗</span>
+                        <span class="feature-icon">ðŸ¥—</span>
                         <span>Juice Bar</span>
                     </div>
                 </div>
@@ -756,43 +759,43 @@
         </div>
     </div>
 
-    <!-- Tech Fit Mogi-Guaçu -->
+    <!-- Tech Fit Mogi-GuaÃ§u -->
     <div class="unidade-card">
         <div class="unidade-header">
-            <h3>Tech Fit Mogi-Guaçu</h3>
+            <h3>Tech Fit Mogi-GuaÃ§u</h3>
         </div>
         <div class="unidade-content">
             <div class="unidade-info">
                 <div class="info-item">
-                    <span class="icon">📍</span>
-                    <span>Rua Dr. João, 670 - Centro, Mogi-Guaçu/SP</span>
+                    <span class="icon">ðŸ“</span>
+                    <span>Rua Dr. JoÃ£o, 670 - Centro, Mogi-GuaÃ§u/SP</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">📞</span>
+                    <span class="icon">ðŸ“ž</span>
                     <span>(19) 3427-1500</span>
                 </div>
                 <div class="info-item">
-                    <span class="icon">🕒</span>
-                    <span>Seg a Sex: 5h às 23h | Sáb: 6h às 20h | Dom: 7h às 14h</span>
+                    <span class="icon">ðŸ•’</span>
+                    <span>Seg a Sex: 5h Ã s 23h | SÃ¡b: 6h Ã s 20h | Dom: 7h Ã s 14h</span>
                 </div>
             </div>
             <div class="unidade-features">
                 <h4>Estrutura:</h4>
                 <div class="features-grid">
                     <div class="feature">
-                        <span class="feature-icon">💪</span>
-                        <span>Musculação</span>
+                        <span class="feature-icon">ðŸ’ª</span>
+                        <span>MusculaÃ§Ã£o</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🏃‍♂️</span>
-                        <span>Área Cardio</span>
+                        <span class="feature-icon">ðŸƒâ€â™‚ï¸</span>
+                        <span>Ãrea Cardio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🚿</span>
-                        <span>Vestiário</span>
+                        <span class="feature-icon">ðŸš¿</span>
+                        <span>VestiÃ¡rio</span>
                     </div>
                     <div class="feature">
-                        <span class="feature-icon">🅿️</span>
+                        <span class="feature-icon">ðŸ…¿ï¸</span>
                         <span>Estacionamento</span>
                     </div>
                 </div>
@@ -812,11 +815,11 @@
                     <div class="footer-logo">
                         <div class="logo-container">
                             <div class="logo">
-                                <img src="logo.png" alt="Tech Fit">
+                                <img src="../../logo.png" alt="Tech Fit">
                             </div>
                             <h2>Tech <span class="color-accent">Fit</span></h2>
                         </div>
-                        <p>Transformando vidas através da tecnologia e fitness.</p>
+                        <p>Transformando vidas atravÃ©s da tecnologia e fitness.</p>
                     </div>
                     <div class="social-links">
                         <a href="#" class="whatsapp">
@@ -842,20 +845,20 @@
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Horários</h4>
+                    <h4>HorÃ¡rios</h4>
                     <ul>
-                        <li>Segunda a Sexta: 5h às 23h</li>
-                        <li>Sábados: 6h às 20h</li>
-                        <li>Domingos: 7h às 14h</li>
-                        <li>Feriados: 7h às 12h</li>
+                        <li>Segunda a Sexta: 5h Ã s 23h</li>
+                        <li>SÃ¡bados: 6h Ã s 20h</li>
+                        <li>Domingos: 7h Ã s 14h</li>
+                        <li>Feriados: 7h Ã s 12h</li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Contato</h4>
                     <ul>
-                        <li>📍 Rua Fitness, 123 - Centro</li>
-                        <li>📞 (19) 98704-4392</li>
-                        <li>✉️ diogo.scherrer@gmail.com</li>
+                        <li>ðŸ“ Rua Fitness, 123 - Centro</li>
+                        <li>ðŸ“ž (19) 98704-4392</li>
+                        <li>âœ‰ï¸ diogo.scherrer@gmail.com</li>
                     </ul>
                 </div>
             </div>
@@ -868,3 +871,4 @@
     <script src="unidades.js"></script>
 </body>
 </html>
+

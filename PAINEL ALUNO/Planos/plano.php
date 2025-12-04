@@ -1,3 +1,6 @@
+﻿<?php
+// plano.php
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -10,23 +13,23 @@
     <header class="cabecalho">
     <div class="logo-container">
         <div class="logo">
-            <img src="logo.png" alt="Tech Fit">
+            <img src="../../logo.png" alt="Tech Fit">
         </div>
         <h1>Tech <span class="color-accent">Fit</span></h1>
     </div>
     <nav>
         <ul>
-            <li><a href="/PAINEL ALUNO/index.html">início</a></li>
-            <li><a href="/PAINEL ALUNO/AULAS/aulas.html">Aulas</a></li>
-            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.html">Modalidades</a></li>
-            <li><a href="/PAINEL ALUNO/UNIDADES/unidades.html">Unidades</a></li>
-            <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.html">Minha conta</a></li>
+            <li><a href="/PAINEL ALUNO/index.php">iní­cio</a></li>
+            <li><a href="/PAINEL ALUNO/AULAS/aulas.php">Aulas</a></li>
+            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.php">Modalidades</a></li>
+            <li><a href="/PAINEL ALUNO/UNIDADES/unidades.php">Unidades</a></li>
+            <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
         </ul>
     </nav>
 </header>
 
 <!-- ================================================================================== -->
-                                 <!-- Seção Planos -->
+                                 <!-- SeÃ§Ã£o Planos -->
                                   <!-- Plans Section -->
         <section class="plans">
             <div class="section-header">
@@ -36,15 +39,15 @@
             <div class="plans-grid">
                 <div class="plan-card">
                     <div class="plan-header">
-                        <h3>Básico</h3>
+                        <h3>BÃ¡sico</h3>
                         <div class="plan-price">
                             <span class="price">R$ 89</span>
-                            <span class="period">/mês</span>
+                            <span class="period">/mÃªs</span>
                         </div>
                     </div>
                     <ul class="plan-features">
-                        <li>Acesso à área de musculação</li>
-                        <li>Avaliação física inicial</li>
+                        <li>Acesso Ã  Ã¡rea de musculaÃ§Ã£o</li>
+                        <li>AvaliaÃ§Ã£o fÃ­sica inicial</li>
                         <li class="disabled">Aulas coletivas</li>
                         <li class="disabled">Personal trainer</li>
                     </ul>
@@ -56,12 +59,12 @@
                         <h3>Premium</h3>
                         <div class="plan-price">
                             <span class="price">R$ 129</span>
-                            <span class="period">/mês</span>
+                            <span class="period">/mÃªs</span>
                         </div>
                     </div>
                     <ul class="plan-features">
-                        <li>Acesso à área de musculação</li>
-                        <li>Avaliação física mensal</li>
+                        <li>Acesso Ã  Ã¡rea de musculaÃ§Ã£o</li>
+                        <li>AvaliaÃ§Ã£o fÃ­sica mensal</li>
                         <li>Todas as aulas coletivas</li>
                         <li class="disabled">Personal trainer</li>
                     </ul>
@@ -72,14 +75,14 @@
                         <h3>Elite</h3>
                         <div class="plan-price">
                             <span class="price">R$ 180</span>
-                            <span class="period">/mês</span>
+                            <span class="period">/mÃªs</span>
                         </div>
                     </div>
                     <ul class="plan-features">
-                        <li>Acesso à área de musculação</li>
-                        <li>Avaliação física quinzenal</li>
+                        <li>Acesso Ã  Ã¡rea de musculaÃ§Ã£o</li>
+                        <li>AvaliaÃ§Ã£o fÃ­sica quinzenal</li>
                         <li>Todas as aulas coletivas</li>
-                        <li>4 sessões com personal trainer</li>
+                        <li>4 sessÃµes com personal trainer</li>
                     </ul>
                     <button class="plan-btn">Trocar para este plano</button>
                 </div>
@@ -94,11 +97,11 @@
                     <div class="footer-logo">
                         <div class="logo-container">
                             <div class="logo">
-                                <img src="logo.png" alt="Tech Fit">
+                                <img src="../../logo.png" alt="Tech Fit">
                             </div>
                             <h2>Tech <span class="color-accent">Fit</span></h2>
                         </div>
-                        <p>Transformando vidas através da tecnologia e fitness.</p>
+                        <p>Transformando vidas atravÃ©s da tecnologia e fitness.</p>
                     </div>
                     <div class="social-links">
                         <a href="#" class="whatsapp">
@@ -124,20 +127,20 @@
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Horários</h4>
+                    <h4>HorÃ¡rios</h4>
                     <ul>
-                        <li>Segunda a Sexta: 5h às 23h</li>
-                        <li>Sábados: 6h às 20h</li>
-                        <li>Domingos: 7h às 14h</li>
-                        <li>Feriados: 7h às 12h</li>
+                        <li>Segunda a Sexta: 5h Ã s 23h</li>
+                        <li>SÃ¡bados: 6h Ã s 20h</li>
+                        <li>Domingos: 7h Ã s 14h</li>
+                        <li>Feriados: 7h Ã s 12h</li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Contato</h4>
                     <ul>
-                        <li>📍 Rua Fitness, 123 - Centro</li>
-                        <li>📞 (19) 98704-4392</li>
-                        <li>✉️ diogo.scherrer@gmail.com</li>
+                        <li>ðŸ“ Rua Fitness, 123 - Centro</li>
+                        <li>ðŸ“ž (19) 98704-4392</li>
+                        <li>âœ‰ï¸ diogo.scherrer@gmail.com</li>
                     </ul>
                 </div>
             </div>
