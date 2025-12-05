@@ -1,607 +1,434 @@
-import Aside from "../components/Aside"
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
+import Button from "../components/Button";
+import PopUpAulas from "../components/popUpAulas"; // Você precisará criar este componente
+import Inputs from "../components/Inputs";
+import { 
+  FiSearch, 
+  FiEdit, 
+  FiTrash2, 
+  FiEye,
+  FiClock,
+  FiCalendar,
+  FiUsers,
+  FiActivity
+} from "react-icons/fi";
+import { MdFitnessCenter, MdLocationOn, MdPerson } from "react-icons/md";
 
-function Agendas (){
-const [agendas, setAgendas] = useState([
-    {
-      id: 1,
-      aluno: 'Carlos Silva',
-      instrutor: 'Ana Souza',
-      tipo: 'Musculação',
-      horario: '08:00',
-      data: '2023-10-15',
-      duracao: '60 min',
-      status: 'Confirmado'
-    },
-    {
-      id: 2,
-      aluno: 'Maria Oliveira',
-      instrutor: 'João Santos',
-      tipo: 'CrossFit',
-      horario: '10:30',
-      data: '2023-10-15',
-      duracao: '45 min',
-      status: 'Pendente'
-    },
-    {
-      id: 3,
-      aluno: 'Roberto Lima',
-      instrutor: 'Paula Costa',
-      tipo: 'Funcional',
-      horario: '14:00',
-      data: '2023-10-16',
-      duracao: '50 min',
-      status: 'Cancelado'
-    },
-    {
-      id: 4,
-      aluno: 'Fernanda Rocha',
-      instrutor: 'Ricardo Alves',
-      tipo: 'Spinning',
-      horario: '18:00',
-      data: '2023-10-16',
-      duracao: '60 min',
-      status: 'Confirmado'
-    },
-  ]);
+function TableAulas({ onDataLoaded }) {
+  const [aulas, setAulas] = useState([]);
+  const [PopUPOpen, setPopUp] = useState(false);
+  const [PopUpMode, setPopUpMode] = useState("create");
+  const [selectedAula, setSelectedAula] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [filterModalidade, setFilterModalidade] = useState("TODAS");
+  const [filterStatus, setFilterStatus] = useState("TODAS");
 
-  // Estado para o formulário
-  const [formData, setFormData] = useState({
-    id: null,
-    aluno: '',
-    instrutor: '',
-    tipo: 'Musculação',
-    horario: '08:00',
-    data: '',
-    duracao: '60 min',
-    status: 'Pendente'
-  });
+  // Dados simulados para demonstração
+  const modalidades = [
+    { id: 1, nome: 'Musculação', cor: 'bg-red-500' },
+    { id: 2, nome: 'CrossFit', cor: 'bg-orange-500' },
+    { id: 3, nome: 'Funcional', cor: 'bg-blue-500' },
+    { id: 4, nome: 'Spinning', cor: 'bg-purple-500' },
+    { id: 5, nome: 'Yoga', cor: 'bg-green-500' },
+    { id: 6, nome: 'Pilates', cor: 'bg-pink-500' }
+  ];
 
-  // Estado para controle de modal e modo de edição
-  const [showModal, setShowModal] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('Todos');
+  const instrutores = [
+    { id: 1, nome: 'Ana Souza' },
+    { id: 2, nome: 'João Santos' },
+    { id: 3, nome: 'Paula Costa' },
+    { id: 4, nome: 'Ricardo Alves' }
+  ];
 
-  // Efeito para definir a data mínima como hoje
+  const unidades = [
+    { id: 1, nome: 'Centro' },
+    { id: 2, nome: 'Zona Sul' },
+    { id: 3, nome: 'Zona Norte' }
+  ];
+
+  const openPopUp = (mode, aulaID) => {
+    setPopUpMode(mode);
+    setSelectedAula(aulaID);
+    setPopUp(true);
+  };
+
+  const closePopUp = () => {
+    setPopUp(false);
+    setSelectedAula(null);
+  };
+
+  // Função para buscar aulas (reutilizável)
+  const fetchAulas = (query = "") => {
+    setLoading(true);
+    
+    // Simulação de API - Em produção, substitua pelo seu endpoint real
+    setTimeout(() => {
+      let dadosSimulados = [
+        {
+          ID_AULA: 1,
+          NOME_AULA: 'Musculação Iniciante',
+          ID_MODALIDADE: 1,
+          ID_INSTRUTOR: 1,
+          ID_UNIDADE: 1,
+          DIA_SEMANA: 'SEG',
+          HORARIO_INICIO: '08:00:00',
+          DURACAO_MINUTOS: 60,
+          VAGAS: 20,
+          STATUS_AULA: 'ATIVA',
+          CRIADO_EM: '2023-10-15 10:00:00'
+        },
+        {
+          ID_AULA: 2,
+          NOME_AULA: 'CrossFit Avançado',
+          ID_MODALIDADE: 2,
+          ID_INSTRUTOR: 2,
+          ID_UNIDADE: 2,
+          DIA_SEMANA: 'TER',
+          HORARIO_INICIO: '10:00:00',
+          DURACAO_MINUTOS: 45,
+          VAGAS: 15,
+          STATUS_AULA: 'ATIVA',
+          CRIADO_EM: '2023-10-15 10:00:00'
+        },
+        {
+          ID_AULA: 3,
+          NOME_AULA: 'Yoga Zen',
+          ID_MODALIDADE: 5,
+          ID_INSTRUTOR: 3,
+          ID_UNIDADE: 3,
+          DIA_SEMANA: 'QUA',
+          HORARIO_INICIO: '14:00:00',
+          DURACAO_MINUTOS: 60,
+          VAGAS: 25,
+          STATUS_AULA: 'ATIVA',
+          CRIADO_EM: '2023-10-15 10:00:00'
+        },
+        {
+          ID_AULA: 4,
+          NOME_AULA: 'Spinning Energy',
+          ID_MODALIDADE: 4,
+          ID_INSTRUTOR: 4,
+          ID_UNIDADE: 1,
+          DIA_SEMANA: 'QUI',
+          HORARIO_INICIO: '18:00:00',
+          DURACAO_MINUTOS: 50,
+          VAGAS: 30,
+          STATUS_AULA: 'ATIVA',
+          CRIADO_EM: '2023-10-15 10:00:00'
+        }
+      ];
+
+      // Filtra por query de busca
+      if (query.trim() !== "") {
+        dadosSimulados = dadosSimulados.filter(aula =>
+          aula.NOME_AULA.toLowerCase().includes(query.toLowerCase())
+        );
+      }
+
+      // Aplica filtros adicionais
+      if (filterModalidade !== "TODAS") {
+        dadosSimulados = dadosSimulados.filter(aula => 
+          aula.ID_MODALIDADE == filterModalidade
+        );
+      }
+
+      if (filterStatus !== "TODAS") {
+        dadosSimulados = dadosSimulados.filter(aula => 
+          aula.STATUS_AULA === filterStatus
+        );
+      }
+
+      setAulas(dadosSimulados);
+      
+      // Chama o callback para enviar dados para o componente pai
+      if (onDataLoaded) {
+        onDataLoaded(dadosSimulados);
+      }
+      
+      setLoading(false);
+    }, 500);
+  };
+
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    setFormData(prev => ({ ...prev, data: today }));
-  }, []);
+    fetchAulas();
+  }, [filterModalidade, filterStatus]); // Recarrega quando filtros mudam
 
-  // Manipuladores de eventos
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+  const handleDelete = (id) => {
+    if (window.confirm("Tem certeza que deseja excluir esta aula?")) {
+      // Em produção, faça a chamada à API
+      // fetch("http://localhost:8000/aulas_api.php", {
+      //   method: "DELETE",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ id: id }),
+      // })
+      //   .then(() => {
+      //     const novasAulas = aulas.filter((aula) => aula.ID_AULA !== id);
+      //     setAulas(novasAulas);
+          
+      //     // Atualiza o pai com os novos dados
+      //     if (onDataLoaded) {
+      //       onDataLoaded(novasAulas);
+      //     }
+      //   })
+      //   .catch((err) => console.error(err));
+
+      // Simulação
+      const novasAulas = aulas.filter((aula) => aula.ID_AULA !== id);
+      setAulas(novasAulas);
+      
+      if (onDataLoaded) {
+        onDataLoaded(novasAulas);
+      }
+    }
   };
 
-  // Adicionar nova agenda
-  const handleAddAgenda = () => {
-    if (!formData.aluno || !formData.instrutor || !formData.data) {
-      alert('Preencha todos os campos obrigatórios!');
-      return;
-    }
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    fetchAulas(query);
+  };
 
-    const newAgenda = {
-      ...formData,
-      id: editing ? formData.id : agendas.length > 0 ? Math.max(...agendas.map(a => a.id)) + 1 : 1
+  // Funções auxiliares
+  const getModalidadeNome = (id) => {
+    const modalidade = modalidades.find(m => m.id == id);
+    return modalidade ? modalidade.nome : 'Modalidade';
+  };
+
+  const getModalidadeCor = (id) => {
+    const modalidade = modalidades.find(m => m.id == id);
+    return modalidade ? modalidade.cor : 'bg-gray-500';
+  };
+
+  const getInstrutorNome = (id) => {
+    const instrutor = instrutores.find(i => i.id == id);
+    return instrutor ? instrutor.nome : 'Instrutor';
+  };
+
+  const getUnidadeNome = (id) => {
+    const unidade = unidades.find(u => u.id == id);
+    return unidade ? unidade.nome : 'Unidade';
+  };
+
+  const getDiaNome = (sigla) => {
+    const dias = {
+      'SEG': 'Seg',
+      'TER': 'Ter',
+      'QUA': 'Qua',
+      'QUI': 'Qui',
+      'SEX': 'Sex',
+      'SAB': 'Sáb',
+      'DOM': 'Dom'
     };
+    return dias[sigla] || sigla;
+  };
 
-    if (editing) {
-      // Atualizar agenda existente
-      setAgendas(agendas.map(agenda => agenda.id === formData.id ? newAgenda : agenda));
-      setEditing(false);
-    } else {
-      // Adicionar nova agenda
-      setAgendas([...agendas, newAgenda]);
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+    return timeString.substring(0, 5);
+  };
+
+  // Opcional: Atualizar estatísticas quando aulas mudar
+  useEffect(() => {
+    if (onDataLoaded) {
+      onDataLoaded(aulas);
     }
-
-    // Limpar formulário e fechar modal
-    resetForm();
-    setShowModal(false);
-  };
-
-  // Editar agenda
-  const handleEditAgenda = (agenda) => {
-    setFormData(agenda);
-    setEditing(true);
-    setShowModal(true);
-  };
-
-  // Excluir agenda
-  const handleDeleteAgenda = (id) => {
-    if (window.confirm('Tem certeza que deseja excluir esta agenda?')) {
-      setAgendas(agendas.filter(agenda => agenda.id !== id));
-    }
-  };
-
-  // Cancelar edição/adicionar
-  const handleCancel = () => {
-    resetForm();
-    setShowModal(false);
-    setEditing(false);
-  };
-
-  // Resetar formulário
-  const resetForm = () => {
-    const today = new Date().toISOString().split('T')[0];
-    setFormData({
-      id: null,
-      aluno: '',
-      instrutor: '',
-      tipo: 'Musculação',
-      horario: '08:00',
-      data: today,
-      duracao: '60 min',
-      status: 'Pendente'
-    });
-  };
-
-  // Filtrar agendas
-  const filteredAgendas = agendas.filter(agenda => {
-    const matchesSearch = 
-      agenda.aluno.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      agenda.instrutor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      agenda.tipo.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = filterStatus === 'Todos' || agenda.status === filterStatus;
-    
-    return matchesSearch && matchesStatus;
-  });
-
-  // Contadores para estatísticas
-  const totalAgendas = agendas.length;
-  const confirmados = agendas.filter(a => a.status === 'Confirmado').length;
-  const pendentes = agendas.filter(a => a.status === 'Pendente').length;
-  const cancelados = agendas.filter(a => a.status === 'Cancelado').length;
-
-  // Formatar data para exibição
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR');
-  };
+  }, [aulas, onDataLoaded]);
 
   return (
-    <div className="min-h-screen w-10/12 ml-auto bg-gradient-to-br from-gray-900 to-black text-white max-h-[700px] overflow-auto border border-none rounded-lg">
-        <Aside></Aside>
-      {/* Cabeçalho */}
-      <header className="bg-gradient-to-r from-black to-gray-900 border-b-4 border-red-600 py-6 px-4 shadow-2xl">
-        <div className="container mx-auto">
-          <div className="text-center">
-            <h1 className="text-5xl font-black text-red-600 tracking-wider mb-2">TECH FIT</h1>
-            <p className="text-gray-400 tracking-widest text-sm uppercase">ACADEMIA</p>
-            <h2 className="text-2xl font-light mt-4 text-white">Sistema de Agendamentos</h2>
-          </div>
-        </div>  
-      </header>
-
-      <main className="container mt-4 mx-auto px-4 py-8 ">
-        {/* Painel de estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 ">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border-l-4 w-36 border-red-600 shadow-lg hover:shadow-red-900/30 transition-all duration-300 hover:-translate-y-1">
-            <h3 className="text-gray-400 text-sm font-medium mb-2 ">Total de Agendas</h3>
-            <p className="text-3xl font-bold text-white">{totalAgendas}</p>
-          </div>
-          
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border-l-4 w-36 border-green-500 shadow-lg hover:shadow-green-900/30 transition-all duration-300 hover:-translate-y-1">
-            <h3 className="text-gray-400 text-sm font-medium mb-2">Confirmados</h3>
-            <p className="text-3xl font-bold text-green-500">{confirmados}</p>
-          </div>
-          
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border-l-4 w-36 border-yellow-500 shadow-lg hover:shadow-yellow-900/30 transition-all duration-300 hover:-translate-y-1">
-            <h3 className="text-gray-400 text-sm font-medium mb-2">Pendentes</h3>
-            <p className="text-3xl font-bold text-yellow-500">{pendentes}</p>
-          </div>
-          
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border-l-4 w-36 border-red-500 shadow-lg hover:shadow-red-900/30 transition-all duration-300 hover:-translate-y-1">
-            <h3 className="text-gray-400 text-sm font-medium mb-2">Cancelados</h3>
-            <p className="text-3xl font-bold text-red-500">{cancelados}</p>
+    <div className="w-full">
+      {/* Barra de Controles */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+        <div className="w-full md:w-1/3">
+          <div className="relative">
+            <FiSearch className="absolute left-4 top-3.5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Buscar aula..."
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
         </div>
 
-        {/* Painel de controle */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <div className="relative w-full md:w-auto md:flex-1 max-w-2xl">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Buscar por aluno, instrutor ou tipo de treino..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 pl-12 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all"
-              />
-              <div className="absolute left-4 top-3.5 text-gray-500">
-                🔍
-              </div>
-            </div>
-          </div>
-          
-          <div className="flex flex-wrap gap-4 w-full md:w-auto">
-            <select 
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
-            >
-              <option value="Todos">Todos os status</option>
-              <option value="Confirmado">Confirmados</option>
-              <option value="Pendente">Pendentes</option>
-              <option value="Cancelado">Cancelados</option>
-            </select>
-            
-            <button 
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-red-900/50 transition-all duration-300 flex items-center gap-2"
-              onClick={() => setShowModal(true)}
-            >
-              <span>+</span>
-              <span>Nova Agenda</span>
-            </button>
-          </div>
-        </div>
+        <div className="flex flex-wrap gap-3">
+          <select 
+            value={filterModalidade}
+            onChange={(e) => setFilterModalidade(e.target.value)}
+            className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          >
+            <option value="TODAS">Todas Modalidades</option>
+            {modalidades.map(m => (
+              <option key={m.id} value={m.id}>{m.nome}</option>
+            ))}
+          </select>
 
-        {/* Tabela de agendas */}
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden shadow-2xl mb-8 border border-gray-700">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-gray-900 to-black">
+          <select 
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          >
+            <option value="TODAS">Todos Status</option>
+            <option value="ATIVA">Ativa</option>
+            <option value="INATIVA">Inativa</option>
+          </select>
+
+          <button
+            onClick={() => openPopUp("create", null)}
+            className="px-4 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2 text-sm"
+          >
+            <span className="text-lg">+</span>
+            Nova Aula
+          </button>
+        </div>
+      </div>
+
+      {/* Tabela */}
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Aula</th>
+                <th className="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Modalidade</th>
+                <th className="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Instrutor</th>
+                <th className="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Horário</th>
+                <th className="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Vagas</th>
+                <th className="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Status</th>
+                <th className="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {loading ? (
                 <tr>
-                  <th className="py-4 px-6 text-left text-gray-300 font-semibold">Aluno</th>
-                  <th className="py-4 px-6 text-left text-gray-300 font-semibold">Instrutor</th>
-                  <th className="py-4 px-6 text-left text-gray-300 font-semibold">Tipo</th>
-                  <th className="py-4 px-6 text-left text-gray-300 font-semibold">Data</th>
-                  <th className="py-4 px-6 text-left text-gray-300 font-semibold">Horário</th>
-                  <th className="py-4 px-6 text-left text-gray-300 font-semibold">Duração</th>
-                  <th className="py-4 px-6 text-left text-gray-300 font-semibold">Status</th>
-                  <th className="py-4 px-6 text-left text-gray-300 font-semibold">Ações</th>
+                  <td colSpan="7" className="py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                      <p className="mt-3 text-gray-600 text-sm">Carregando aulas...</p>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700">
-                {filteredAgendas.length > 0 ? (
-                  filteredAgendas.map(agenda => (
-                    <tr key={agenda.id} className="hover:bg-gray-800/50 transition-colors">
-                      <td className="py-4 px-6 font-medium">{agenda.aluno}</td>
-                      <td className="py-4 px-6">{agenda.instrutor}</td>
-                      <td className="py-4 px-6">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                          agenda.tipo === 'Musculação' ? 'bg-red-900/40 text-red-300' :
-                          agenda.tipo === 'CrossFit' ? 'bg-yellow-900/40 text-yellow-300' :
-                          agenda.tipo === 'Funcional' ? 'bg-blue-900/40 text-blue-300' :
-                          agenda.tipo === 'Spinning' ? 'bg-purple-900/40 text-purple-300' :
-                          'bg-gray-700 text-gray-300'
-                        }`}>
-                          {agenda.tipo}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">{formatDate(agenda.data)}</td>
-                      <td className="py-4 px-6 font-medium">{agenda.horario}</td>
-                      <td className="py-4 px-6">{agenda.duracao}</td>
-                      <td className="py-4 px-6">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                          agenda.status === 'Confirmado' ? 'bg-green-900/40 text-green-400 border border-green-800' :
-                          agenda.status === 'Pendente' ? 'bg-yellow-900/40 text-yellow-400 border border-yellow-800' :
-                          'bg-red-900/40 text-red-400 border border-red-800'
-                        }`}>
-                          {agenda.status}
-                        </span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="flex space-x-2">
-                          <button 
-                            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm font-medium py-1.5 px-4 rounded-lg transition-all duration-300"
-                            onClick={() => handleEditAgenda(agenda)}
-                          >
-                            Editar
-                          </button>
-                          <button 
-                            className="bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 text-white text-sm font-medium py-1.5 px-4 rounded-lg transition-all duration-300"
-                            onClick={() => handleDeleteAgenda(agenda.id)}
-                          >
-                            Excluir
-                          </button>
+              ) : aulas.length > 0 ? (
+                aulas.map((aula) => (
+                  <tr 
+                    key={aula.ID_AULA} 
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="py-4 px-6">
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm">{aula.NOME_AULA}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <MdLocationOn className="text-gray-400" size={12} />
+                          <span className="text-xs text-gray-600">{getUnidadeNome(aula.ID_UNIDADE)}</span>
+                          <FiCalendar className="text-gray-400 ml-1" size={12} />
+                          <span className="text-xs text-gray-600">{getDiaNome(aula.DIA_SEMANA)}</span>
                         </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="8" className="py-12 text-center text-gray-500">
-                      <div className="flex flex-col items-center justify-center">
-                        <div className="text-5xl mb-4">📅</div>
-                        <p className="text-xl mb-2">Nenhuma agenda encontrada</p>
-                        <p className="text-gray-400">
-                          {searchTerm || filterStatus !== 'Todos' 
-                            ? "Tente alterar os filtros de busca" 
-                            : "Clique em 'Nova Agenda' para adicionar uma"}
-                        </p>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span 
+                        className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${getModalidadeCor(aula.ID_MODALIDADE)}`}
+                      >
+                        {getModalidadeNome(aula.ID_MODALIDADE)}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                          <MdPerson className="text-blue-600 text-xs" />
+                        </div>
+                        <span className="text-sm">{getInstrutorNome(aula.ID_INSTRUTOR)}</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-2">
+                        <FiClock className="text-gray-400 text-sm" />
+                        <span className="font-medium text-sm">{formatTime(aula.HORARIO_INICIO)}</span>
+                        <span className="text-gray-500 text-xs">({aula.DURACAO_MINUTOS}min)</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex items-center">
+                        <div className="w-20 bg-gray-200 rounded-full h-1.5">
+                          <div 
+                            className="bg-green-500 h-1.5 rounded-full"
+                            style={{ width: `${Math.min(100, (aula.VAGAS / 30) * 100)}%` }}
+                          ></div>
+                        </div>
+                        <span className="ml-2 font-semibold text-sm">{aula.VAGAS}</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${
+                        aula.STATUS_AULA === 'ATIVA' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {aula.STATUS_AULA === 'ATIVA' ? 'Ativa' : 'Inativa'}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => openPopUp("edit", aula.ID_AULA)}
+                          className="p-1.5 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                          title="Editar"
+                        >
+                          <FiEdit size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(aula.ID_AULA)}
+                          className="p-1.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
+                          title="Excluir"
+                        >
+                          <FiTrash2 size={14} />
+                        </button>
+                        <button
+                          onClick={() => openPopUp("view", aula.ID_AULA)}
+                          className="p-1.5 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+                          title="Ver detalhes"
+                        >
+                          <FiEye size={14} />
+                        </button>
                       </div>
                     </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="text-4xl mb-3 text-gray-300">🎯</div>
+                      <p className="text-lg font-semibold text-gray-700 mb-1">Nenhuma aula encontrada</p>
+                      <p className="text-gray-500 text-sm">
+                        {searchQuery || filterModalidade !== "TODAS" || filterStatus !== "TODAS" 
+                          ? "Tente alterar os filtros de busca" 
+                          : "Clique em 'Nova Aula' para adicionar uma"}
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
+      </div>
 
-        {/* Resumo */}
-        <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg">
-          <h3 className="text-xl font-bold mb-4 text-white">Resumo do Sistema</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <h4 className="text-gray-400 text-sm font-medium mb-2">Próximas Agendas</h4>
-              <ul className="space-y-2">
-                {agendas
-                  .filter(a => a.status === 'Confirmado' || a.status === 'Pendente')
-                  .sort((a, b) => new Date(a.data) - new Date(b.data))
-                  .slice(0, 3)
-                  .map(agenda => (
-                    <li key={agenda.id} className="flex justify-between items-center">
-                      <span className="text-white">{agenda.aluno}</span>
-                      <span className="text-gray-400 text-sm">{formatDate(agenda.data)} - {agenda.horario}</span>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-gray-400 text-sm font-medium mb-2">Instrutores mais ocupados</h4>
-              <ul className="space-y-2">
-                {Array.from(new Set(agendas.map(a => a.instrutor)))
-                  .map(instrutor => ({
-                    nome: instrutor,
-                    count: agendas.filter(a => a.instrutor === instrutor).length
-                  }))
-                  .sort((a, b) => b.count - a.count)
-                  .slice(0, 3)
-                  .map((instrutor, idx) => (
-                    <li key={idx} className="flex justify-between items-center">
-                      <span className="text-white">{instrutor.nome}</span>
-                      <span className="text-red-500 font-semibold">{instrutor.count} aulas</span>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-gray-400 text-sm font-medium mb-2">Tipos mais populares</h4>
-              <ul className="space-y-2">
-                {Array.from(new Set(agendas.map(a => a.tipo)))
-                  .map(tipo => ({
-                    nome: tipo,
-                    count: agendas.filter(a => a.tipo === tipo).length
-                  }))
-                  .sort((a, b) => b.count - a.count)
-                  .slice(0, 3)
-                  .map((tipo, idx) => (
-                    <li key={idx} className="flex justify-between items-center">
-                      <span className="text-white">{tipo.nome}</span>
-                      <span className="text-gray-400">{tipo.count}</span>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* Modal para adicionar/editar agenda */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-2xl">
-            <div className="p-6 border-b border-gray-700">
-              <h2 className="text-2xl font-bold text-white">
-                {editing ? 'Editar Agenda' : 'Nova Agenda'}
-              </h2>
-              <p className="text-gray-400 mt-1">
-                {editing ? 'Atualize os dados da agenda selecionada' : 'Preencha os dados para criar uma nova agenda'}
-              </p>
-            </div>
-            
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Aluno *
-                  </label>
-                  <input
-                    type="text"
-                    name="aluno"
-                    value={formData.aluno}
-                    onChange={handleInputChange}
-                    placeholder="Nome completo do aluno"
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Instrutor *
-                  </label>
-                  <input
-                    type="text"
-                    name="instrutor"
-                    value={formData.instrutor}
-                    onChange={handleInputChange}
-                    placeholder="Nome do instrutor responsável"
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                  />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Tipo de Treino
-                  </label>
-                  <select
-                    name="tipo"
-                    value={formData.tipo}
-                    onChange={handleInputChange}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                  >
-                    <option value="Musculação">Musculação</option>
-                    <option value="CrossFit">CrossFit</option>
-                    <option value="Funcional">Funcional</option>
-                    <option value="Spinning">Spinning</option>
-                    <option value="Yoga">Yoga</option>
-                    <option value="Pilates">Pilates</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Duração
-                  </label>
-                  <select
-                    name="duracao"
-                    value={formData.duracao}
-                    onChange={handleInputChange}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                  >
-                    <option value="30 min">30 minutos</option>
-                    <option value="45 min">45 minutos</option>
-                    <option value="60 min">60 minutos</option>
-                    <option value="90 min">90 minutos</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Data *
-                  </label>
-                  <input
-                    type="date"
-                    name="data"
-                    value={formData.data}
-                    onChange={handleInputChange}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-gray-300 text-sm font-medium mb-2">
-                    Horário
-                  </label>
-                  <select
-                    name="horario"
-                    value={formData.horario}
-                    onChange={handleInputChange}
-                    className="w-full bg-gray-800 border border-gray-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
-                  >
-                    <option value="06:00">06:00</option>
-                    <option value="07:00">07:00</option>
-                    <option value="08:00">08:00</option>
-                    <option value="09:00">09:00</option>
-                    <option value="10:00">10:00</option>
-                    <option value="11:00">11:00</option>
-                    <option value="12:00">12:00</option>
-                    <option value="14:00">14:00</option>
-                    <option value="15:00">15:00</option>
-                    <option value="16:00">16:00</option>
-                    <option value="17:00">17:00</option>
-                    <option value="18:00">18:00</option>
-                    <option value="19:00">19:00</option>
-                    <option value="20:00">20:00</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div className="mb-8">
-                <label className="block text-gray-300 text-sm font-medium mb-2">
-                  Status
-                </label>
-                <div className="flex space-x-4">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="status"
-                      value="Pendente"
-                      checked={formData.status === 'Pendente'}
-                      onChange={handleInputChange}
-                      className="mr-2 text-red-600 focus:ring-red-600"
-                    />
-                    <span className="text-gray-300">Pendente</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="status"
-                      value="Confirmado"
-                      checked={formData.status === 'Confirmado'}
-                      onChange={handleInputChange}
-                      className="mr-2 text-green-600 focus:ring-green-600"
-                    />
-                    <span className="text-gray-300">Confirmado</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="status"
-                      value="Cancelado"
-                      checked={formData.status === 'Cancelado'}
-                      onChange={handleInputChange}
-                      className="mr-2 text-red-600 focus:ring-red-600"
-                    />
-                    <span className="text-gray-300">Cancelado</span>
-                  </label>
-                </div>
-              </div>
-              
-              <div className="flex justify-end space-x-4">
-                <button 
-                  className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-800 transition-colors font-medium"
-                  onClick={handleCancel}
-                >
-                  Cancelar
-                </button>
-                <button 
-                  className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg font-medium transition-all shadow-lg hover:shadow-red-900/50"
-                  onClick={handleAddAgenda}
-                >
-                  {editing ? 'Atualizar Agenda' : 'Salvar Agenda'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* PopUp para criar/editar/ver aula */}
+      {PopUPOpen && (
+        <PopUpAulas
+          isOpen={PopUPOpen}
+          onClose={closePopUp}
+          mode={PopUpMode}
+          aulaId={selectedAula}
+          onSuccess={() => {
+            fetchAulas(searchQuery);
+            closePopUp();
+          }}
+        />
       )}
-
-      {/* Rodapé */}
-      <footer className="bg-gradient-to-r from-black to-gray-900 border-t border-gray-800 py-6 px-4">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div>
-              <p className="text-gray-400 text-center md:text-left">
-                Tech Fit Academy © 2023 - Sistema de Agendamentos
-              </p>
-              <p className="text-gray-500 text-sm mt-1 text-center md:text-left">
-                Total de {agendas.length} agendas cadastradas
-              </p>
-            </div>
-            <div className="mt-4 md:mt-0">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                  <span className="text-gray-400 text-sm">Confirmado</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                  <span className="text-gray-400 text-sm">Pendente</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                  <span className="text-gray-400 text-sm">Cancelado</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
-
 }
 
-export default Agendas
+export default TableAulas;
