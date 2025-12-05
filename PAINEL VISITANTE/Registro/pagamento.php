@@ -167,7 +167,7 @@ try {
 
             <div class="info-container">
                 <div class="info-logo">
-                    <img src="logo.png" alt="Tech Fit">
+                    <img src="../../logo.png" alt="Tech Fit">
                 </div>
                 <h2 class="info-titulo">🎉 Quase lá!</h2>
                 <p class="info-texto">Finalize seu pagamento e comece hoje mesmo sua jornada fitness.</p>

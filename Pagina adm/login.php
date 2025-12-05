@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿<?php
+// login.php
+?>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -231,4 +234,5 @@
   </script>
 </body>
 </html>
+
 

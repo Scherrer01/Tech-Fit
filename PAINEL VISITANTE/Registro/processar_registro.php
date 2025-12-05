@@ -118,7 +118,7 @@ try {
         // Commit da transação
         $conn->commit();
         
-        // ✅ AGORA VAI PARA PAGAMENTO (fluxo correto)
+        // ✅ AGORA VAI PARA PAGAMENTO (MESMA PASTA)
         $_SESSION['dados_cadastro'] = [
             'id_aluno' => $id_aluno,
             'nome' => $_POST['nome'],
@@ -128,8 +128,8 @@ try {
             'valor_plano' => $plano['VALOR'] // Valor do plano para pagamento
         ];
         
-        // Redirecionar para PAGAMENTO
-        header('Location: /pagamento.php?sucesso=Cadastro realizado! Agora finalize o pagamento.');
+        // Redirecionar para PAGAMENTO (MESMA PASTA)
+        header('Location: pagamento.php');
         exit;
         
     } catch (Exception $e) {

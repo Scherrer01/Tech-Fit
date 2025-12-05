@@ -1,3 +1,6 @@
+﻿<?php
+// home.php
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,20 +11,20 @@
 </head>
 <body>
 <!-- ================================================================================= -->
-                                 <!-- cabeçalho -->
+                                 <!-- cabeÃ§alho -->
     <header class="cabecalho">
     <div class="logo-container">
         <div class="logo">
-            <img src="logo.png" alt="Tech Fit">
+            <img src="../../logo.png" alt="Tech Fit">
         </div>
         <h1>Tech <span class="color-accent">Fit</span></h1>
     </div>
     <nav>
         <ul>
-            <li><a href="/Planos/planos.html">Planos</a></li>
-            <li><a href="/Sobre Nós/sobreNós.html">Sobre Nós</a></li>
-            <li><a href="/Contato/contato.html">Contato</a></li>
-            <li id="login"><a href="/Login/login.html">Login</a></li>
+            <li><a href="/Planos/planos.php">Planos</a></li>
+            <li><a href="/Sobre NÃ³s/sobreNÃ³s.php">Sobre NÃ³s</a></li>
+            <li><a href="/Contato/contato.php">Contato</a></li>
+            <li id="login"><a href="/Login/login.php">Login</a></li>
         </ul>
     </nav>
 </header>
@@ -33,11 +36,11 @@
         <section class="hero">
             <div class="hero-content">
                 <h1>Transforme seu corpo e mente</h1>
-                <p>Na Tech Fit, combinamos tecnologia de ponta com treinamento especializado para resultados extraordinários</p>
+                <p>Na Tech Fit, combinamos tecnologia de ponta com treinamento especializado para resultados extraordinÃ¡rios</p>
                 <div class="hero-buttons">
-                    <button class="primary-btn">Experimente Grátis</button>
-                    <a href="/Planos/planos.html" class="btn-link">
-                    <button class="secondary-btn">Conheça Nossos Planos</button></a>
+                    <button class="primary-btn">Experimente GrÃ¡tis</button>
+                    <a href="/Planos/planos.php" class="btn-link">
+                    <button class="secondary-btn">ConheÃ§a Nossos Planos</button></a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
@@ -60,23 +63,23 @@
         <section class="features">
             <div class="section-header">
                 <h2>Por que escolher a Tech Fit?</h2>
-                <p>Oferecemos o que há de mais moderno em equipamentos e metodologia de treino</p>
+                <p>Oferecemos o que hÃ¡ de mais moderno em equipamentos e metodologia de treino</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🏋️</div>
+                    <div class="feature-icon">ðŸ‹ï¸</div>
                     <h3>Equipamentos High-Tech</h3>
-                    <p>Aparelhos com tecnologia de ponta para maximizar seus resultados e segurança</p>
+                    <p>Aparelhos com tecnologia de ponta para maximizar seus resultados e seguranÃ§a</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">👨‍🏫</div>
+                    <div class="feature-icon">ðŸ‘¨â€ðŸ«</div>
                     <h3>Professores Certificados</h3>
-                    <p>Equipe especializada com certificações internacionais em educação física</p>
+                    <p>Equipe especializada com certificaÃ§Ãµes internacionais em educaÃ§Ã£o fÃ­sica</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
+                    <div class="feature-icon">âš¡</div>
                     <h3>Resultados Comprovados</h3>
-                    <p>Metodologia baseada em ciência que garante evolução constante</p>
+                    <p>Metodologia baseada em ciÃªncia que garante evoluÃ§Ã£o constante</p>
                 </div>
             </div>
         </section>
@@ -94,21 +97,21 @@
                     <div class="class-image cardio"></div>
                     <div class="class-info">
                         <h3>Cardio Tech</h3>
-                        <p>Aulas de alta intensidade com monitoramento cardíaco em tempo real</p>
+                        <p>Aulas de alta intensidade com monitoramento cardÃ­aco em tempo real</p>
                         <div class="class-meta">
-                            <span>⏱ 45min</span>
-                            <span>🔥 Alta Intensidade</span>
+                            <span>â± 45min</span>
+                            <span>ðŸ”¥ Alta Intensidade</span>
                         </div>
                     </div>
                 </div>
                 <div class="class-card">
                     <div class="class-image strength"></div>
                     <div class="class-info">
-                        <h3>Força & Potência</h3>
-                        <p>Treino focado em ganho de massa muscular e força máxima</p>
+                        <h3>ForÃ§a & PotÃªncia</h3>
+                        <p>Treino focado em ganho de massa muscular e forÃ§a mÃ¡xima</p>
                         <div class="class-meta">
-                            <span>⏱ 60min</span>
-                            <span>💪 Forte</span>
+                            <span>â± 60min</span>
+                            <span>ðŸ’ª Forte</span>
                         </div>
                     </div>
                 </div>
@@ -116,10 +119,10 @@
                     <div class="class-image yoga"></div>
                     <div class="class-info">
                         <h3>Yoga Tech</h3>
-                        <p>Prática de yoga com auxílio de sensores para perfeito alinhamento</p>
+                        <p>PrÃ¡tica de yoga com auxÃ­lio de sensores para perfeito alinhamento</p>
                         <div class="class-meta">
-                            <span>⏱ 50min</span>
-                            <span>🧘‍♀️ Relaxante</span>
+                            <span>â± 50min</span>
+                            <span>ðŸ§˜â€â™€ï¸ Relaxante</span>
                         </div>
                     </div>
                 </div>
@@ -129,8 +132,8 @@
                         <h3>Boxing Tech</h3>
                         <p>Treino de boxe com tecnologia de impacto e performance</p>
                         <div class="class-meta">
-                            <span>⏱ 55min</span>
-                            <span>🥊 Intenso</span>
+                            <span>â± 55min</span>
+                            <span>ðŸ¥Š Intenso</span>
                         </div>
                     </div>
                 </div>
@@ -143,7 +146,7 @@
         <!-- Testimonial 1 -->
         <div class="testimonial-card">
             <div class="quote">"</div>
-            <p>"O serviço foi excepcional! A equipe superou todas as nossas expectativas e entregou resultados incríveis no prazo estabelecido."</p>
+            <p>"O serviÃ§o foi excepcional! A equipe superou todas as nossas expectativas e entregou resultados incrÃ­veis no prazo estabelecido."</p>
             <div class="client">
                 <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Maria Silva" class="client-avatar" alt="Maria Silva" class="client-avatar">
                 <div class="client-info">
@@ -156,11 +159,11 @@
         <!-- Testimonial 2 -->
         <div class="testimonial-card">
             <div class="quote">"</div>
-            <p>"Profissionalismo e qualidade impressionantes. Recomendo fortemente para qualquer empresa que busca excelência em seus projetos."</p>
+            <p>"Profissionalismo e qualidade impressionantes. Recomendo fortemente para qualquer empresa que busca excelÃªncia em seus projetos."</p>
             <div class="client">
-                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="João Santos" class="client-avatar">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="JoÃ£o Santos" class="client-avatar">
                 <div class="client-info">
-                    <h4>João Santos</h4>
+                    <h4>JoÃ£o Santos</h4>
                     <p>CEO Tech Solutions</p>
                 </div>
             </div>
@@ -169,7 +172,7 @@
         <!-- Testimonial 3 -->
         <div class="testimonial-card">
             <div class="quote">"</div>
-            <p>"A experiência foi transformadora para nosso negócio. A atenção aos detalhes e o suporte pós-implantação foram fundamentais."</p>
+            <p>"A experiÃªncia foi transformadora para nosso negÃ³cio. A atenÃ§Ã£o aos detalhes e o suporte pÃ³s-implantaÃ§Ã£o foram fundamentais."</p>
             <div class="client">
                 <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Ana Costa" class="client-avatar">
                 <div class="client-info">
@@ -198,11 +201,11 @@
                     <div class="footer-logo">
                         <div class="logo-container">
                             <div class="logo">
-                                <img src="logo.png" alt="Tech Fit">
+                                <img src="../../logo.png" alt="Tech Fit">
                             </div>
                             <h2>Tech <span class="color-accent">Fit</span></h2>
                         </div>
-                        <p>Transformando vidas através da tecnologia e fitness.</p>
+                        <p>Transformando vidas atravÃ©s da tecnologia e fitness.</p>
                     </div>
                     <div class="social-links">
                         <a href="#" class="whatsapp">
@@ -228,20 +231,20 @@
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Horários</h4>
+                    <h4>HorÃ¡rios</h4>
                     <ul>
-                        <li>Segunda a Sexta: 5h às 23h</li>
-                        <li>Sábados: 6h às 20h</li>
-                        <li>Domingos: 7h às 14h</li>
-                        <li>Feriados: 7h às 12h</li>
+                        <li>Segunda a Sexta: 5h Ã s 23h</li>
+                        <li>SÃ¡bados: 6h Ã s 20h</li>
+                        <li>Domingos: 7h Ã s 14h</li>
+                        <li>Feriados: 7h Ã s 12h</li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Contato</h4>
                     <ul>
-                        <li>📍 Rua Fitness, 123 - Centro</li>
-                        <li>📞 (19) 98704-4392</li>
-                        <li>✉️ diogo.scherrer@gmail.com</li>
+                        <li>ðŸ“ Rua Fitness, 123 - Centro</li>
+                        <li>ðŸ“ž (19) 98704-4392</li>
+                        <li>âœ‰ï¸ diogo.scherrer@gmail.com</li>
                     </ul>
                 </div>
             </div>
@@ -253,3 +256,4 @@
     </div>
 </body>
 </html>
+

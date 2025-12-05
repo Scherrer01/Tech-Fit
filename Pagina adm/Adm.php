@@ -1,0 +1,360 @@
+﻿<?php
+// Adm.php
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - TechFit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: radial-gradient(circle at 20% 20%, #ff2626, #000);
+      color: #fff;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: rgba(20, 20, 20, 0.9);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(255, 38, 38, 0.3);
+      box-shadow: 0 0 20px rgba(255, 38, 38, 0.3);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      background: linear-gradient(90deg, #ff2626, #ff5a5a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 10px rgba(255, 38, 38, 0.4);
+      margin-bottom: 40px;
+    }
+
+    nav ul {
+      list-style: none;
+    }
+
+    nav ul li {
+      padding: 12px 20px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #ccc;
+      text-align: left;
+    }
+
+    nav ul li:hover {
+      background: linear-gradient(90deg, #ff2626, #7a0000);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 38, 38, 0.5);
+      transform: translateX(5px);
+    }
+
+    /* Dashboard principal */
+    .dashboard {
+      margin-left: 280px;
+      flex: 1;
+      padding: 40px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .top-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(20, 20, 20, 0.8);
+      border: 1px solid rgba(255, 38, 38, 0.3);
+      border-radius: 20px;
+      padding: 25px;
+      text-align: center;
+      font-size: 18px;
+      box-shadow: 0 0 15px rgba(255, 38, 38, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 38, 38, 0.5);
+    }
+
+    .card strong {
+      display: block;
+      font-size: 26px;
+      margin-top: 10px;
+      color: #ff4040;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .chart-container {
+      background: rgba(20, 20, 20, 0.85);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 38, 38, 0.3);
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 38, 38, 0.2);
+    }
+
+    h3 {
+      margin-bottom: 15px;
+      font-size: 22px;
+      color: #ff5a5a;
+      text-shadow: 0 0 8px rgba(255, 38, 38, 0.3);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(20, 20, 20, 0.85);
+      border: 1px solid rgba(255, 38, 38, 0.3);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255, 38, 38, 0.2);
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+    }
+
+    th {
+      background: rgba(255, 38, 38, 0.15);
+      color: #ff4040;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    tr:hover {
+      background: rgba(255, 38, 38, 0.1);
+    }
+
+    .ultimos-alunos {
+      margin-top: 40px;
+      background: rgba(20, 20, 20, 0.85);
+      padding: 25px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 38, 38, 0.3);
+      box-shadow: 0 0 15px rgba(255, 38, 38, 0.3);
+    }
+
+    .ultimos-alunos ul {
+      list-style: none;
+      margin-top: 15px;
+    }
+
+    .ultimos-alunos li {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 38, 38, 0.2);
+      color: #ccc;
+    }
+
+    .ultimos-alunos li:last-child {
+      border-bottom: none;
+    }
+
+    /* Responsividade */
+    @media (max-width: 900px) {
+      .charts {
+        grid-template-columns: 1fr;
+      }
+      .dashboard {
+        margin-left: 0;
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div>
+      <h2 class="logo">TechFit Admin</h2>
+      <nav>
+        <ul>
+          <li>ðŸ  Dashboard</li>
+          <li>ðŸ§â€â™‚ï¸ Alunos</li>
+          <li>ðŸ“… Agendas</li>
+          <li>ðŸ’ª Treinadores</li>
+          <li>ðŸ‘¥ Colaboradores</li>
+          <li>ðŸŒ Redes</li>
+          <li>ðŸ’° Financeiro</li>
+          <li>ðŸ†˜ Suporte</li>
+          <li>âš™ï¸ ConfiguraÃ§Ãµes</li>
+        </ul>
+      </nav>
+    </div>
+    <ul>
+      <li>ðŸšª Sair</li>
+    </ul>
+  </aside>
+
+  <main class="dashboard">
+    <section class="top-stats">
+      <div class="card">Alunos cadastrados: <strong>1070</strong></div>
+      <div class="card">FuncionÃ¡rios: <strong>110</strong></div>
+      <div class="card">Cancelamentos: <strong>55</strong></div>
+      <div class="card">Modalidades: <strong>12</strong></div>
+    </section>
+
+    <section class="charts">
+      <div class="chart-container">
+        <h3>MatrÃ­culas por MÃªs (2024)</h3>
+        <canvas id="barChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>RelaÃ§Ã£o de Alunos</h3>
+        <canvas id="pieChart"></canvas>
+      </div>
+    </section>
+
+    <section class="professores">
+      <h3>Professores</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Ãrea</th>
+            <th>Sala</th>
+            <th>RA</th>
+            <th>Turno</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>LuÃ­s Fernando</td>
+            <td>MusculaÃ§Ã£o</td>
+            <td>A4</td>
+            <td>1098</td>
+            <td>ManhÃ£</td>
+          </tr>
+          <tr>
+            <td>Jacqueline Silva</td>
+            <td>Funcional</td>
+            <td>A2</td>
+            <td>2098</td>
+            <td>Tarde</td>
+          </tr>
+          <tr>
+            <td>Gabriel M. Lima</td>
+            <td>Crossfit</td>
+            <td>A6</td>
+            <td>4576</td>
+            <td>Noite</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="ultimos-alunos">
+      <h3>Ãšltimos alunos</h3>
+      <ul>
+        <li>Gabriel M. Lima</li>
+        <li>Mayury Silva</li>
+        <li>JoÃ£o Pedro</li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    // --- GrÃ¡fico de Barras: MatrÃ­culas 2024 ---
+    const ctxBar = document.getElementById('barChart');
+    new Chart(ctxBar, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        datasets: [{
+          label: 'Novas MatrÃ­culas',
+          data: [85, 92, 110, 98, 120, 130, 140, 160, 150, 155, 170, 190],
+          backgroundColor: 'rgba(255, 38, 38, 0.7)',
+          borderColor: '#ff4040',
+          borderWidth: 2,
+          borderRadius: 8
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#fff' },
+            grid: { color: 'rgba(255,255,255,0.1)' }
+          },
+          y: {
+            ticks: { color: '#fff' },
+            grid: { color: 'rgba(255,255,255,0.1)' }
+          }
+        }
+      }
+    });
+
+    // --- GrÃ¡fico de Pizza: RelaÃ§Ã£o de Alunos ---
+    const ctxPie = document.getElementById('pieChart');
+    new Chart(ctxPie, {
+      type: 'pie',
+      data: {
+        labels: ['MatrÃ­culas Ativas', 'Cancelamentos', 'Planos Congelados'],
+        datasets: [{
+          data: [190, 55, 90],
+          backgroundColor: [
+            'rgba(255, 38, 38, 0.8)',
+            'rgba(255, 99, 99, 0.8)',
+            'rgba(255, 200, 200, 0.6)'
+          ],
+          borderColor: '#000',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            labels: { color: '#fff', font: { size: 14 } }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
