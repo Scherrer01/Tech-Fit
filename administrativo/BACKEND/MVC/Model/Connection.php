@@ -8,7 +8,7 @@ class Connection{
             $host = 'localhost';
             $dbname = 'tech_fit';
             $user = 'root';
-            $senha = 'senaisp';
+            $senha = 'Limeira@123';
 
             self::$instance = new PDO( 
                 "mysql:host=$host;charset=utf8",

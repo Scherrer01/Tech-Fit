@@ -93,7 +93,7 @@ class AlunoDAO{
     public function atualizarAlunos($idAlunos, $novoNome,$novoEndereco,$novoEmail,$novoNascimento, $novoTelefone, $novoCPF,$novoSexo,$novoSenhaAluno,$NovoStatus){
 
         // cria a query para fazer o update no banco de dados
-        $stmt = $this->conn->prepare("UPDATE alunos 
+        $stmt = $this->conn->prepare("UPDATE ALUNOS 
             SET nome = :novoNome, 
                 endereco = :novoEndereco, 
                 nascimento = :novoNascimento, 
@@ -129,7 +129,7 @@ class AlunoDAO{
     // Buscar alunos pelo nome 
 public function buscarAlunos($nome){
     $stmt = $this->conn->prepare("
-        SELECT * FROM alunos WHERE NOME LIKE :nome
+        SELECT * FROM ALUNOS WHERE NOME LIKE :nome
     ");
     
     $stmt->execute([':nome'=>"%$nome%"]);
@@ -143,7 +143,7 @@ public function buscarAlunos($nome){
 }
 
     public function buscarAlunosPorID($id) {
-    $sql = "SELECT * FROM alunos WHERE ID_ALUNO = ?";
+    $sql = "SELECT * FROM ALUNOS WHERE ID_ALUNO = ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);

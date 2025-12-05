@@ -1,9 +1,9 @@
 import Aside from "../components/Aside"
 
-function Colaboradores (){
+function Funcionarios (){
     return(
         <Aside/>
     )
 }
 
-export default Colaboradores
+export default Funcionarios

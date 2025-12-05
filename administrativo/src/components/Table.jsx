@@ -4,11 +4,12 @@ import PopUpAlunos from "../components/popUpAlunos";
 import Inputs from "../components/Inputs";
 // import SearchIcon from '@mui/icons-material/Search';
 
-function Table() {
+function Table({ onDataLoaded }) { // Adicionando a prop callback
   const [alunos, setAlunos] = useState([]);
   const [PopUPOpen, setPopUp] = useState(false);
   const [PopUpMode, setPopUpMode] = useState("create");
   const [selectedAluno, setSelectedAluno] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const openPopUp = (mode, alunoID) => {
     setPopUpMode(mode);
@@ -21,12 +22,44 @@ function Table() {
     setSelectedAluno(null);
   };
 
-  useEffect(() => {
-    fetch("http://localhost:8000/alunosAPI.php")
+  // Função para buscar alunos (reutilizável)
+  const fetchAlunos = (query = "") => {
+    const url = query.trim() === "" 
+      ? "http://localhost:8000/alunosAPI.php"
+      : `http://localhost:8000/alunosAPI.php?search=${encodeURIComponent(query)}`;
+
+    fetch(url)
       .then((res) => res.json())
-      .then((data) => setAlunos(data))
-      .catch((err) => console.error(err));
-  }, []);
+      .then((data) => {
+        let alunosData = [];
+        
+        // Trata diferentes formatos de resposta
+        if (Array.isArray(data)) {
+          alunosData = data;
+        } else if (data && typeof data === 'object') {
+          // Se for um único aluno, coloca em array
+          alunosData = [data];
+        }
+        
+        setAlunos(alunosData);
+        
+        // Chama o callback para enviar dados para o componente pai
+        if (onDataLoaded) {
+          onDataLoaded(alunosData);
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar alunos:", err);
+        // Ainda chama o callback mesmo com erro (com array vazio)
+        if (onDataLoaded) {
+          onDataLoaded([]);
+        }
+      });
+  };
+
+  useEffect(() => {
+    fetchAlunos();
+  }, [onDataLoaded]); // Adicionado onDataLoaded como dependência
 
   const handleDelete = (id) => {
     if (window.confirm("Tem certeza que deseja excluir este aluno?")) {
@@ -36,33 +69,29 @@ function Table() {
         body: JSON.stringify({ idAlunos: id }),
       })
         .then(() => {
-          setAlunos(alunos.filter((aluno) => aluno.ID_ALUNO !== id));
+          const novosAlunos = alunos.filter((aluno) => aluno.ID_ALUNO !== id);
+          setAlunos(novosAlunos);
+          
+          // Atualiza o pai com os novos dados
+          if (onDataLoaded) {
+            onDataLoaded(novosAlunos);
+          }
         })
         .catch((err) => console.error(err));
     }
   };
+
   const handleSearch = (query) => {
-  if (query.trim() === "") {
-    // se o campo estiver vazio, recarrega todos
-    fetch("http://localhost:8000/alunosAPI.php")
-      .then((res) => res.json())
-      .then((data) => setAlunos(data))
-      .catch((err) => console.error(err));
-    return;
-  }
+    setSearchQuery(query);
+    fetchAlunos(query);
+  };
 
-  fetch("http://localhost:8000/alunosAPI.php?search=" + query)
-    .then((res) => res.json())
-    .then((data) => {
-      if (Array.isArray(data)) {
-        setAlunos(data); // se voltar lista
-      } else {
-        setAlunos([data]); // se API retornar um único aluno
-      }
-    })
-    .catch((err) => console.error(err));
-};
-
+  // Opcional: Atualizar estatísticas quando alunos mudar
+  useEffect(() => {
+    if (onDataLoaded) {
+      onDataLoaded(alunos);
+    }
+  }, [alunos, onDataLoaded]);
 
   return (
     <>
@@ -70,7 +99,7 @@ function Table() {
       <div className="w-full max-h-[700px] overflow-auto border border-gray-300 rounded-lg">
         <div className="flex justify-end">
 
-        <input className="
+    <input className="
     w-full max-w-60
     px-3 py-2
     rounded-xl
@@ -84,7 +113,8 @@ function Table() {
     placeholder-gray-400
     bg-white
     text-black
-  "onChange={(e) => handleSearch(e.target.value)} placeholder="Buscar" />
+  "onChange={(e) => handleSearch(e.target.value)} placeholder="Buscar"  />
+  
         </div>
 
 

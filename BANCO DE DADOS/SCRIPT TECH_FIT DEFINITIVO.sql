@@ -185,8 +185,41 @@ INSERT INTO UNIDADES (NOME_UNIDADE, ENDERECO_UNIDADE, TELEFONE_UNIDADE) VALUES
 ('Tech Fit Salvador', 'Avenida Tancredo Neves, 1500 - Caminho das Árvores, Salvador - BA', '(71) 3304-7809'),
 ('Tech Fit Fortaleza', 'Av. Beira Mar, 3000 - Meireles, Fortaleza - CE', '(85) 3304-7810');
 
+INSERT INTO ALUNOS (NOME, ENDERECO, NASCIMENTO, TELEFONE, CPF, SEXO, EMAIL, SENHA_HASH, STATUS_ALUNO, ID_PLANO) VALUES
+('João Silva', 'Rua das Flores, 123 - Centro', '1990-05-15', '(11) 99999-1111', '123.456.789-01', 'MASCULINO', 'joao.silva@email.com', SHA2('senha123', 256), 'ATIVO', 1),
+('Maria Santos', 'Av. Brasil, 456 - Jardins', '1985-08-22', '(11) 99999-2222', '234.567.890-12', 'FEMININO', 'maria.santos@email.com', SHA2('senha456', 256), 'ATIVO', 2),
+('Carlos Oliveira', 'Rua Augusta, 789 - Consolação', '1995-02-10', '(11) 99999-3333', '345.678.901-23', 'MASCULINO', 'carlos.oliveira@email.com', SHA2('senha789', 256), 'ATIVO', 3),
+('Ana Costa', 'Alameda Santos, 101 - Cerqueira César', '1988-11-30', '(11) 99999-4444', '456.789.012-34', 'FEMININO', 'ana.costa@email.com', SHA2('senha101', 256), 'SUSPENSO', 1),
+('Pedro Almeida', 'Rua Oscar Freire, 202 - Pinheiros', '1992-07-18', '(11) 99999-5555', '567.890.123-45', 'MASCULINO', 'pedro.almeida@email.com', SHA2('senha202', 256), 'INATIVO', 2),
+('Julia Ribeiro', 'Av. Paulista, 303 - Bela Vista', '1998-04-25', '(11) 99999-6666', '678.901.234-56', 'FEMININO', 'julia.ribeiro@email.com', SHA2('senha303', 256), 'ATIVO', 1),
+('Marcos Souza', 'Rua Haddock Lobo, 404 - Jardins', '1983-09-12', '(11) 99999-7777', '789.012.345-67', 'MASCULINO', 'marcos.souza@email.com', SHA2('senha404', 256), 'ATIVO', 3),
+('Fernanda Lima', 'Al. Jaú, 505 - Jardim Paulista', '1991-12-05', '(11) 99999-8888', '890.123.456-78', 'FEMININO', 'fernanda.lima@email.com', SHA2('senha505', 256), 'ATIVO', 2),
+('Ricardo Martins', 'Rua Estados Unidos, 606 - Jardim América', '1987-06-20', '(11) 99999-9999', '901.234.567-89', 'MASCULINO', 'ricardo.martins@email.com', SHA2('senha606', 256), 'SUSPENSO', 1),
+('Camila Ferreira', 'Av. Rebouças, 707 - Pinheiros', '1994-03-08', '(11) 99999-0000', '012.345.678-90', 'FEMININO', 'camila.ferreira@email.com', SHA2('senha707', 256), 'ATIVO', 2);
 
+INSERT INTO FUNCIONARIOS (NOME_FUNCIONARIO, LOGIN_REDE, NASCIMENTO_FUNCIONARIO, CPF_FUNCIONARIO, TELEFOHNE_FUNCIONARIO, DATA_ADMISSAO, SALARIO, CARGO, ENDERECO_FUNCIONARIO, EMAIL_FUNCIONARIO, SENHA_FUNCIONARIO, TURNO, ID_MODALIDADE) VALUES
+('Roberto Carlos', 'roberto.carlos', '1980-03-25', '111.222.333-44', '(11) 98888-1111', '2020-01-15', 4500.00, 'Gerente', 'Rua das Laranjeiras, 100 - Jardins', 'roberto.carlos@techfit.com', SHA2('func123', 256), 'MANHA', NULL),
+('Patrícia Mendes', 'patricia.mendes', '1985-07-12', '222.333.444-55', '(11) 98888-2222', '2021-03-10', 3800.00, 'Instrutor', 'Av. Europa, 200 - Jardim Europa', 'patricia.mendes@techfit.com', SHA2('func456', 256), 'TARDE', 1),
+('Lucas Oliveira', 'lucas.oliveira', '1990-11-30', '333.444.555-66', '(11) 98888-3333', '2022-05-20', 3500.00, 'Instrutor', 'Rua Bela Cintra, 300 - Consolação', 'lucas.oliveira@techfit.com', SHA2('func789', 256), 'NOITE', 2),
+('Sandra Nunes', 'sandra.nunes', '1978-04-18', '444.555.666-77', '(11) 98888-4444', '2019-08-05', 4200.00, 'Recepcionista', 'Al. Campinas, 400 - Jardim Paulista', 'sandra.nunes@techfit.com', SHA2('func101', 256), 'ROTATIVO', NULL),
+('Felipe Costa', 'felipe.costa', '1988-09-22', '555.666.777-88', '(11) 98888-5555', '2023-01-30', 3200.00, 'Instrutor', 'Rua Augusta, 500 - Cerqueira César', 'felipe.costa@techfit.com', SHA2('func202', 256), 'MANHA', 3),
+('Amanda Silva', 'amanda.silva', '1992-12-15', '666.777.888-99', '(11) 98888-6666', '2022-07-15', 3000.00, 'Nutricionista', 'Av. Paulista, 600 - Bela Vista', 'amanda.silva@techfit.com', SHA2('func303', 256), 'TARDE', NULL),
+('Rodrigo Santos', 'rodrigo.santos', '1983-06-08', '777.888.999-00', '(11) 98888-7777', '2020-11-25', 4000.00, 'Personal Trainer', 'Rua Haddock Lobo, 700 - Jardins', 'rodrigo.santos@techfit.com', SHA2('func404', 256), 'NOITE', 4),
+('Tatiane Lima', 'tatiane.lima', '1987-02-28', '888.999.000-11', '(11) 98888-8888', '2021-09-10', 2800.00, 'Recepcionista', 'Al. Santos, 800 - Cerqueira César', 'tatiane.lima@techfit.com', SHA2('func505', 256), 'ROTATIVO', NULL),
+('Marcelo Rocha', 'marcelo.rocha', '1975-10-05', '999.000.111-22', '(11) 98888-9999', '2018-04-18', 5000.00, 'Coordenador', 'Rua Oscar Freire, 900 - Pinheiros', 'marcelo.rocha@techfit.com', SHA2('func606', 256), 'MANHA', NULL),
+('Bianca Alves', 'bianca.alves', '1995-08-14', '000.111.222-33', '(11) 98888-0000', '2023-03-01', 2900.00, 'Instrutor', 'Av. Rebouças, 1000 - Pinheiros', 'bianca.alves@techfit.com', SHA2('func707', 256), 'TARDE', 5);
   
+INSERT INTO MODALIDADES (NOME_MODALIDADE, DESCRICAO_MODALIDADE) VALUES
+('Musculação', 'Treinamento com pesos e equipamentos para fortalecimento muscular'),
+('Spinning', 'Aula de ciclismo indoor com música motivacional'),
+('Zumba', 'Aula de dança fitness com ritmos latinos'),
+('Pilates', 'Método de exercícios para fortalecimento e alongamento'),
+('CrossFit', 'Treinamento funcional de alta intensidade'),
+('Yoga', 'Prática de posturas e respiração para equilíbrio físico e mental'),
+('Natação', 'Aulas de natação para todos os níveis'),
+('Boxe', 'Treinamento de boxe para condicionamento físico'),
+('Funcional', 'Exercícios que simulam movimentos do dia a dia'),
+('Alongamento', 'Aulas focadas em flexibilidade e relaxamento muscular');
   
 
   
