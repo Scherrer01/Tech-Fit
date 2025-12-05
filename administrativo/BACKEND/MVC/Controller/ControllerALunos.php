@@ -15,7 +15,7 @@ class ControllerALunos{
         return $this->dao->lerAlunosAll();
     }
 public function criar($nome, $endereco, $nascimento, $telefone, $CPF, $sexo, $email, $senha_hash, $statusAluno, $Id_plano, $criado_em){
-    // 🔥 CORREÇÃO: A ordem deve corresponder ao construtor da classe Alunos
+    // CORREÇÃO: A ordem deve corresponder ao construtor da classe Alunos
     // Construtor: __construct($id_aluno, $nome, $endereco, $nascimento, $telefone, $CPF, $sexo, $email, $senha_hash, $status_aluno, $criado_em, $id_plano)
     
     $aluno = new Alunos(
@@ -29,8 +29,8 @@ public function criar($nome, $endereco, $nascimento, $telefone, $CPF, $sexo, $em
         $email,         // email
         $senha_hash,    // senha_hash
         $statusAluno,   // status_aluno
-        $criado_em,     // criado_em  🔥 AGORA CORRETO!
-        $Id_plano       // id_plano   🔥 AGORA CORRETO!
+        $criado_em,     // criado_em  AGORA CORRETO!
+        $Id_plano       // id_plano  AGORA CORRETO!
     );
     $this->dao->criarAlunos($aluno);
 }

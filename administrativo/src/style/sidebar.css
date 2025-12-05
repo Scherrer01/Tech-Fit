@@ -15,7 +15,7 @@
         .sidebar {
             width: 18vw;
             /* define a largura do sidebar*/
-            background: rgba(20, 20, 20, 0.9);
+            background: rgba(20, 20, 20);
             /* fundo quase opaco 90% (0.9) de opacidade*/
             backdrop-filter: blur(10px);
             /* coloca um filtro no background, desfocando o fundo*/
