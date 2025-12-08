@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
-import PopUpAulas from "../components/popUpAulas"; // Você precisará criar este componente
+import PopUpAulas from "../components/PopUpAulas"
 import Inputs from "../components/Inputs";
+import Aside from "../components/Aside";
 import { 
   FiSearch, 
   FiEdit, 
@@ -235,7 +236,13 @@ function TableAulas({ onDataLoaded }) {
   }, [aulas, onDataLoaded]);
 
   return (
-    <div className="w-full">
+    <main className="flex min-h-screen">
+  <div className="w-1/5 flex-shrink-0"> {/* Ajuste a largura conforme necessário */}
+    <Aside />
+  </div>
+
+  {/* Conteúdo principal */}
+ <div className="flex-1 overflow-auto">
       {/* Barra de Controles */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <div className="w-full md:w-1/3">
@@ -428,6 +435,7 @@ function TableAulas({ onDataLoaded }) {
         />
       )}
     </div>
+    </main>
   );
 }
 
