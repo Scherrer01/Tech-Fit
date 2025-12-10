@@ -1,4 +1,4 @@
-// login.js
+// login.js - Versão simplificada e funcional
 document.addEventListener('DOMContentLoaded', function() {
     const formLogin = document.getElementById('formLogin');
     const btnLogin = document.getElementById('btnLogin');
@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputSenha = document.getElementById('senha');
     const checkLembrar = document.getElementById('lembrar');
 
-    // Formulário tradicional com validação AJAX
     formLogin.addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -46,11 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function fazerLogin() {
+        console.log('Iniciando login...');
+        
         const dados = {
             email: inputEmail.value.trim(),
             senha: inputSenha.value,
             lembrar: checkLembrar.checked
         };
+
+        console.log('Dados enviados:', dados);
 
         // Mostrar loading
         btnLogin.textContent = 'Entrando...';
@@ -58,29 +61,62 @@ document.addEventListener('DOMContentLoaded', function() {
         btnLogin.style.opacity = '0.7';
 
         try {
-             const response = await fetch('/processar_login.php', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dados)
-        });
+            // URL base - ajuste conforme necessário
+            // Se está na pasta "Registro", o arquivo está na mesma pasta
+            const url = 'processar_login.php';
+            console.log('Fazendo requisição para:', url);
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dados)
+            });
 
-            const data = await response.json();
+            console.log('Status da resposta:', response.status);
+            
+            // Primeiro pegar o texto para debug
+            const responseText = await response.text();
+            console.log('Resposta (texto bruto):', responseText.substring(0, 300));
+            
+            // Tentar parsear como JSON
+            let data;
+            try {
+                data = JSON.parse(responseText);
+                console.log('Resposta parseada:', data);
+            } catch (parseError) {
+                console.error('Erro ao parsear JSON:', parseError);
+                
+                if (responseText.includes('Fatal error') || responseText.includes('Warning')) {
+                    throw new Error('Erro no servidor PHP. Verifique a configuração.');
+                } else if (responseText.includes('Método não permitido')) {
+                    throw new Error('URL incorreta ou método não permitido.');
+                } else {
+                    throw new Error('Resposta inválida do servidor.');
+                }
+            }
             
             if (data.success) {
-                // Login bem-sucedido - redirecionar para Painel Aluno
-                window.location.href = '../../Painel Aluno/index.php';
+                console.log('Login bem-sucedido!');
+                
+                // Se tiver redirect no response, use
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } 
+                // Se não, redirecione manualmente
+                else {
+                    window.location.href = '../../Painel Aluno/index.php';
+                }
             } else {
-                // Mostrar erro
+                console.log('Erro no login:', data.message);
                 mostrarErroGeral(data.message);
-                // Limpar senha
                 inputSenha.value = '';
                 inputSenha.focus();
             }
         } catch (error) {
-            console.error('Erro:', error);
-            mostrarErroGeral('Erro ao conectar com o servidor. Tente novamente.');
+            console.error('Erro completo:', error);
+            mostrarErroGeral('Erro: ' + error.message);
         } finally {
             // Restaurar botão
             btnLogin.textContent = 'Entrar';
@@ -166,34 +202,3 @@ document.addEventListener('DOMContentLoaded', function() {
         inputEmail.focus();
     }
 });
-
-async function fazerLogin() {
-    console.log('Iniciando login...');
-    
-    try {
-        const url = '../../processar_login.php';
-        console.log('Tentando acessar:', url);
-        
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dados)
-        });
-        
-        console.log('Resposta recebida:', response.status);
-        
-        if (!response.ok) {
-            console.error('Erro HTTP:', response.status, response.statusText);
-            throw new Error(`Erro HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        console.log('Dados recebidos:', data);
-        
-    } catch (error) {
-        console.error('Erro completo:', error);
-        mostrarErroGeral('Erro: ' + error.message);
-    }
-}

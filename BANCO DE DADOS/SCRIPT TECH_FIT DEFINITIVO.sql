@@ -220,8 +220,7 @@ INSERT INTO MODALIDADES (NOME_MODALIDADE, DESCRICAO_MODALIDADE) VALUES
 ('Boxe', 'Treinamento de boxe para condicionamento físico'),
 ('Funcional', 'Exercícios que simulam movimentos do dia a dia'),
 ('Alongamento', 'Aulas focadas em flexibilidade e relaxamento muscular');
-  
 
-  
+
 
 

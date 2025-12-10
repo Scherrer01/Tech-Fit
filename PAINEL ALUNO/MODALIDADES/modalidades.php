@@ -11,7 +11,7 @@
 </head>
 <body>
     <!-- ================================================================================= -->
-    <!-- CABEÃ‡ALHO -->
+    <!-- CABEÇALHO -->
     <header class="cabecalho">
         <div class="logo-container">
             <div class="logo">
@@ -31,12 +31,12 @@
     </header>
     <!-- ================================================================================= -->
 
-    <!-- ConteÃºdo Principal -->
+    <!-- Conteúdo Principal -->
     <main class="modalidades-container">
-        <!-- CabeÃ§alho da PÃ¡gina -->
+        <!-- Cabeçalho da Página -->
         <section class="page-header">
             <h1>Nossas Modalidades</h1>
-            <p>ConheÃ§a todas as opÃ§Ãµes de treino com tecnologia de ponta</p>
+            <p>Conheça todas as opções de treino com tecnologia de ponta</p>
         </section>
 
         <!-- Grid de Modalidades -->
@@ -52,69 +52,69 @@
                         </div>
                     </div>
                     <p class="modality-description">
-                        Aulas de cardio com equipamentos de Ãºltima geraÃ§Ã£o e monitoramento em tempo real. 
-                        Esteiras, bikes e elÃ­pticos inteligentes que ajustam automaticamente a intensidade.
+                        Aulas de cardio com equipamentos de última geração e monitoramento em tempo real. 
+                        Esteiras, bikes e elípticos inteligentes que ajustam automaticamente a intensidade.
                     </p>
                     <div class="modality-details">
                         <div class="detail-item">
-                            <span class="icon">â±</span>
+                            <span class="icon">⏱️</span>
                             <span>45-60 min</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ”¥</span>
+                            <span class="icon">🔥</span>
                             <span>500-800 cal</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ’ª</span>
+                            <span class="icon">💪</span>
                             <span>Alta Intensidade</span>
                         </div>
                     </div>
                     <div class="modality-benefits">
-                        <h4>BenefÃ­cios:</h4>
+                        <h4>Benefícios:</h4>
                         <ul>
                             <li>Melhora capacidade cardiovascular</li>
-                            <li>Queima calÃ³rica acelerada</li>
+                            <li>Queima calórica acelerada</li>
                             <li>Monitoramento preciso de performance</li>
-                            <li>Treinos personalizados automÃ¡ticos</li>
+                            <li>Treinos personalizados automáticos</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- ForÃ§a & PotÃªncia -->
+            <!-- Força & Potência -->
             <div class="modality-card" data-category="strength tech">
                 <div class="modality-image strength-tech"></div>
                 <div class="modality-content">
                     <div class="modality-header">
-                        <h3>ForÃ§a & PotÃªncia</h3>
+                        <h3>Força & Potência</h3>
                         <div class="modality-badges">
-                            <span class="badge strength">ForÃ§a</span>
+                            <span class="badge strength">Força</span>
                         </div>
                     </div>
                     <p class="modality-description">
-                        Treino de forÃ§a com equipamentos inteligentes que monitoram carga, repetiÃ§Ãµes e 
-                        tÃ©cnica. MÃ¡quinas com sensores que previnem lesÃµes e otimizam resultados.
+                        Treino de força com equipamentos inteligentes que monitoram carga, repetições e 
+                        técnica. Máquinas com sensores que previnem lesões e otimizam resultados.
                     </p>
                     <div class="modality-details">
                         <div class="detail-item">
-                            <span class="icon">â±</span>
+                            <span class="icon">⏱️</span>
                             <span>60 min</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ‹ï¸</span>
+                            <span class="icon">🏋️</span>
                             <span>Massa Muscular</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ“Š</span>
+                            <span class="icon">📊</span>
                             <span>Progresso Digital</span>
                         </div>
                     </div>
                     <div class="modality-benefits">
-                        <h4>BenefÃ­cios:</h4>
+                        <h4>Benefícios:</h4>
                         <ul>
                             <li>Ganho de massa muscular</li>
-                            <li>Aumento da forÃ§a mÃ¡xima</li>
-                            <li>CorreÃ§Ã£o automÃ¡tica de postura</li>
+                            <li>Aumento da força máxima</li>
+                            <li>Correção automática de postura</li>
                             <li>Tracking detalhado do progresso</li>
                         </ul>
                     </div>
@@ -132,30 +132,30 @@
                         </div>
                     </div>
                     <p class="modality-description">
-                        PrÃ¡tica de yoga com sensores de movimento que garantem o alinhamento perfeito 
-                        das posturas. Realidade aumentada para guiar as sequÃªncias de forma precisa.
+                        Prática de yoga com sensores de movimento que garantem o alinhamento perfeito 
+                        das posturas. Realidade aumentada para guiar as sequências de forma precisa.
                     </p>
                     <div class="modality-details">
                         <div class="detail-item">
-                            <span class="icon">â±</span>
+                            <span class="icon">⏱️</span>
                             <span>50-60 min</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ§˜â€â™€ï¸</span>
+                            <span class="icon">🧘‍♀️</span>
                             <span>Baixo Impacto</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸŽ¯</span>
+                            <span class="icon">🎯</span>
                             <span>Alinhamento Perfeito</span>
                         </div>
                     </div>
                     <div class="modality-benefits">
-                        <h4>BenefÃ­cios:</h4>
+                        <h4>Benefícios:</h4>
                         <ul>
                             <li>Melhora da flexibilidade</li>
-                            <li>ReduÃ§Ã£o do estresse</li>
-                            <li>CorreÃ§Ã£o postural</li>
-                            <li>ConsciÃªncia corporal</li>
+                            <li>Redução do estresse</li>
+                            <li>Correção postural</li>
+                            <li>Consciência corporal</li>
                         </ul>
                     </div>
                 </div>
@@ -172,30 +172,30 @@
                         </div>
                     </div>
                     <p class="modality-description">
-                        Arte marcial tailandesa com equipamentos inteligentes que medem forÃ§a, velocidade 
-                        e precisÃ£o dos golpes. Sacos de pancada com sensores de impacto.
+                        Arte marcial tailandesa com equipamentos inteligentes que medem força, velocidade 
+                        e precisão dos golpes. Sacos de pancada com sensores de impacto.
                     </p>
                     <div class="modality-details">
                         <div class="detail-item">
-                            <span class="icon">â±</span>
+                            <span class="icon">⏱️</span>
                             <span>55 min</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ¥Š</span>
+                            <span class="icon">🥊</span>
                             <span>Alta Intensidade</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ“ˆ</span>
-                            <span>AnÃ¡lise de Golpes</span>
+                            <span class="icon">📈</span>
+                            <span>Análise de Golpes</span>
                         </div>
                     </div>
                     <div class="modality-benefits">
-                        <h4>BenefÃ­cios:</h4>
+                        <h4>Benefícios:</h4>
                         <ul>
-                            <li>Condicionamento fÃ­sico completo</li>
+                            <li>Condicionamento físico completo</li>
                             <li>Autodefesa</li>
-                            <li>Alta queima calÃ³rica</li>
-                            <li>Melhora da coordenaÃ§Ã£o</li>
+                            <li>Alta queima calórica</li>
+                            <li>Melhora da coordenação</li>
                         </ul>
                     </div>
                 </div>
@@ -212,84 +212,84 @@
                         </div>
                     </div>
                     <p class="modality-description">
-                        DanÃ§a fitness com ritmos latinos e tecnologia de monitoramento. Sensores de 
-                        movimento acompanham a coreografia e calculam a queima calÃ³rica em tempo real.
+                        Dança fitness com ritmos latinos e tecnologia de monitoramento. Sensores de 
+                        movimento acompanham a coreografia e calculam a queima calórica em tempo real.
                     </p>
                     <div class="modality-details">
                         <div class="detail-item">
-                            <span class="icon">â±</span>
+                            <span class="icon">⏱️</span>
                             <span>50 min</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ’ƒ</span>
+                            <span class="icon">💃</span>
                             <span>Cardio Dance</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸŽµ</span>
-                            <span>MÃºsica Interativa</span>
+                            <span class="icon">🎵</span>
+                            <span>Música Interativa</span>
                         </div>
                     </div>
                     <div class="modality-benefits">
-                        <h4>BenefÃ­cios:</h4>
+                        <h4>Benefícios:</h4>
                         <ul>
-                            <li>Alta queima calÃ³rica (atÃ© 800cal)</li>
-                            <li>Melhora do ritmo e coordenaÃ§Ã£o</li>
-                            <li>ReduÃ§Ã£o do estresse</li>
-                            <li>SocializaÃ§Ã£o e diversÃ£o</li>
+                            <li>Alta queima calórica (até 800cal)</li>
+                            <li>Melhora do ritmo e coordenação</li>
+                            <li>Redução do estresse</li>
+                            <li>Socialização e diversão</li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Core Tech - AbdÃ´men -->
+            <!-- Core Tech - Abdômen -->
             <div class="modality-card" data-category="strength tech">
                 <div class="modality-image core-tech"></div>
                 <div class="modality-content">
                     <div class="modality-header">
                         <h3>Abdominal</h3>
                         <div class="modality-badges">
-                            <span class="badge strength">ForÃ§a</span>
+                            <span class="badge strength">Força</span>
                         </div>
                     </div>
                     <p class="modality-description">
-                        Treino especÃ­fico para core e abdÃ´men com eletromiografia (EMG) que monitora 
-                        a ativaÃ§Ã£o muscular. Equipamentos que garantem a execuÃ§Ã£o perfeita dos exercÃ­cios.
+                        Treino específico para core e abdômen com eletromiografia (EMG) que monitora 
+                        a ativação muscular. Equipamentos que garantem a execução perfeita dos exercícios.
                     </p>
                     <div class="modality-details">
                         <div class="detail-item">
-                            <span class="icon">â±</span>
+                            <span class="icon">⏱️</span>
                             <span>45 min</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ’ª</span>
-                            <span>DefiniÃ§Ã£o</span>
+                            <span class="icon">💪</span>
+                            <span>Definição</span>
                         </div>
                         <div class="detail-item">
-                            <span class="icon">ðŸ“Š</span>
+                            <span class="icon">📊</span>
                             <span>Biofeedback</span>
                         </div>
                     </div>
                     <div class="modality-benefits">
-                        <h4>BenefÃ­cios:</h4>
+                        <h4>Benefícios:</h4>
                         <ul>
-                            <li>DefiniÃ§Ã£o abdominal</li>
+                            <li>Definição abdominal</li>
                             <li>Fortalecimento do core</li>
                             <li>Melhora da postura</li>
-                            <li>PrevenÃ§Ã£o de dores lombares</li>
+                            <li>Prevenção de dores lombares</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ComparaÃ§Ã£o de Modalidades -->
+        <!-- Comparação de Modalidades -->
         <section class="comparison-section">
-            <h2>Encontre a Modalidade Ideal para VocÃª</h2>
+            <h2>Encontre a Modalidade Ideal para Você</h2>
             <div class="comparison-table">
                 <div class="table-header">
                     <div class="header-cell">Modalidade</div>
                     <div class="header-cell">Intensidade</div>
-                    <div class="header-cell">Queima CalÃ³rica</div>
+                    <div class="header-cell">Queima Calórica</div>
                     <div class="header-cell">Foco Principal</div>
                     <div class="header-cell">Recomendado para</div>
                 </div>
@@ -303,11 +303,11 @@
                 </div>
                 
                 <div class="table-row">
-                    <div class="cell modality-name">ForÃ§a & PotÃªncia</div>
+                    <div class="cell modality-name">Força & Potência</div>
                     <div class="cell intensity-high">Alta</div>
                     <div class="cell">400-600 cal</div>
                     <div class="cell">Massa muscular</div>
-                    <div class="cell">Hipertrofia, forÃ§a</div>
+                    <div class="cell">Hipertrofia, força</div>
                 </div>
                 
                 <div class="table-row">
@@ -323,23 +323,23 @@
                     <div class="cell intensity-high">Alta</div>
                     <div class="cell">600-900 cal</div>
                     <div class="cell">Condicionamento total</div>
-                    <div class="cell">Defesa, alto gasto calÃ³rico</div>
+                    <div class="cell">Defesa, alto gasto calórico</div>
                 </div>
                 
                 <div class="table-row">
                     <div class="cell modality-name">Zumba</div>
-                    <div class="cell intensity-medium">MÃ©dia</div>
+                    <div class="cell intensity-medium">Média</div>
                     <div class="cell">500-800 cal</div>
                     <div class="cell">Cardio divertido</div>
-                    <div class="cell">DiversÃ£o, socializaÃ§Ã£o</div>
+                    <div class="cell">Diversão, socialização</div>
                 </div>
                 
                 <div class="table-row">
                     <div class="cell modality-name">Abdominal</div>
-                    <div class="cell intensity-medium">MÃ©dia</div>
+                    <div class="cell intensity-medium">Média</div>
                     <div class="cell">300-500 cal</div>
-                    <div class="cell">DefiniÃ§Ã£o abdominal</div>
-                    <div class="cell">AbdÃ´men, postura</div>
+                    <div class="cell">Definição abdominal</div>
+                    <div class="cell">Abdômen, postura</div>
                 </div>
             </div>
         </section>
@@ -358,7 +358,7 @@
                             </div>
                             <h2>Tech <span class="color-accent">Fit</span></h2>
                         </div>
-                        <p>Transformando vidas atravÃ©s da tecnologia e fitness.</p>
+                        <p>Transformando vidas através da tecnologia e fitness.</p>
                     </div>
                     <div class="social-links">
                         <a href="#" class="whatsapp">
@@ -384,20 +384,20 @@
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>HorÃ¡rios</h4>
+                    <h4>Horários</h4>
                     <ul>
-                        <li>Segunda a Sexta: 5h Ã s 23h</li>
-                        <li>SÃ¡bados: 6h Ã s 20h</li>
-                        <li>Domingos: 7h Ã s 14h</li>
-                        <li>Feriados: 7h Ã s 12h</li>
+                        <li>Segunda a Sexta: 5h às 23h</li>
+                        <li>Sábados: 6h às 20h</li>
+                        <li>Domingos: 7h às 14h</li>
+                        <li>Feriados: 7h às 12h</li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Contato</h4>
                     <ul>
-                        <li>ðŸ“ Rua Fitness, 123 - Centro</li>
-                        <li>ðŸ“ž (19) 98704-4392</li>
-                        <li>âœ‰ï¸ diogo.scherrer@gmail.com</li>
+                        <li>📍 Rua Fitness, 123 - Centro</li>
+                        <li>📞 (19) 98704-4392</li>
+                        <li>✉️ diogo.scherrer@gmail.com</li>
                     </ul>
                 </div>
             </div>
@@ -410,4 +410,3 @@
     <script src="modalidades.js"></script>
 </body>
 </html>
-

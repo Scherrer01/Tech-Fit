@@ -1,5 +1,221 @@
 ﻿<?php
 // aulas.php
+session_start();
+
+// Verificar se o usuário está logado
+if (!isset($_SESSION['id_aluno'])) {
+    header('Location: ../../PAINEL VISITANTE/registro/login.php');
+    exit();
+}
+
+$id_aluno = $_SESSION['id_aluno'];
+
+// Incluir a classe Database
+require_once '../../database.php';
+
+$database = new Database();
+$conn = $database->getConnection();
+
+if (!$conn) {
+    die("Erro na conexão com o banco de dados.");
+}
+
+// ==============================================================
+// PROCESSAR AGENDAMENTO DE AULA VIA AJAX
+// ==============================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'agendar_aula') {
+    
+    $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+    
+    try {
+        // Validar dados
+        $required_fields = ['nome_aula', 'horario', 'dia_semana', 'id_aluno'];
+        foreach ($required_fields as $field) {
+            if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
+                throw new Exception("Campo obrigatório '$field' não preenchido.");
+            }
+        }
+        
+        if ($_POST['id_aluno'] != $id_aluno) {
+            throw new Exception("Acesso não autorizado.");
+        }
+        
+        // Buscar ID da aula pelo nome
+        $nome_aula = trim($_POST['nome_aula']);
+        $dia_semana = trim($_POST['dia_semana']);
+        $horario = trim($_POST['horario']);
+        
+        $sql_aula = "SELECT ID_AULA FROM AULAS WHERE NOME_AULA = :nome_aula AND DIA_SEMANA = :dia_semana AND HORARIO_INICIO = :horario LIMIT 1";
+        $stmt_aula = $conn->prepare($sql_aula);
+        $stmt_aula->bindParam(':nome_aula', $nome_aula);
+        $stmt_aula->bindParam(':dia_semana', $dia_semana);
+        $stmt_aula->bindParam(':horario', $horario);
+        $stmt_aula->execute();
+        
+        if ($stmt_aula->rowCount() === 0) {
+            throw new Exception("Aula não encontrada.");
+        }
+        
+        $aula = $stmt_aula->fetch(PDO::FETCH_ASSOC);
+        $id_aula = $aula['ID_AULA'];
+        
+        // Verificar se já está agendado
+        $sql_verificar = "SELECT COUNT(*) as total FROM PARTICIPAM WHERE ID_AULA = :id_aula AND ID_ALUNO = :id_aluno";
+        $stmt_verificar = $conn->prepare($sql_verificar);
+        $stmt_verificar->bindParam(':id_aula', $id_aula);
+        $stmt_verificar->bindParam(':id_aluno', $id_aluno);
+        $stmt_verificar->execute();
+        $result = $stmt_verificar->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result['total'] > 0) {
+            throw new Exception("Você já está inscrito nesta aula.");
+        }
+        
+        // Verificar vagas disponíveis
+        $sql_vagas = "SELECT VAGAS FROM AULAS WHERE ID_AULA = :id_aula";
+        $stmt_vagas = $conn->prepare($sql_vagas);
+        $stmt_vagas->bindParam(':id_aula', $id_aula);
+        $stmt_vagas->execute();
+        $vaga = $stmt_vagas->fetch(PDO::FETCH_ASSOC);
+        
+        $vagas_ocupadas = "SELECT COUNT(*) as ocupadas FROM PARTICIPAM WHERE ID_AULA = :id_aula";
+        $stmt_ocupadas = $conn->prepare($vagas_ocupadas);
+        $stmt_ocupadas->bindParam(':id_aula', $id_aula);
+        $stmt_ocupadas->execute();
+        $ocupadas = $stmt_ocupadas->fetch(PDO::FETCH_ASSOC);
+        
+        if ($ocupadas['ocupadas'] >= $vaga['VAGAS']) {
+            throw new Exception("Não há vagas disponíveis para esta aula.");
+        }
+        
+        // Agendar a aula
+        $sql_agendar = "INSERT INTO PARTICIPAM (ID_AULA, ID_ALUNO, DATA_PARTICIPACAO) VALUES (:id_aula, :id_aluno, NOW())";
+        $stmt_agendar = $conn->prepare($sql_agendar);
+        $stmt_agendar->bindParam(':id_aula', $id_aula);
+        $stmt_agendar->bindParam(':id_aluno', $id_aluno);
+        
+        if ($stmt_agendar->execute()) {
+            $response = [
+                'success' => true,
+                'message' => 'Aula agendada com sucesso!',
+                'data' => [
+                    'nome_aula' => $nome_aula,
+                    'dia_semana' => $dia_semana,
+                    'horario' => $horario
+                ]
+            ];
+        } else {
+            throw new Exception("Erro ao agendar aula.");
+        }
+        
+    } catch (Exception $e) {
+        $response = [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+    
+    if ($isAjax) {
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
+}
+
+// ==============================================================
+// BUSCAR AULAS AGENDADAS PELO ALUNO
+// ==============================================================
+try {
+    $sql_aulas_agendadas = "SELECT 
+        a.NOME_AULA,
+        a.DIA_SEMANA,
+        a.HORARIO_INICIO,
+        a.DURACAO_MINUTOS,
+        m.NOME_MODALIDADE,
+        f.NOME_FUNCIONARIO as INSTRUTOR,
+        p.DATA_PARTICIPACAO
+    FROM PARTICIPAM p
+    JOIN AULAS a ON p.ID_AULA = a.ID_AULA
+    JOIN MODALIDADES m ON a.ID_MODALIDADE = m.ID_MODALIDADE
+    LEFT JOIN FUNCIONARIOS f ON a.ID_INSTRUTOR = f.ID_FUNCIONARIO
+    WHERE p.ID_ALUNO = :id_aluno
+    ORDER BY p.DATA_PARTICIPACAO DESC";
+    
+    $stmt_agendadas = $conn->prepare($sql_aulas_agendadas);
+    $stmt_agendadas->bindParam(':id_aluno', $id_aluno);
+    $stmt_agendadas->execute();
+    $aulas_agendadas = $stmt_agendadas->fetchAll(PDO::FETCH_ASSOC);
+    
+} catch (PDOException $e) {
+    $aulas_agendadas = [];
+    error_log("Erro ao buscar aulas agendadas: " . $e->getMessage());
+}
+
+// ==============================================================
+// BUSCAR TODAS AS AULAS DISPONÍVEIS
+// ==============================================================
+try {
+    // Buscar aulas do banco de dados
+    $sql_aulas = "SELECT 
+        a.*, 
+        m.NOME_MODALIDADE, 
+        f.NOME_FUNCIONARIO, 
+        u.NOME_UNIDADE,
+        (SELECT COUNT(*) FROM PARTICIPAM p WHERE p.ID_AULA = a.ID_AULA) as inscritos,
+        (SELECT COUNT(*) FROM PARTICIPAM p2 WHERE p2.ID_AULA = a.ID_AULA AND p2.ID_ALUNO = :id_aluno) as aluno_inscrito
+    FROM AULAS a
+    JOIN MODALIDADES m ON a.ID_MODALIDADE = m.ID_MODALIDADE
+    LEFT JOIN FUNCIONARIOS f ON a.ID_INSTRUTOR = f.ID_FUNCIONARIO
+    LEFT JOIN UNIDADES u ON a.ID_UNIDADE = u.ID_UNIDADE
+    ORDER BY 
+        FIELD(a.DIA_SEMANA, 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'),
+        a.HORARIO_INICIO";
+    
+    $stmt_aulas = $conn->prepare($sql_aulas);
+    $stmt_aulas->bindParam(':id_aluno', $id_aluno);
+    $stmt_aulas->execute();
+    $aulas_disponiveis = $stmt_aulas->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Agrupar aulas por nome para exibição
+    $aulas_agrupadas = [];
+    foreach ($aulas_disponiveis as $aula) {
+        $nome_aula = $aula['NOME_AULA'];
+        if (!isset($aulas_agrupadas[$nome_aula])) {
+            $aulas_agrupadas[$nome_aula] = [
+                'NOME_AULA' => $aula['NOME_AULA'],
+                'NOME_MODALIDADE' => $aula['NOME_MODALIDADE'],
+                'NOME_FUNCIONARIO' => $aula['NOME_FUNCIONARIO'],
+                'NOME_UNIDADE' => $aula['NOME_UNIDADE'],
+                'DURACAO_MINUTOS' => $aula['DURACAO_MINUTOS'],
+                'horarios' => []
+            ];
+        }
+        
+        $aulas_agrupadas[$nome_aula]['horarios'][] = [
+            'DIA_SEMANA' => $aula['DIA_SEMANA'],
+            'HORARIO_INICIO' => $aula['HORARIO_INICIO'],
+            'VAGAS' => $aula['VAGAS'],
+            'INSCRITOS' => $aula['inscritos'],
+            'ALUNO_INSCRITO' => $aula['aluno_inscrito'] > 0,
+            'ID_AULA' => $aula['ID_AULA']
+        ];
+    }
+    
+} catch (PDOException $e) {
+    error_log("Erro PDO: " . $e->getMessage());
+    die("Erro ao carregar aulas.");
+}
+
+// Mapeamento de dias da semana
+$dias_semana = [
+    'DOM' => 'Domingo',
+    'SEG' => 'Segunda',
+    'TER' => 'Terça',
+    'QUA' => 'Quarta',
+    'QUI' => 'Quinta',
+    'SEX' => 'Sexta',
+    'SAB' => 'Sábado'
+];
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -8,10 +224,240 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aulas - Tech Fit</title>
     <link rel="stylesheet" href="aulas.css">
+    <style>
+        /* Estilos específicos para o sistema de agendamento */
+        .schedule-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 100px;
+        }
+
+        .schedule-btn.agendar {
+            background-color: #FF2626;
+            color: white;
+        }
+
+        .schedule-btn.agendar:hover:not(:disabled) {
+            background-color: #e02020;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 38, 38, 0.3);
+        }
+
+        .schedule-btn.agendado {
+            background-color: #4CAF50 !important;
+            color: white !important;
+            cursor: default !important;
+        }
+
+        .schedule-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .vagas-info {
+            font-size: 12px;
+            color: #b0b0b0;
+            margin: 5px 0;
+            display: block;
+        }
+
+        .schedule-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Status das vagas */
+        .vagas-poucas {
+            color: #FF9800;
+        }
+
+        .vagas-lotado {
+            color: #F44336;
+        }
+
+        /* Filtros */
+        .filter-btn {
+            padding: 8px 16px;
+            background: #282828;
+            border: 1px solid #444;
+            color: #b0b0b0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background-color: #FF2626;
+            color: white;
+            border-color: #FF2626;
+        }
+
+        .filter-btn:hover:not(.active) {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Notificações */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: notificationSlideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification.success {
+            background-color: #4CAF50;
+        }
+
+        .notification.error {
+            background-color: #F44336;
+        }
+
+        @keyframes notificationSlideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Seção de aulas agendadas */
+        .scheduled-classes-section {
+            margin-bottom: 40px;
+        }
+
+        .scheduled-classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .scheduled-class-card {
+            background: #282828;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #444;
+            transition: transform 0.3s ease;
+        }
+
+        .scheduled-class-card:hover {
+            transform: translateY(-5px);
+            border-color: #FF2626;
+        }
+
+        .class-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .status-agendada {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .status-realizada {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Modal de confirmação */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: #282828;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid #444;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn.confirm {
+            background-color: #FF2626;
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background-color: #444;
+            color: #b0b0b0;
+        }
+
+        .modal-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Contador de aulas */
+        .class-counter {
+            background: #FF2626;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        /* Esconde seções por padrão */
+        .section-hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <!-- ================================================================================= -->
-    <!-- CABEÃ‡ALHO -->
+    <!-- CABEÇALHO -->
     <header class="cabecalho">
         <div class="logo-container">
             <div class="logo">
@@ -21,267 +467,147 @@
         </div>
         <nav>
             <ul>
-            <li><a href="/PAINEL ALUNO/index.php">iní­cio</a></li>
-            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.php">Modalidades</a></li>
-            <li><a href="/PAINEL ALUNO/UNIDADES/unidades.php">Unidades</a></li>
-            <li><a href="/PAINEL ALUNO/PLANOS/plano.php">Planos</a></li>
-            <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
+                <li><a href="/PAINEL ALUNO/index.php">Início</a></li>
+                <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.php">Modalidades</a></li>
+                <li><a href="/PAINEL ALUNO/UNIDADES/unidades.php">Unidades</a></li>
+                <li><a href="/PAINEL ALUNO/PLANOS/plano.php">Planos</a></li>
+                <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
             </ul>
         </nav>
     </header>
     <!-- ================================================================================= -->
 
-    <!-- ConteÃºdo Principal -->
+    <!-- Notificação -->
+    <div id="notification" class="notification" style="display: none;"></div>
+
+    <!-- Modal de confirmação -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalTitle">Confirmar agendamento</h3>
+            <p id="modalMessage">Tem certeza que deseja agendar esta aula?</p>
+            <div class="modal-buttons">
+                <button id="modalCancel" class="modal-btn cancel">Cancelar</button>
+                <button id="modalConfirm" class="modal-btn confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
     <main class="aulas-container">
-        <!-- CabeÃ§alho da PÃ¡gina -->
+        <!-- Cabeçalho da Página -->
         <section class="page-header">
             <h1>Aulas Tech Fit</h1>
-            <p>Acompanhe suas aulas agendadas e histÃ³rico de treinos</p>
+            <p>Acompanhe suas aulas agendadas e histórico de treinos</p>
         </section>
 
         <!-- Filtros e Busca -->
         <section class="filters-section">
             <div class="filters-container">
                 <div class="search-box">
-                    <input type="text" placeholder="Buscar aula...">
-                    <button>ðŸ”</button>
+                    <input type="text" id="searchInput" placeholder="Buscar aula...">
+                    <button id="searchButton">🔍</button>
                 </div>
                 <div class="filter-buttons">
-                    <button class="filter-btn active">Todas</button>
-                    <button class="filter-btn">Agendadas</button>
-                    <button class="filter-btn">Realizadas</button>
-                    <button class="filter-btn">Favoritas</button>
+                    <button class="filter-btn active" data-filter="todas">Todas</button>
+                    <button class="filter-btn" data-filter="agendadas">
+                        Agendadas <span class="class-counter"><?php echo count($aulas_agendadas); ?></span>
+                    </button>
+                    <button class="filter-btn" data-filter="disponiveis">Disponíveis</button>
                 </div>
             </div>
         </section>
 
-        <!-- Todas as Aulas DisponÃ­veis -->
-<section class="available-classes">
-    
-    <div class="classes-grid">
-        <!-- Aula 1 -->
-        <div class="class-card available">
-            <div class="class-image cardio"></div>
-            <div class="class-info">
-                <h3>Cardio</h3>
-                <p>Aula de alta intensidade com monitoramento cardÃ­aco em tempo real</p>
-                <div class="class-meta">
-                    <span>â± 45min</span>
-                    <span>ðŸ”¥ Alta Intensidade</span>
-                    <span>ðŸ‘¨â€ðŸ« Prof. Carlos</span>
+        <!-- Aulas Agendadas -->
+        <section id="agendadasSection" class="scheduled-classes-section section-hidden">
+            <h2 style="color: white;">Suas Aulas Agendadas</h2>
+            
+            <?php if (count($aulas_agendadas) > 0): ?>
+            <div class="scheduled-classes-grid">
+                <?php foreach ($aulas_agendadas as $aula): 
+                    $data_participacao = new DateTime($aula['DATA_PARTICIPACAO']);
+                    $hoje = new DateTime();
+                    $status = ($data_participacao < $hoje) ? 'realizada' : 'agendada';
+                ?>
+                <div class="scheduled-class-card">
+                    <span class="class-status status-<?php echo $status; ?>">
+                        <?php echo ucfirst($status); ?>
+                    </span>
+                    <h3><?php echo htmlspecialchars($aula['NOME_AULA']); ?></h3>
+                    <p><?php echo htmlspecialchars($aula['NOME_MODALIDADE']); ?></p>
+                    
+                    <div class="class-details">
+                        <p><strong>Dia:</strong> <?php echo $dias_semana[$aula['DIA_SEMANA']] ?? $aula['DIA_SEMANA']; ?></p>
+                        <p><strong>Horário:</strong> <?php echo date('H:i', strtotime($aula['HORARIO_INICIO'])); ?></p>
+                        <p><strong>Duração:</strong> <?php echo $aula['DURACAO_MINUTOS']; ?> min</p>
+                        <p><strong>Instrutor:</strong> <?php echo htmlspecialchars($aula['INSTRUTOR'] ?? 'Não definido'); ?></p>
+                        <p><strong>Agendado em:</strong> <?php echo date('d/m/Y H:i', strtotime($aula['DATA_PARTICIPACAO'])); ?></p>
+                    </div>
                 </div>
+                <?php endforeach; ?>
             </div>
-            <div class="class-schedule">
-                <div class="schedule-item">
-                    <span>Segunda - 18:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>Quarta - 19:30</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>Sexta - 17:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
+            <?php else: ?>
+            <div class="no-classes" style="text-align: center; padding: 40px; color: #b0b0b0;">
+                <p>Você ainda não tem aulas agendadas.</p>
+                <p style="margin-top: 10px;">Explore as aulas disponíveis abaixo e faça seu primeiro agendamento!</p>
             </div>
-        </div>
+            <?php endif; ?>
+        </section>
 
-        <!-- Aula 2 -->
-        <div class="class-card available">
-            <div class="class-image strength"></div>
-            <div class="class-info">
-                <h3>ForÃ§a & PotÃªncia</h3>
-                <p>Treino focado em ganho de massa muscular e forÃ§a mÃ¡xima</p>
-                <div class="class-meta">
-                    <span>â± 60min</span>
-                    <span>ðŸ’ª Forte</span>
-                    <span>ðŸ‘©â€ðŸ« Prof. Ana</span>
+        <!-- Aulas Disponíveis -->
+        <section id="disponiveisSection" class="available-classes">
+            <h2 style="color: white;">Aulas Disponíveis</h2>
+            <div class="classes-grid">
+                <?php foreach ($aulas_agrupadas as $nome_aula => $dados_aula): 
+                    // Determinar classe CSS baseada na modalidade
+                    $modalidade_class = strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $dados_aula['NOME_MODALIDADE']));
+                ?>
+                <div class="class-card available" data-modalidade="<?php echo htmlspecialchars($dados_aula['NOME_MODALIDADE']); ?>">
+                    <div class="class-image <?php echo $modalidade_class; ?>"></div>
+                    <div class="class-info">
+                        <h3><?php echo htmlspecialchars($nome_aula); ?></h3>
+                        <p><?php echo htmlspecialchars($dados_aula['NOME_MODALIDADE']); ?> com monitoramento de performance</p>
+                        <div class="class-meta">
+                            <span>⏱️ <?php echo $dados_aula['DURACAO_MINUTOS']; ?>min</span>
+                            <span>👨‍🏫 <?php echo htmlspecialchars($dados_aula['NOME_FUNCIONARIO'] ?? 'Professor não definido'); ?></span>
+                            <?php if (!empty($dados_aula['NOME_UNIDADE'])): ?>
+                            <span>🏢 <?php echo htmlspecialchars($dados_aula['NOME_UNIDADE']); ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="class-schedule">
+                        <?php foreach ($dados_aula['horarios'] as $horario): 
+                            $dia_formatado = $dias_semana[$horario['DIA_SEMANA']] ?? $horario['DIA_SEMANA'];
+                            $vagas_disponiveis = $horario['VAGAS'] - $horario['INSCRITOS'];
+                            $vaga_class = ($vagas_disponiveis <= 2) ? 'vagas-poucas' : (($vagas_disponiveis <= 0) ? 'vagas-lotado' : '');
+                        ?>
+                        <div class="schedule-item" data-aula-id="<?php echo $horario['ID_AULA']; ?>">
+                            <span><?php echo $dia_formatado; ?> - <?php echo date('H:i', strtotime($horario['HORARIO_INICIO'])); ?></span>
+                            <span class="vagas-info <?php echo $vaga_class; ?>">
+                                Vagas: <?php echo $vagas_disponiveis; ?>/<?php echo $horario['VAGAS']; ?>
+                            </span>
+                            <?php if ($horario['ALUNO_INSCRITO']): ?>
+                                <button class="schedule-btn agendado" disabled>✓ Agendada</button>
+                            <?php else: ?>
+                                <button class="schedule-btn agendar" 
+                                        data-nome-aula="<?php echo htmlspecialchars($nome_aula); ?>"
+                                        data-dia-semana="<?php echo $horario['DIA_SEMANA']; ?>"
+                                        data-horario="<?php echo $horario['HORARIO_INICIO']; ?>"
+                                        data-id-aluno="<?php echo $id_aluno; ?>"
+                                        <?php echo ($vagas_disponiveis <= 0) ? 'disabled' : ''; ?>>
+                                    <?php echo ($vagas_disponiveis <= 0) ? 'Lotado' : 'Agendar'; ?>
+                                </button>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-            </div>
-            <div class="class-schedule">
-                <div class="schedule-item">
-                    <span>TerÃ§a - 19:00</span>
-                    <button class="schedule-btn">Agendar</button>
+                <?php endforeach; ?>
+                
+                <?php if (empty($aulas_agrupadas)): ?>
+                <div class="no-classes">
+                    <p>Não há aulas disponíveis no momento.</p>
                 </div>
-                <div class="schedule-item">
-                    <span>Quinta - 20:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>SÃ¡bado - 10:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Aula 3 -->
-        <div class="class-card available">
-            <div class="class-image yoga"></div>
-            <div class="class-info">
-                <h3>Yoga</h3>
-                <p>PrÃ¡tica de yoga com auxÃ­lio do professor</p>
-                <div class="class-meta">
-                    <span>â± 50min</span>
-                    <span>ðŸ§˜â€â™€ï¸ Relaxante</span>
-                    <span>ðŸ‘¨â€ðŸ« Prof. JoÃ£o</span>
-                </div>
-            </div>
-            <div class="class-schedule">
-                <div class="schedule-item">
-                    <span>Segunda - 07:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>Quarta - 08:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>Sexta - 07:30</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Aula 4 -->
-        <div class="class-card available">
-            <div class="class-image boxing"></div>
-            <div class="class-info">
-                <h3>Muay Thai</h3>
-                <p>Treino de Muay Thai com tecnologia de impacto e performance</p>
-                <div class="class-meta">
-                    <span>â± 55min</span>
-                    <span>ðŸ¥Š Intenso</span>
-                    <span>ðŸ‘©â€ðŸ« Prof. Maria</span>
-                </div>
-            </div>
-            <div class="class-schedule">
-                <div class="schedule-item">
-                    <span>TerÃ§a - 18:30</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>Quinta - 19:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>SÃ¡bado - 11:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Aula 5 - Zumba Tech -->
-        <div class="class-card available">
-            <div class="class-image zumba"></div>
-            <div class="class-info">
-                <h3>Zumba</h3>
-                <p>DanÃ§a, diversÃ£o e queima calÃ³rica com tecnologia de monitoramento</p>
-                <div class="class-meta">
-                    <span>â± 50min</span>
-                    <span>ðŸ’ƒ Cardio Dance</span>
-                    <span>ðŸ‘©â€ðŸ« Prof. Carla</span>
-                </div>
-            </div>
-            <div class="class-schedule">
-                <div class="schedule-item">
-                    <span>Segunda - 19:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>Quarta - 20:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>Sexta - 18:30</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Aula 6 - Core Tech - DefiniÃ§Ã£o Abdominal -->
-        <div class="class-card available">
-            <div class="class-image abs"></div>
-            <div class="class-info">
-                <h3>Abdominal</h3>
-                <p>Treino especÃ­fico para fortalecimento e definiÃ§Ã£o do abdÃ´men</p>
-                <div class="class-meta">
-                    <span>â± 45min</span>
-                    <span>ðŸ’ª DefiniÃ§Ã£o</span>
-                    <span>ðŸ‘¨â€ðŸ« Prof. Marcos</span>
-                </div>
-            </div>
-            <div class="class-schedule">
-                <div class="schedule-item">
-                    <span>TerÃ§a - 07:00</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>Quinta - 19:30</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-                <div class="schedule-item">
-                    <span>SÃ¡bado - 10:30</span>
-                    <button class="schedule-btn">Agendar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-        <!-- HistÃ³rico de Aulas -->
-        <section class="class-history">
-            <h2>HistÃ³rico de Aulas</h2>
-            <div class="history-table">
-                <div class="table-header">
-                    <span>Aula</span>
-                    <span>Data</span>
-                    <span>Professor</span>
-                    <span>Status</span>
-                    <span>AvaliaÃ§Ã£o</span>
-                </div>
-                <div class="table-row">
-                    <span>Cardio Tech</span>
-                    <span>15/03/2024 - 18:00</span>
-                    <span>Prof. Carlos</span>
-                    <span class="status completed">ConcluÃ­da</span>
-                    <span>â­â­â­â­â­</span>
-                </div>
-                <div class="table-row">
-                    <span>ForÃ§a & PotÃªncia</span>
-                    <span>13/03/2024 - 19:30</span>
-                    <span>Prof. Ana</span>
-                    <span class="status completed">ConcluÃ­da</span>
-                    <span>â­â­â­â­</span>
-                </div>
-                <div class="table-row">
-                    <span>Yoga Tech</span>
-                    <span>11/03/2024 - 08:00</span>
-                    <span>Prof. JoÃ£o</span>
-                    <span class="status completed">ConcluÃ­da</span>
-                    <span>â­â­â­â­â­</span>
-                </div>
-                <div class="table-row">
-                    <span>Muay Thai</span>
-                    <span>08/03/2024 - 18:30</span>
-                    <span>Prof. Maria</span>
-                    <span class="status completed"> ConcluÃ­da</span>
-                    <span>â­â­â­â­â­</span>
-                </div>
-                <div class="table-row">
-                    <span>Zumba</span>
-                    <span>06/03/2024 - 19:00</span>
-                    <span>Prof. Carlos</span>
-                    <span class="status completed"> ConcluÃ­da</span>
-                    <span>â­â­â­</span>
-                </div>
-                <div class="table-row">
-                    <span>Abdominal</span>
-                    <span>10/03/2024 - 19:30</span>
-                    <span>Prof. Ana</span>
-                    <span class="status completed"> ConcluÃ­da</span>
-                    <span>â­â­â­â­</span>
-                </div>
+                <?php endif; ?>
             </div>
         </section>
     </main>
@@ -289,64 +615,10 @@
     <!-- ================================================================================= -->
     <!-- FOOTER -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <div class="logo-container">
-                            <div class="logo">
-                               <img src="../../logo.png" alt="Tech Fit">
-                            </div>
-                            <h2>Tech <span class="color-accent">Fit</span></h2>
-                        </div>
-                        <p>Transformando vidas atravÃ©s da tecnologia e fitness.</p>
-                    </div>
-                    <div class="social-links">
-                        <a href="#" class="whatsapp">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.189-3.553-8.449"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="facebook">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="instagram">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="youtube">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>HorÃ¡rios</h4>
-                    <ul>
-                        <li>Segunda a Sexta: 5h Ã s 23h</li>
-                        <li>SÃ¡bados: 6h Ã s 20h</li>
-                        <li>Domingos: 7h Ã s 14h</li>
-                        <li>Feriados: 7h Ã s 12h</li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contato</h4>
-                    <ul>
-                        <li>ðŸ“ Rua Fitness, 123 - Centro</li>
-                        <li>ðŸ“ž (19) 98704-4392</li>
-                        <li>âœ‰ï¸ diogo.scherrer@gmail.com</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Tech Fit Academia. Todos os direitos reservados.</p>
-            </div>
-        </div>
+        <!-- ... código do footer ... -->
     </footer>
+
+    <script src="aulas.js"></script>
+    <script src="pesquisa.js"></script>
 </body>
 </html>
-
