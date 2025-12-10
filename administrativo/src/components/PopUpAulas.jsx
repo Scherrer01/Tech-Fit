@@ -138,25 +138,25 @@ const PopUpAulas = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-300">
         {/* Cabeçalho */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+        <div className="sticky top-0 bg-gray-900 border-b border-gray-800 px-6 py-4 flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-white">
               {mode === 'create' ? 'Nova Aula' : 
                mode === 'edit' ? 'Editar Aula' : 'Detalhes da Aula'}
             </h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-300">
               {mode === 'create' ? 'Preencha os dados para criar uma nova aula' : 
                mode === 'edit' ? 'Modifique os dados da aula' : 'Visualize os detalhes da aula'}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-800 rounded-full transition-colors"
           >
-            <FiX size={24} className="text-gray-500" />
+            <FiX size={24} className="text-gray-300 hover:text-white" />
           </button>
         </div>
 
@@ -164,17 +164,17 @@ const PopUpAulas = ({
         <form onSubmit={handleSubmit} className="p-6">
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
-              <p className="text-red-700 text-sm">{error}</p>
+              <p className="text-red-700 text-sm font-medium">{error}</p>
             </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Nome da Aula */}
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 <div className="flex items-center gap-2">
-                  <MdFitnessCenter className="text-gray-400" />
-                  Nome da Aula *
+                  <MdFitnessCenter className="text-red-600" />
+                  <span className="text-gray-800">Nome da Aula *</span>
                 </div>
               </label>
               <input
@@ -184,17 +184,17 @@ const PopUpAulas = ({
                 onChange={handleChange}
                 disabled={mode === 'view'}
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800"
                 placeholder="Ex: Yoga Avançado"
               />
             </div>
 
             {/* Modalidade */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 <div className="flex items-center gap-2">
-                  <MdFitnessCenter className="text-gray-400" />
-                  Modalidade *
+                  <MdFitnessCenter className="text-red-600" />
+                  <span className="text-gray-800">Modalidade *</span>
                 </div>
               </label>
               <select
@@ -203,11 +203,11 @@ const PopUpAulas = ({
                 onChange={handleChange}
                 disabled={mode === 'view'}
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800"
               >
-                <option value="">Selecione uma modalidade</option>
+                <option value="" className="text-gray-500">Selecione uma modalidade</option>
                 {modalidades.map((modalidade) => (
-                  <option key={modalidade.id} value={modalidade.id}>
+                  <option key={modalidade.id} value={modalidade.id} className="text-gray-800">
                     {modalidade.nome}
                   </option>
                 ))}
@@ -216,10 +216,10 @@ const PopUpAulas = ({
 
             {/* Instrutor */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 <div className="flex items-center gap-2">
-                  <MdPerson className="text-gray-400" />
-                  Instrutor
+                  <MdPerson className="text-red-600" />
+                  <span className="text-gray-800">Instrutor</span>
                 </div>
               </label>
               <select
@@ -227,11 +227,11 @@ const PopUpAulas = ({
                 value={formData.id_instrutor}
                 onChange={handleChange}
                 disabled={mode === 'view'}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800"
               >
-                <option value="">Selecione um instrutor (opcional)</option>
+                <option value="" className="text-gray-500">Selecione um instrutor (opcional)</option>
                 {instrutores.map((instrutor) => (
-                  <option key={instrutor.id} value={instrutor.id}>
+                  <option key={instrutor.id} value={instrutor.id} className="text-gray-800">
                     {instrutor.nome}
                   </option>
                 ))}
@@ -240,10 +240,10 @@ const PopUpAulas = ({
 
             {/* Unidade */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 <div className="flex items-center gap-2">
-                  <MdLocationOn className="text-gray-400" />
-                  Unidade
+                  <MdLocationOn className="text-red-600" />
+                  <span className="text-gray-800">Unidade</span>
                 </div>
               </label>
               <select
@@ -251,11 +251,11 @@ const PopUpAulas = ({
                 value={formData.id_unidade}
                 onChange={handleChange}
                 disabled={mode === 'view'}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800"
               >
-                <option value="">Selecione uma unidade (opcional)</option>
+                <option value="" className="text-gray-500">Selecione uma unidade (opcional)</option>
                 {unidades.map((unidade) => (
-                  <option key={unidade.id} value={unidade.id}>
+                  <option key={unidade.id} value={unidade.id} className="text-gray-800">
                     {unidade.nome}
                   </option>
                 ))}
@@ -264,10 +264,10 @@ const PopUpAulas = ({
 
             {/* Dia da Semana */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 <div className="flex items-center gap-2">
-                  <FiCalendar className="text-gray-400" />
-                  Dia da Semana *
+                  <FiCalendar className="text-red-600" />
+                  <span className="text-gray-800">Dia da Semana *</span>
                 </div>
               </label>
               <select
@@ -276,10 +276,10 @@ const PopUpAulas = ({
                 onChange={handleChange}
                 disabled={mode === 'view'}
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800"
               >
                 {diasSemana.map((dia) => (
-                  <option key={dia.sigla} value={dia.sigla}>
+                  <option key={dia.sigla} value={dia.sigla} className="text-gray-800">
                     {dia.nome}
                   </option>
                 ))}
@@ -288,10 +288,10 @@ const PopUpAulas = ({
 
             {/* Horário de Início */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 <div className="flex items-center gap-2">
-                  <FiClock className="text-gray-400" />
-                  Horário de Início *
+                  <FiClock className="text-red-600" />
+                  <span className="text-gray-800">Horário de Início *</span>
                 </div>
               </label>
               <input
@@ -301,14 +301,14 @@ const PopUpAulas = ({
                 onChange={handleChange}
                 disabled={mode === 'view'}
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800"
               />
             </div>
 
             {/* Duração */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Duração (minutos) *
+              <label className="block text-sm font-medium text-gray-800 mb-2">
+                <span className="text-gray-800">Duração (minutos) *</span>
               </label>
               <input
                 type="number"
@@ -319,16 +319,16 @@ const PopUpAulas = ({
                 min="1"
                 max="480"
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800"
               />
             </div>
 
             {/* Vagas */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-800 mb-2">
                 <div className="flex items-center gap-2">
-                  <FiUsers className="text-gray-400" />
-                  Vagas *
+                  <FiUsers className="text-red-600" />
+                  <span className="text-gray-800">Vagas *</span>
                 </div>
               </label>
               <input
@@ -340,17 +340,17 @@ const PopUpAulas = ({
                 min="1"
                 max="500"
                 required
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-gray-800"
               />
             </div>
           </div>
 
           {/* Rodapé com botões */}
-          <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-3">
+          <div className="mt-8 pt-6 border-t border-gray-300 flex justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 border border-gray-400 text-gray-800 font-medium rounded-xl hover:bg-gray-100 transition-colors"
             >
               Cancelar
             </button>
@@ -359,7 +359,7 @@ const PopUpAulas = ({
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-3 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {loading ? (
                   <>

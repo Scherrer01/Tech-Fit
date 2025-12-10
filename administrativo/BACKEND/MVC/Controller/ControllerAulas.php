@@ -1,7 +1,7 @@
 <?php
 
-require_once 'AulaDAO.php';
-require_once 'aula.php';
+require_once '../Model/aulaDAO.php';
+require_once '../Model/aula.php';
 
 class ControllerAulas {
     private $aulaDAO;
@@ -157,10 +157,18 @@ class ControllerAulas {
                 $aulaExistente->setVagas($dados['vagas']);
             }
             
-            // Verificar conflito de horário (excluindo a própria aula)
-            if (isset($dados['id_unidade']) || isset($dados['dia_semana']) || 
-                isset($dados['horario_inicio']) || isset($dados['duracao_minutos'])) {
-                
+            // Verificar conflito de horário sempre que houver alteração em campos relevantes
+            $necessitaVerificarConflito = false;
+            $camposHorario = ['id_unidade', 'dia_semana', 'horario_inicio', 'duracao_minutos'];
+            
+            foreach ($camposHorario as $campo) {
+                if (isset($dados[$campo])) {
+                    $necessitaVerificarConflito = true;
+                    break;
+                }
+            }
+            
+            if ($necessitaVerificarConflito) {
                 $conflito = $this->aulaDAO->verificarConflitoHorario(
                     $aulaExistente->getIdUnidade() ?? 0,
                     $aulaExistente->getDiaSemana(),
@@ -308,6 +316,15 @@ class ControllerAulas {
     // 9. Buscar agenda semanal
     public function buscarAgendaSemanal($id_unidade = null, $data_referencia = null) {
         try {
+            // Validar data_referencia
+            if ($data_referencia) {
+                $dataObj = DateTime::createFromFormat('Y-m-d', $data_referencia);
+                if (!$dataObj) {
+                    return ['success' => false, 'message' => 'Formato de data inválido. Use YYYY-MM-DD'];
+                }
+                $data_referencia = $dataObj->format('Y-m-d');
+            }
+            
             $aulas = $this->aulaDAO->buscarAgendaSemanal($id_unidade, $data_referencia);
             
             $aulasFormatadas = [];
@@ -343,6 +360,11 @@ class ControllerAulas {
                 return ['success' => false, 'message' => 'Dados insuficientes para verificação'];
             }
             
+            // Validação adicional
+            if (!is_numeric($dados['id_unidade'])) {
+                return ['success' => false, 'message' => 'ID da unidade inválido'];
+            }
+            
             $conflito = $this->aulaDAO->verificarConflitoHorario(
                 $dados['id_unidade'],
                 $dados['dia_semana'],
@@ -365,25 +387,24 @@ class ControllerAulas {
         }
     }
     
-    // 11. Buscar aulas com relacionamentos
+    // 11. Buscar aula com relacionamentos (SIMPLIFICADO)
     public function buscarAulaCompleta($id_aula) {
         try {
             if (empty($id_aula) || !is_numeric($id_aula)) {
                 return ['success' => false, 'message' => 'ID inválido'];
             }
             
-            $dados = $this->aulaDAO->buscarComRelacionamentos($id_aula);
+            $aula = $this->aulaDAO->buscarPorId($id_aula);
             
-            if (!$dados) {
+            if (!$aula) {
                 return ['success' => false, 'message' => 'Aula não encontrada'];
             }
             
-            // Formatar dados com horário de término
-            $dadosFormatados = $this->formatarAulaComRelacionamentos($dados);
+            $dadosCompletos = $this->formatarAula($aula);
             
             return [
                 'success' => true,
-                'data' => $dadosFormatados
+                'data' => $dadosCompletos
             ];
             
         } catch (Exception $e) {
@@ -394,25 +415,20 @@ class ControllerAulas {
         }
     }
     
-    // 12. Listar todas as aulas com relacionamentos
+    // 12. Listar todas as aulas (método simplificado)
     public function listarAulasCompletas($filtros = []) {
         try {
-            $dados = $this->aulaDAO->buscarComRelacionamentos();
+            // Usar o método listarAulas existente
+            $resultado = $this->listarAulas($filtros);
             
-            // Aplicar filtros após a consulta
-            if (!empty($filtros)) {
-                $dados = $this->filtrarAulas($dados, $filtros);
-            }
-            
-            $aulasFormatadas = [];
-            foreach ($dados as $dado) {
-                $aulasFormatadas[] = $this->formatarAulaComRelacionamentos($dado);
+            if (!$resultado['success']) {
+                return $resultado;
             }
             
             return [
                 'success' => true,
-                'data' => $aulasFormatadas,
-                'total' => count($aulasFormatadas)
+                'data' => $resultado['data'],
+                'total' => $resultado['total']
             ];
             
         } catch (Exception $e) {
@@ -442,22 +458,31 @@ class ControllerAulas {
     }
     
     private function formatarAulaComRelacionamentos($dados) {
+        // Se dados já é um objeto Aulas
+        if ($dados instanceof Aulas) {
+            return $this->formatarAula($dados);
+        }
+        
+        // Se é um array associativo
         return [
-            'id_aula' => $dados['ID_AULA'],
-            'nome_aula' => $dados['NOME_AULA'],
-            'id_modalidade' => $dados['ID_MODALIDADE'],
-            'nome_modalidade' => $dados['NOME_MODALIDADE'] ?? null,
-            'id_instrutor' => $dados['ID_INSTRUTOR'],
-            'nome_instrutor' => $dados['NOME_INSTRUTOR'] ?? null,
-            'id_unidade' => $dados['ID_UNIDADE'],
-            'nome_unidade' => $dados['NOME_UNIDADE'] ?? null,
-            'endereco_unidade' => $dados['ENDERECO'] ?? null,
-            'dia_semana' => $dados['DIA_SEMANA'],
-            'horario_inicio' => $dados['HORARIO_INICIO'],
-            'duracao_minutos' => $dados['DURACAO_MINUTOS'],
-            'vagas' => $dados['VAGAS'],
-            'criado_em' => $dados['CRIADO_EM'],
-            'horario_termino' => $this->calcularHorarioTermino($dados['HORARIO_INICIO'], $dados['DURACAO_MINUTOS'])
+            'id_aula' => $dados['ID_AULA'] ?? $dados['id_aula'] ?? null,
+            'nome_aula' => $dados['NOME_AULA'] ?? $dados['nome_aula'] ?? null,
+            'id_modalidade' => $dados['ID_MODALIDADE'] ?? $dados['id_modalidade'] ?? null,
+            'nome_modalidade' => $dados['NOME_MODALIDADE'] ?? $dados['nome_modalidade'] ?? null,
+            'id_instrutor' => $dados['ID_INSTRUTOR'] ?? $dados['id_instrutor'] ?? null,
+            'nome_instrutor' => $dados['NOME_INSTRUTOR'] ?? $dados['nome_instrutor'] ?? null,
+            'id_unidade' => $dados['ID_UNIDADE'] ?? $dados['id_unidade'] ?? null,
+            'nome_unidade' => $dados['NOME_UNIDADE'] ?? $dados['nome_unidade'] ?? null,
+            'endereco_unidade' => $dados['ENDERECO'] ?? $dados['endereco'] ?? null,
+            'dia_semana' => $dados['DIA_SEMANA'] ?? $dados['dia_semana'] ?? null,
+            'horario_inicio' => $dados['HORARIO_INICIO'] ?? $dados['horario_inicio'] ?? null,
+            'duracao_minutos' => $dados['DURACAO_MINUTOS'] ?? $dados['duracao_minutos'] ?? null,
+            'vagas' => $dados['VAGAS'] ?? $dados['vagas'] ?? null,
+            'criado_em' => $dados['CRIADO_EM'] ?? $dados['criado_em'] ?? null,
+            'horario_termino' => $this->calcularHorarioTermino(
+                $dados['HORARIO_INICIO'] ?? $dados['horario_inicio'] ?? null,
+                $dados['DURACAO_MINUTOS'] ?? $dados['duracao_minutos'] ?? null
+            )
         ];
     }
     
@@ -466,9 +491,13 @@ class ControllerAulas {
             return null;
         }
         
-        $inicio = new DateTime($horario_inicio);
-        $inicio->modify("+{$duracao_minutos} minutes");
-        return $inicio->format('H:i:s');
+        try {
+            $inicio = new DateTime($horario_inicio);
+            $inicio->modify("+{$duracao_minutos} minutes");
+            return $inicio->format('H:i:s');
+        } catch (Exception $e) {
+            return null;
+        }
     }
     
     private function getNomeDiaSemana($numero_dia) {
@@ -489,15 +518,37 @@ class ControllerAulas {
         return array_filter($aulas, function($aula) use ($filtros) {
             foreach ($filtros as $campo => $valor) {
                 if (!empty($valor)) {
-                    $campo_upper = strtoupper($campo);
-                    if (isset($aula[$campo_upper])) {
-                        if ($campo_upper === 'DIA_SEMANA') {
-                            if (strtoupper($aula[$campo_upper]) !== strtoupper($valor)) {
-                                return false;
-                            }
-                        } elseif ($aula[$campo_upper] != $valor) {
+                    // Tenta várias formas de acessar o campo
+                    $campoUpper = strtoupper($campo);
+                    $campoLower = strtolower($campo);
+                    $campoCamel = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $campo))));
+                    
+                    $valorAula = null;
+                    
+                    if (isset($aula[$campoUpper])) {
+                        $valorAula = $aula[$campoUpper];
+                    } elseif (isset($aula[$campoLower])) {
+                        $valorAula = $aula[$campoLower];
+                    } elseif (isset($aula[$campo])) {
+                        $valorAula = $aula[$campo];
+                    } elseif (is_array($aula) && array_key_exists($campoCamel, $aula)) {
+                        $valorAula = $aula[$campoCamel];
+                    } elseif (is_object($aula) && property_exists($aula, $campoCamel)) {
+                        $getter = 'get' . ucfirst($campoCamel);
+                        if (method_exists($aula, $getter)) {
+                            $valorAula = $aula->$getter();
+                        }
+                    } else {
+                        // Se não encontrou o campo, ignora este filtro
+                        continue;
+                    }
+                    
+                    if ($campo === 'dia_semana') {
+                        if (strtoupper($valorAula) !== strtoupper($valor)) {
                             return false;
                         }
+                    } elseif ($valorAula != $valor) {
+                        return false;
                     }
                 }
             }
@@ -564,4 +615,4 @@ class ControllerAulas {
         return $erros;
     }
 }
-?>
+?>  

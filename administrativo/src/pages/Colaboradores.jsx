@@ -5,33 +5,43 @@ import TableColaboradores from "../components/TableColaboradores";
 import { useState } from "react";
 
 function Colaboradores() {
-  const [PopUPOpen, setPopUp] = useState(false);
-  const [PopUpMode, setPopUpMode] = useState("create");
+  const [popUpOpen, setPopUp] = useState(false);
+  const [popUpMode, setPopUpMode] = useState("create");
   const [searchTerm, setSearchTerm] = useState("");
-  const [totalColaboradores, setTotalColaboradores] = useState(0);
-  const [colaboradoresAtivos, setColaboradoresAtivos] = useState(0);
-  const [colaboradoresInativos, setColaboradoresInativos] = useState(0);
-  const [tipoSelecionado, setTipoSelecionado] = useState("TODOS");
+  const [totalFuncionarios, setTotalFuncionarios] = useState(0);
+  const [funcionariosAtivos, setFuncionariosAtivos] = useState(0);
+  const [funcionariosInativos, setFuncionariosInativos] = useState(0);
+  const [cargoSelecionado, setCargoSelecionado] = useState("TODOS");
+  const [funcionarioEditId, setFuncionarioEditId] = useState(null);
 
-  const openPopUp = (mode) => {
+  const openPopUp = (mode, id = null) => {
     setPopUpMode(mode);
+    setFuncionarioEditId(id);
     setPopUp(true);
   };
 
   // Função callback que será passada para o componente Table
-  const handleTableDataLoaded = (colaboradoresData) => {
-    if (colaboradoresData && Array.isArray(colaboradoresData)) {
-      const total = colaboradoresData.length;
-      const ativos = colaboradoresData.filter(colaborador => 
-        colaborador.STATUS_COLABORADOR === 'ATIVO'
+  const handleTableDataLoaded = (funcionariosData) => {
+    if (funcionariosData && Array.isArray(funcionariosData)) {
+      const total = funcionariosData.length;
+      const ativos = funcionariosData.filter(funcionario => 
+        funcionario.status === 'ATIVO'
       ).length;
-      const inativos = colaboradoresData.filter(colaborador => 
-        colaborador.STATUS_COLABORADOR === 'INATIVO'
+      const inativos = funcionariosData.filter(funcionario => 
+        funcionario.status === 'INATIVO'
       ).length;
 
-      setTotalColaboradores(total);
-      setColaboradoresAtivos(ativos);
-      setColaboradoresInativos(inativos);
+      setTotalFuncionarios(total);
+      setFuncionariosAtivos(ativos);
+      setFuncionariosInativos(inativos);
+    }
+  };
+
+  // Função para atualizar após cadastro/edição
+  const handleSuccess = () => {
+    // Forçar recarregamento da tabela
+    if (window.handleRefreshTable) {
+      window.handleRefreshTable();
     }
   };
 
@@ -43,7 +53,7 @@ function Colaboradores() {
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-red-950">Gerenciamento de Colaboradores</h1>
+            <h1 className="text-2xl font-bold text-red-950">Gerenciamento de Funcionários</h1>
             <p className="text-gray-600 text-sm mt-1">Gerencie instrutores, recepcionistas e administradores</p>
           </div>
           
@@ -51,7 +61,7 @@ function Colaboradores() {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Buscar colaborador..."
+                placeholder="Buscar funcionário..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full sm:w-64 pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -67,15 +77,17 @@ function Colaboradores() {
             </div>
             
             <select 
-              value={tipoSelecionado}
-              onChange={(e) => setTipoSelecionado(e.target.value)}
+              value={cargoSelecionado}
+              onChange={(e) => setCargoSelecionado(e.target.value)}
               className="px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             >
-              <option value="TODOS">Todos os Tipos</option>
+              <option value="TODOS">Todos os Cargos</option>
               <option value="INSTRUTOR">Instrutores</option>
               <option value="RECEPCIONISTA">Recepcionistas</option>
               <option value="ADMINISTRADOR">Administradores</option>
               <option value="GERENTE">Gerentes</option>
+              <option value="PERSONAL">Personal Trainer</option>
+              <option value="LIMPEZA">Serviços Gerais</option>
             </select>
             
             <Button 
@@ -86,7 +98,7 @@ function Colaboradores() {
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Novo Colaborador
+              Novo Funcionário
             </Button>
           </div>
         </div>
@@ -96,8 +108,8 @@ function Colaboradores() {
           <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-purple-700 font-medium">Total de Colaboradores</p>
-                <p className="text-xl font-bold text-gray-800 mt-1">{totalColaboradores}</p>
+                <p className="text-sm text-purple-700 font-medium">Total de Funcionários</p>
+                <p className="text-xl font-bold text-gray-800 mt-1">{totalFuncionarios}</p>
               </div>
               <div className="bg-purple-500 p-2 rounded-lg">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -111,7 +123,7 @@ function Colaboradores() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-green-700 font-medium">Ativos</p>
-                <p className="text-xl font-bold text-gray-800 mt-1">{colaboradoresAtivos}</p>
+                <p className="text-xl font-bold text-gray-800 mt-1">{funcionariosAtivos}</p>
               </div>
               <div className="bg-green-500 p-2 rounded-lg">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +137,7 @@ function Colaboradores() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-orange-700 font-medium">Inativos</p>
-                <p className="text-xl font-bold text-gray-800 mt-1">{colaboradoresInativos}</p>
+                <p className="text-xl font-bold text-gray-800 mt-1">{funcionariosInativos}</p>
               </div>
               <div className="bg-orange-500 p-2 rounded-lg">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,13 +150,13 @@ function Colaboradores() {
           <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-700 font-medium">Instrutores</p>
+                <p className="text-sm text-blue-700 font-medium">Estatísticas</p>
                 <p className="text-xl font-bold text-gray-800 mt-1">-</p>
-                <p className="text-xs text-blue-600 mt-1">em desenvolvimento</p>
+                <p className="text-xs text-blue-600 mt-1">Carregando...</p>
               </div>
               <div className="bg-blue-500 p-2 rounded-lg">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
             </div>
@@ -197,19 +209,22 @@ function Colaboradores() {
         </div>
       </div>
       
-      {/* Tabela de Colaboradores */}
+      {/* Tabela de Funcionários */}
       <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
         <TableColaboradores 
           onDataLoaded={handleTableDataLoaded}
           searchTerm={searchTerm}
-          tipoSelecionado={tipoSelecionado}
+          tipoSelecionado={cargoSelecionado}
+          onEditClick={(id) => openPopUp("edit", id)}
         />
       </div>
       
       <PopUpColaboradores 
-        isOpen={PopUPOpen} 
+        isOpen={popUpOpen} 
         onClose={() => setPopUp(false)} 
-        mode={PopUpMode} 
+        mode={popUpMode} 
+        funcionarioId={funcionarioEditId}
+        onSuccess={handleSuccess}
       />
     </main>
   );

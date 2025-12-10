@@ -1,19 +1,20 @@
 import Inputs from "./Inputs";
 import { useState, useEffect } from "react";
 
-function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, onSuccess }) {
+function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, onSuccess }) {
   const [formData, setFormData] = useState({
     nome: "",
     sobrenome: "",
     cpf: "",
-    nascimento: "",
+    data_nascimento: "",
     telefone: "",
     email: "",
     endereco: "",
     sexo: "",
-    tipo: "INSTRUTOR",
+    cargo: "INSTRUTOR",
     salario: "",
     data_admissao: new Date().toISOString().split('T')[0],
+    turno: "MANHÃ",
     status: "ATIVO",
     senha: "",
     confirmaSenha: ""
@@ -24,14 +25,14 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
   const [success, setSuccess] = useState(false);
   const [erroSenha, setErroSenha] = useState("");
 
-  // Buscar colaborador no modo edição
+  // Buscar funcionário no modo edição
   useEffect(() => {
-    if (isOpen && mode === "edit" && colaboradorId) {
-      const fetchColaborador = async () => {
+    if (isOpen && mode === "edit" && funcionarioId) {
+      const fetchFuncionario = async () => {
         try {
           setLoading(true);
           const response = await fetch(
-            `http://localhost:8000/colaboradoresAPI.php?idColaborador=${colaboradorId}`,
+            `http://localhost:8000/ColaboradoresAPI.php?id_funcionario=${funcionarioId}`,
             {
               method: "GET"
             }
@@ -40,45 +41,48 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
           const result = await response.json();
           console.log("Dados recebidos da API:", result);
 
+          // Ajuste para a estrutura da sua API
           setFormData({
-            nome: result.NOME || "",
-            sobrenome: result.SOBRENOME || "",
-            cpf: result.CPF || "",
-            nascimento: result.NASCIMENTO ? result.NASCIMENTO.split('T')[0] : "",
-            telefone: result.TELEFONE || "",
-            email: result.EMAIL || "",
-            endereco: result.ENDERECO || "",
-            sexo: result.SEXO || "",
-            tipo: result.TIPO_COLABORADOR || "INSTRUTOR",
-            salario: result.SALARIO || "",
-            data_admissao: result.DATA_ADMISSAO ? result.DATA_ADMISSAO.split('T')[0] : new Date().toISOString().split('T')[0],
-            status: result.STATUS_COLABORADOR || "ATIVO",
+            nome: result.nome || "",
+            sobrenome: result.sobrenome || "",
+            cpf: result.cpf || "",
+            data_nascimento: result.data_nascimento ? result.data_nascimento.split('T')[0] : "",
+            telefone: result.telefone || "",
+            email: result.email || "",
+            endereco: result.endereco || "",
+            sexo: result.sexo || "",
+            cargo: result.cargo || "INSTRUTOR",
+            salario: result.salario || "",
+            data_admissao: result.data_admissao ? result.data_admissao.split('T')[0] : new Date().toISOString().split('T')[0],
+            turno: result.turno || "MANHÃ",
+            status: result.status || "ATIVO",
             senha: "",
             confirmaSenha: ""
           });
           
         } catch (error) {
-          console.error("Erro ao buscar colaborador:", error);
-          setMensagem("Erro ao carregar dados do colaborador.");
+          console.error("Erro ao buscar funcionário:", error);
+          setMensagem("Erro ao carregar dados do funcionário.");
         } finally {
           setLoading(false);
         }
       };
 
-      fetchColaborador();
+      fetchFuncionario();
     } else if (isOpen && mode === "create") {
       setFormData({
         nome: "",
         sobrenome: "",
         cpf: "",
-        nascimento: "",
+        data_nascimento: "",
         telefone: "",
         email: "",
         endereco: "",
         sexo: "",
-        tipo: "INSTRUTOR",
+        cargo: "INSTRUTOR",
         salario: "",
         data_admissao: new Date().toISOString().split('T')[0],
+        turno: "MANHÃ",
         status: "ATIVO",
         senha: "",
         confirmaSenha: ""
@@ -87,7 +91,7 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
       setSuccess(false);
       setErroSenha("");
     }
-  }, [isOpen, mode, colaboradorId]);
+  }, [isOpen, mode, funcionarioId]);
 
   if (!isOpen) return null;
 
@@ -167,32 +171,33 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
     }
 
     try {
-      const url = "http://localhost:8000/colaboradoresAPI.php";
+      const url = "http://localhost:8000/ColaboradoresAPI.php";
       const method = mode === "create" ? "POST" : "PUT";
 
       const payload = {
         nome: formData.nome.trim(),
         sobrenome: formData.sobrenome.trim(),
         cpf: formData.cpf.replace(/[^\d]/g, '').trim(),
-        nascimento: formData.nascimento,
+        data_nascimento: formData.data_nascimento,
         telefone: formData.telefone.trim(),
         email: formData.email.trim(),
         endereco: formData.endereco.trim(),
         sexo: formData.sexo,
-        tipo_colaborador: formData.tipo,
+        cargo: formData.cargo,
         salario: parseFloat(formData.salario) || 0,
         data_admissao: formData.data_admissao,
-        status_colaborador: formData.status.trim(),
+        turno: formData.turno,
+        status: formData.status.trim(),
       };
 
-      // Adicionar senha apenas se foi preenchida
+      // Adicionar senha apenas se foi preenchida (para criação ou alteração)
       if (formData.senha) {
-        payload.senha_hash = formData.senha.trim();
+        payload.senha = formData.senha.trim();
       }
 
-      // Adicionar idColaborador apenas no modo edição
+      // Adicionar id_funcionario apenas no modo edição
       if (mode === "edit") {
-        payload.idColaborador = parseInt(colaboradorId);
+        payload.id_funcionario = parseInt(funcionarioId);
       }
 
       console.log("Enviando dados para API:", payload);
@@ -207,7 +212,7 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
       console.log("Resposta completa do servidor:", result);
 
       if (response.ok) {
-        setMensagem(mode === "create" ? "Colaborador cadastrado com sucesso!" : "Colaborador atualizado com sucesso!");
+        setMensagem(mode === "create" ? "Funcionário cadastrado com sucesso!" : "Funcionário atualizado com sucesso!");
         setSuccess(true);
         
         setTimeout(() => {
@@ -228,7 +233,7 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
     }
   };
 
-  const tiposColaborador = [
+  const tiposCargo = [
     { value: "INSTRUTOR", label: "Instrutor", desc: "Responsável por aulas e treinos" },
     { value: "RECEPCIONISTA", label: "Recepcionista", desc: "Atendimento ao cliente" },
     { value: "ADMINISTRADOR", label: "Administrador", desc: "Gestão administrativa" },
@@ -237,8 +242,15 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
     { value: "PERSONAL", label: "Personal Trainer", desc: "Acompanhamento individual" }
   ];
 
-  const getTipoIcon = (tipo) => {
-    switch(tipo) {
+  const turnos = [
+    { value: "MANHÃ", label: "Manhã", desc: "06:00 - 12:00" },
+    { value: "TARDE", label: "Tarde", desc: "12:00 - 18:00" },
+    { value: "NOITE", label: "Noite", desc: "18:00 - 00:00" },
+    { value: "INTEGRAL", label: "Integral", desc: "08:00 - 18:00" }
+  ];
+
+  const getCargoIcon = (cargo) => {
+    switch(cargo) {
       case 'INSTRUTOR': return '🏋️';
       case 'RECEPCIONISTA': return '💁';
       case 'ADMINISTRADOR': return '💼';
@@ -248,20 +260,31 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
     }
   };
 
+  const getTurnoIcon = (turno) => {
+    switch(turno) {
+      case 'MANHÃ': return '🌅';
+      case 'TARDE': return '🌞';
+      case 'NOITE': return '🌙';
+      case 'INTEGRAL': return '⏳';
+      default: return '🕐';
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+    
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-start z-50 p-4 w-full max-h-full overflow-auto">
       <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-2xl w-full max-w-5xl shadow-2xl overflow-hidden animate-fadeIn">
         {/* Header do Modal */}
         <div className="bg-gradient-to-r from-purple-900/20 to-gray-900 p-6 border-b border-gray-800">
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-bold text-white">
-                {mode === "create" ? "➕ Novo Colaborador" : "✏️ Editar Colaborador"}
+                {mode === "create" ? "➕ Novo Funcionário" : "✏️ Editar Funcionário"}
               </h2>
               <p className="text-gray-400 text-sm mt-1">
                 {mode === "create" 
-                  ? "Preencha os dados para cadastrar um novo colaborador" 
-                  : "Atualize as informações do colaborador"}
+                  ? "Preencha os dados para cadastrar um novo funcionário" 
+                  : "Atualize as informações do funcionário"}
               </p>
             </div>
             <button 
@@ -376,7 +399,7 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
                   name="email" 
                   value={formData.email} 
                   onChange={handleChange} 
-                  placeholder="colaborador@academia.com" 
+                  placeholder="funcionario@academia.com" 
                   required 
                   disabled={loading}
                   className="w-full"
@@ -408,8 +431,8 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
                 </label>
                 <Inputs 
                   type="date" 
-                  name="nascimento" 
-                  value={formData.nascimento} 
+                  name="data_nascimento" 
+                  value={formData.data_nascimento} 
                   onChange={handleChange} 
                   required 
                   disabled={loading}
@@ -480,37 +503,70 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
               </div>
             </div>
 
-            {/* Tipo de Colaborador e Data Admissão */}
+            {/* Cargo, Turno, Data Admissão e Salário */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
-              {/* Tipo de Colaborador */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-purple-400">
-                  Cargo/Função <span className="text-red-500">*</span>
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {tiposColaborador.map((tipo) => (
-                    <div 
-                      key={tipo.value}
-                      className={`p-3 border rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
-                        formData.tipo === tipo.value 
-                          ? 'border-purple-500 bg-purple-900/20' 
-                          : 'border-gray-700 hover:border-gray-600'
-                      }`}
-                      onClick={() => !loading && setFormData({...formData, tipo: tipo.value})}
-                    >
-                      <span className="text-2xl mb-1">{getTipoIcon(tipo.value)}</span>
-                      <span className="font-semibold text-white text-sm">{tipo.label}</span>
-                      <span className="text-xs text-gray-400 mt-1">{tipo.desc}</span>
-                    </div>
-                  ))}
+              {/* Cargo e Turno */}
+              <div className="space-y-6">
+                {/* Cargo */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-purple-400">
+                    Cargo/Função <span className="text-red-500">*</span>
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {tiposCargo.map((cargo) => (
+                      <div 
+                        key={cargo.value}
+                        className={`p-3 border rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
+                          formData.cargo === cargo.value 
+                            ? 'border-purple-500 bg-purple-900/20' 
+                            : 'border-gray-700 hover:border-gray-600'
+                        }`}
+                        onClick={() => !loading && setFormData({...formData, cargo: cargo.value})}
+                      >
+                        <span className="text-2xl mb-1">{getCargoIcon(cargo.value)}</span>
+                        <span className="font-semibold text-white text-sm">{cargo.label}</span>
+                        <span className="text-xs text-gray-400 mt-1">{cargo.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <input 
+                    type="hidden" 
+                    name="cargo" 
+                    value={formData.cargo} 
+                    required 
+                  />
                 </div>
-                <input 
-                  type="hidden" 
-                  name="tipo" 
-                  value={formData.tipo} 
-                  required 
-                />
+
+                {/* Turno */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-purple-400">
+                    Turno <span className="text-red-500">*</span>
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {turnos.map((turno) => (
+                      <div 
+                        key={turno.value}
+                        className={`p-3 border rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
+                          formData.turno === turno.value 
+                            ? 'border-blue-500 bg-blue-900/20' 
+                            : 'border-gray-700 hover:border-gray-600'
+                        }`}
+                        onClick={() => !loading && setFormData({...formData, turno: turno.value})}
+                      >
+                        <span className="text-2xl mb-1">{getTurnoIcon(turno.value)}</span>
+                        <span className="font-semibold text-white text-sm">{turno.label}</span>
+                        <span className="text-xs text-gray-400 mt-1">{turno.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <input 
+                    type="hidden" 
+                    name="turno" 
+                    value={formData.turno} 
+                    required 
+                  />
+                </div>
               </div>
 
               {/* Data Admissão e Salário */}
@@ -627,7 +683,7 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
-                        Cadastrar Colaborador
+                        Cadastrar Funcionário
                       </>
                     ) : (
                       <>
@@ -648,4 +704,4 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", colaboradorId, o
   );
 }
 
-export default PopUpColaboradores;
+export default PopUpColaboradores;  
