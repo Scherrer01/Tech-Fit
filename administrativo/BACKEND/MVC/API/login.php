@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$conn = new mysqli("localhost", "root", "Limeira@123", "tech_fit");
+$conn = new mysqli("localhost", "root", "senaisp", "tech_fit");
 
 if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);

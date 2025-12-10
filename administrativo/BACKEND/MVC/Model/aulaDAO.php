@@ -1,271 +1,368 @@
 <?php
-require_once 'aulas.php';         // importa a classe Aulas
-require_once 'Connection.php';    // importa a classe Connection
+
+require_once 'aula.php';
+require_once 'Connection.php';
 
 class AulaDAO {
-    private $conn; // atributo que vai guardar a conexão com o banco de dados
-
+    private $conn;
+    
     public function __construct() {
         // aqui chamamos o método getInstance() da classe Connection
-        $this->conn = Connection::getInstance(); 
-
-        // cria a tabela AULAS caso ela ainda não exista no banco
-        $this->conn->exec("
-            DROP TABLE IF EXISTS AULAS;
-            CREATE TABLE AULAS (
-                ID_AULA INT AUTO_INCREMENT PRIMARY KEY,
-                NOME_AULA VARCHAR(150),
-                ID_MODALIDADE INT NOT NULL,
-                ID_INSTRUTOR INT DEFAULT NULL,
-                ID_UNIDADE INT DEFAULT NULL,
-                DIA_SEMANA ENUM('DOM','SEG','TER','QUA','QUI','SEX','SAB') NOT NULL,
-                HORARIO_INICIO TIME NOT NULL,
-                DURACAO_MINUTOS SMALLINT UNSIGNED NOT NULL DEFAULT 60,
-                VAGAS SMALLINT UNSIGNED NOT NULL DEFAULT 30,
-                CRIADO_EM TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                INDEX idx_aulas_modalidade (ID_MODALIDADE),
-                INDEX idx_aulas_instrutor (ID_INSTRUTOR),
-                INDEX idx_aulas_unidade (ID_UNIDADE),
-                CONSTRAINT fk_aulas_modalidade FOREIGN KEY (ID_MODALIDADE) REFERENCES MODALIDADES(ID_MODALIDADE)
-                    ON UPDATE CASCADE ON DELETE RESTRICT,
-                CONSTRAINT fk_aulas_instrutor FOREIGN KEY (ID_INSTRUTOR) REFERENCES FUNCIONARIOS(ID_FUNCIONARIO)
-                    ON UPDATE CASCADE ON DELETE SET NULL,
-                CONSTRAINT fk_aulas_unidade FOREIGN KEY (ID_UNIDADE) REFERENCES UNIDADES(ID_UNIDADE)
-            );
-        ");
+        // esse método retorna um objeto PDO já configurado para se conectar ao banco
+        $this->conn = Connection::getInstance();
+    
     }
-
-    // método para inserir uma nova aula no banco
-    public function criarAula(Aulas $aula) {
-        $sql = "INSERT INTO AULAS 
-                (NOME_AULA, ID_MODALIDADE, ID_INSTRUTOR, ID_UNIDADE, DIA_SEMANA, 
-                 HORARIO_INICIO, DURACAO_MINUTOS, VAGAS, CRIADO_EM)
-                VALUES 
-                (:NOME_AULA, :ID_MODALIDADE, :ID_INSTRUTOR, :ID_UNIDADE, :DIA_SEMANA, 
-                 :HORARIO_INICIO, :DURACAO_MINUTOS, :VAGAS, :CRIADO_EM)";
-
-        $stmt = $this->conn->prepare($sql);
-
-        $stmt->execute([
-            ':NOME_AULA'         => $aula->getNomeAula(),
-            ':ID_MODALIDADE'     => $aula->getIdModalidade(),
-            ':ID_INSTRUTOR'      => $aula->getIdInstrutor(),
-            ':ID_UNIDADE'        => $aula->getIdUnidade(),
-            ':DIA_SEMANA'        => $aula->getDiaSemana(),
-            ':HORARIO_INICIO'    => $aula->getHorarioInicio(),
-            ':DURACAO_MINUTOS'   => $aula->getDuracaoMinutos(),
-            ':VAGAS'             => $aula->getVagas(),
-            ':CRIADO_EM'         => $aula->getCriadoEm()
-        ]);
-
-        return $this->conn->lastInsertId(); // Retorna o ID da aula criada
-    }
-
-    // método que lê todas as aulas da tabela
-    public function lerAulasAll() {
-        $stmt = $this->conn->query("SELECT * FROM AULAS ORDER BY DIA_SEMANA, HORARIO_INICIO");
-        $result = [];
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = [
-                'ID_AULA'           => $row['ID_AULA'],
-                'NOME_AULA'         => $row['NOME_AULA'],
-                'ID_MODALIDADE'     => $row['ID_MODALIDADE'],
-                'ID_INSTRUTOR'      => $row['ID_INSTRUTOR'],
-                'ID_UNIDADE'        => $row['ID_UNIDADE'],
-                'DIA_SEMANA'        => $row['DIA_SEMANA'],
-                'HORARIO_INICIO'    => $row['HORARIO_INICIO'],
-                'DURACAO_MINUTOS'   => $row['DURACAO_MINUTOS'],
-                'VAGAS'             => $row['VAGAS'],
-                'CRIADO_EM'         => $row['CRIADO_EM']
-            ];
-        }
-
-        return $result;
-    }
-
-    // Atualizar aula
-    public function atualizarAula($idAula, $novoNomeAula, $novoIdModalidade, $novoIdInstrutor, 
-                                  $novoIdUnidade, $novoDiaSemana, $novoHorarioInicio, 
-                                  $novoDuracaoMinutos, $novoVagas) {
-
-        $sql = "UPDATE AULAS 
-                SET NOME_AULA = :novoNomeAula, 
-                    ID_MODALIDADE = :novoIdModalidade, 
-                    ID_INSTRUTOR = :novoIdInstrutor, 
-                    ID_UNIDADE = :novoIdUnidade, 
-                    DIA_SEMANA = :novoDiaSemana, 
-                    HORARIO_INICIO = :novoHorarioInicio, 
-                    DURACAO_MINUTOS = :novoDuracaoMinutos, 
-                    VAGAS = :novoVagas 
-                WHERE ID_AULA = :idAula";
-
-        $stmt = $this->conn->prepare($sql);
-
-        $stmt->execute([
-            ':novoNomeAula'       => $novoNomeAula,
-            ':novoIdModalidade'   => $novoIdModalidade,
-            ':novoIdInstrutor'    => $novoIdInstrutor,
-            ':novoIdUnidade'      => $novoIdUnidade,
-            ':novoDiaSemana'      => $novoDiaSemana,
-            ':novoHorarioInicio'  => $novoHorarioInicio,
-            ':novoDuracaoMinutos' => $novoDuracaoMinutos,
-            ':novoVagas'          => $novoVagas,
-            ':idAula'             => $idAula
-        ]);
-
-        return $stmt->rowCount(); // Retorna o número de linhas afetadas
-    }
-
-    // Deletar aula
-    public function deletarAula($id_aula) {
-        $stmt = $this->conn->prepare('DELETE FROM AULAS WHERE ID_AULA = ?');
-        $stmt->execute([$id_aula]);
-        return $stmt->rowCount();
-    }
-
-    // Buscar aulas pelo nome 
-    public function buscarAulas($nome) {
-        $stmt = $this->conn->prepare("
-            SELECT * FROM AULAS WHERE NOME_AULA LIKE :nome
-            ORDER BY DIA_SEMANA, HORARIO_INICIO
-        ");
+    
+    // 1. Criar nova aula
+    public function criar(Aulas $aula) {
+        $sql = "INSERT INTO AULAS (NOME_AULA, ID_MODALIDADE, ID_INSTRUTOR, ID_UNIDADE, DIA_SEMANA, 
+                HORARIO_INICIO, DURACAO_MINUTOS, VAGAS, CRIADO_EM) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
-        $stmt->execute([':nome' => "%$nome%"]);
-
-        $result = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $row;
+        try {
+            $stmt = $this->conn->prepare($sql);
+            
+            $stmt->execute([
+                $aula->getNomeAula(),
+                $aula->getIdModalidade(),
+                $aula->getIdInstrutor(),
+                $aula->getIdUnidade(),
+                $aula->getDiaSemana(),
+                $aula->getHorarioInicio(),
+                $aula->getDuracaoMinutos(),
+                $aula->getVagas(),
+                $aula->getCriadoEm()
+            ]);
+            
+            $aula->setIdAula($this->conn->lastInsertId());
+            return $aula;
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao criar aula: " . $e->getMessage());
         }
-
-        return $result;
     }
-
-    // Buscar aula por ID
-    public function buscarAulaPorID($id) {
+    
+    // 2. Buscar aula por ID
+    public function buscarPorId($id_aula) {
         $sql = "SELECT * FROM AULAS WHERE ID_AULA = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$id_aula]);
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($resultado) {
+                return $this->mapearParaObjeto($resultado);
+            }
+            return null;
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao buscar aula: " . $e->getMessage());
+        }
     }
-
-    // Buscar aulas por modalidade
-    public function buscarAulasPorModalidade($id_modalidade) {
+    
+    // 3. Listar todas as aulas
+    public function listarTodos($filtros = []) {
+        $sql = "SELECT * FROM AULAS WHERE 1=1";
+        $params = [];
+        
+        // Aplicar filtros dinâmicos
+        if (!empty($filtros['id_modalidade'])) {
+            $sql .= " AND ID_MODALIDADE = ?";
+            $params[] = $filtros['id_modalidade'];
+        }
+        
+        if (!empty($filtros['id_instrutor'])) {
+            $sql .= " AND ID_INSTRUTOR = ?";
+            $params[] = $filtros['id_instrutor'];
+        }
+        
+        if (!empty($filtros['id_unidade'])) {
+            $sql .= " AND ID_UNIDADE = ?";
+            $params[] = $filtros['id_unidade'];
+        }
+        
+        if (!empty($filtros['dia_semana'])) {
+            $sql .= " AND DIA_SEMANA = ?";
+            $params[] = strtoupper($filtros['dia_semana']);
+        }
+        
+        $sql .= " ORDER BY DIA_SEMANA, HORARIO_INICIO";
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $aulas = [];
+            foreach ($resultados as $row) {
+                $aulas[] = $this->mapearParaObjeto($row);
+            }
+            return $aulas;
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao listar aulas: " . $e->getMessage());
+        }
+    }
+    
+    // 4. Atualizar aula
+    public function atualizar(Aulas $aula) {
+        $sql = "UPDATE AULAS SET 
+                NOME_AULA = ?, 
+                ID_MODALIDADE = ?, 
+                ID_INSTRUTOR = ?, 
+                ID_UNIDADE = ?, 
+                DIA_SEMANA = ?, 
+                HORARIO_INICIO = ?, 
+                DURACAO_MINUTOS = ?, 
+                VAGAS = ? 
+                WHERE ID_AULA = ?";
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            
+            return $stmt->execute([
+                $aula->getNomeAula(),
+                $aula->getIdModalidade(),
+                $aula->getIdInstrutor(),
+                $aula->getIdUnidade(),
+                $aula->getDiaSemana(),
+                $aula->getHorarioInicio(),
+                $aula->getDuracaoMinutos(),
+                $aula->getVagas(),
+                $aula->getIdAula()
+            ]);
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao atualizar aula: " . $e->getMessage());
+        }
+    }
+    
+    // 5. Excluir aula
+    public function excluir($id_aula) {
+        $sql = "DELETE FROM AULAS WHERE ID_AULA = ?";
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([$id_aula]);
+            
+        } catch (PDOException $e) {
+            // Verificar se é erro de chave estrangeira
+            if ($e->getCode() == '23000') {
+                throw new Exception("Não é possível excluir esta aula pois existem registros relacionados.");
+            }
+            throw new Exception("Erro ao excluir aula: " . $e->getMessage());
+        }
+    }
+    
+    // 6. Buscar aulas por modalidade
+    public function buscarPorModalidade($id_modalidade) {
         $sql = "SELECT * FROM AULAS WHERE ID_MODALIDADE = ? ORDER BY DIA_SEMANA, HORARIO_INICIO";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$id_modalidade]);
         
-        $result = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $row;
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$id_modalidade]);
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $aulas = [];
+            foreach ($resultados as $row) {
+                $aulas[] = $this->mapearParaObjeto($row);
+            }
+            return $aulas;
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao buscar aulas por modalidade: " . $e->getMessage());
         }
-
-        return $result;
     }
-
-    // Buscar aulas por instrutor
-    public function buscarAulasPorInstrutor($id_instrutor) {
-        $sql = "SELECT * FROM AULAS WHERE ID_INSTRUTOR = ? ORDER BY DIA_SEMANA, HORARIO_INICIO";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$id_instrutor]);
-        
-        $result = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $row;
-        }
-
-        return $result;
-    }
-
-    // Buscar aulas por unidade
-    public function buscarAulasPorUnidade($id_unidade) {
+    
+    // 7. Buscar aulas por unidade
+    public function buscarPorUnidade($id_unidade) {
         $sql = "SELECT * FROM AULAS WHERE ID_UNIDADE = ? ORDER BY DIA_SEMANA, HORARIO_INICIO";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$id_unidade]);
         
-        $result = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $row;
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$id_unidade]);
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $aulas = [];
+            foreach ($resultados as $row) {
+                $aulas[] = $this->mapearParaObjeto($row);
+            }
+            return $aulas;
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao buscar aulas por unidade: " . $e->getMessage());
         }
-
-        return $result;
     }
-
-    // Buscar aulas por dia da semana
-    public function buscarAulasPorDia($dia_semana) {
-        $sql = "SELECT * FROM AULAS WHERE DIA_SEMANA = ? ORDER BY HORARIO_INICIO";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([strtoupper($dia_semana)]);
+    
+    // 8. Buscar aulas por instrutor
+    public function buscarPorInstrutor($id_instrutor) {
+        $sql = "SELECT * FROM AULAS WHERE ID_INSTRUTOR = ? ORDER BY DIA_SEMANA, HORARIO_INICIO";
         
-        $result = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $row;
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$id_instrutor]);
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $aulas = [];
+            foreach ($resultados as $row) {
+                $aulas[] = $this->mapearParaObjeto($row);
+            }
+            return $aulas;
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao buscar aulas por instrutor: " . $e->getMessage());
         }
-
-        return $result;
     }
-
-    // Buscar aulas com vagas disponíveis
-    public function buscarAulasComVagas() {
-        $sql = "SELECT a.*, 
-                       (SELECT COUNT(*) FROM MATRICULAS_AULAS WHERE ID_AULA = a.ID_AULA) as vagas_ocupadas
-                FROM AULAS a
-                HAVING vagas_ocupadas < VAGAS
-                ORDER BY DIA_SEMANA, HORARIO_INICIO";
-        
-        $stmt = $this->conn->query($sql);
-        
-        $result = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $row;
-        }
-
-        return $result;
-    }
-
-    // Verificar conflito de horário para um instrutor
-    public function verificarConflitoHorarioInstrutor($id_instrutor, $dia_semana, $horario_inicio, $duracao_minutos, $id_aula_excluir = null) {
+    
+    // 9. Verificar conflitos de horário
+    public function verificarConflitoHorario($id_unidade, $dia_semana, $horario_inicio, $duracao, $id_aula_excluir = null) {
         $sql = "SELECT * FROM AULAS 
-                WHERE ID_INSTRUTOR = :id_instrutor 
-                AND DIA_SEMANA = :dia_semana 
-                AND ID_AULA != COALESCE(:id_aula_excluir, -1)
+                WHERE ID_UNIDADE = ? 
+                AND DIA_SEMANA = ? 
+                AND ID_AULA != ? 
                 AND (
-                    (HORARIO_INICIO <= :horario_inicio AND 
-                    ADDTIME(HORARIO_INICIO, SEC_TO_TIME(DURACAO_MINUTOS * 60)) > :horario_inicio)
-                    OR
-                    (:horario_inicio <= HORARIO_INICIO AND 
-                    ADDTIME(:horario_inicio, SEC_TO_TIME(:duracao_minutos * 60)) > HORARIO_INICIO)
+                    (HORARIO_INICIO <= ? AND ADDTIME(HORARIO_INICIO, SEC_TO_TIME(DURACAO_MINUTOS * 60)) > ?) OR
+                    (HORARIO_INICIO < ADDTIME(?, SEC_TO_TIME(? * 60)) AND ADDTIME(HORARIO_INICIO, SEC_TO_TIME(DURACAO_MINUTOS * 60)) >= ADDTIME(?, SEC_TO_TIME(? * 60))) OR
+                    (HORARIO_INICIO >= ? AND ADDTIME(HORARIO_INICIO, SEC_TO_TIME(DURACAO_MINUTOS * 60)) <= ADDTIME(?, SEC_TO_TIME(? * 60)))
                 )";
         
-        $stmt = $this->conn->prepare($sql);
-        
-        $stmt->execute([
-            ':id_instrutor'      => $id_instrutor,
-            ':dia_semana'        => $dia_semana,
-            ':id_aula_excluir'   => $id_aula_excluir,
-            ':horario_inicio'    => $horario_inicio,
-            ':duracao_minutos'   => $duracao_minutos
-        ]);
-        
-        return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
-    }
-
-    // Contar número de aulas por modalidade
-    public function contarAulasPorModalidade() {
-        $sql = "SELECT m.NOME_MODALIDADE, COUNT(a.ID_AULA) as total_aulas
-                FROM MODALIDADES m
-                LEFT JOIN AULAS a ON m.ID_MODALIDADE = a.ID_MODALIDADE
-                GROUP BY m.ID_MODALIDADE
-                ORDER BY total_aulas DESC";
-        
-        $stmt = $this->conn->query($sql);
-        
-        $result = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = $row;
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $id_aula_excluir = $id_aula_excluir ?? 0;
+            
+            $stmt->execute([
+                $id_unidade,
+                $dia_semana,
+                $id_aula_excluir,
+                $horario_inicio,
+                $horario_inicio,
+                $horario_inicio,
+                $duracao,
+                $horario_inicio,
+                $duracao,
+                $horario_inicio,
+                $horario_inicio,
+                $duracao
+            ]);
+            
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return count($resultados) > 0;
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao verificar conflitos de horário: " . $e->getMessage());
         }
-
-        return $result;
+    }
+    
+    // 10. Contar total de vagas por modalidade
+    public function contarVagasPorModalidade($id_modalidade) {
+        $sql = "SELECT COUNT(*) as total_aulas, SUM(VAGAS) as total_vagas 
+                FROM AULAS 
+                WHERE ID_MODALIDADE = ?";
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$id_modalidade]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao contar vagas: " . $e->getMessage());
+        }
+    }
+    
+    // 11. Buscar aulas com informações relacionadas (JOIN)
+    public function buscarComRelacionamentos($id_aula = null) {
+        $sql = "SELECT 
+                    a.*,
+                    m.NOME_MODALIDADE,
+                    f.NOME as NOME_INSTRUTOR,
+                    u.NOME_UNIDADE,
+                    u.ENDERECO
+                FROM AULAS a
+                LEFT JOIN MODALIDADES m ON a.ID_MODALIDADE = m.ID_MODALIDADE
+                LEFT JOIN FUNCIONARIOS f ON a.ID_INSTRUTOR = f.ID_FUNCIONARIO
+                LEFT JOIN UNIDADES u ON a.ID_UNIDADE = u.ID_UNIDADE";
+        
+        $params = [];
+        if ($id_aula) {
+            $sql .= " WHERE a.ID_AULA = ?";
+            $params[] = $id_aula;
+        }
+        
+        $sql .= " ORDER BY a.DIA_SEMANA, a.HORARIO_INICIO";
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            
+            if ($id_aula) {
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao buscar aulas com relacionamentos: " . $e->getMessage());
+        }
+    }
+    
+    // 12. Método para mapear array para objeto
+    private function mapearParaObjeto($row) {
+        $aula = new Aulas(
+            $row['NOME_AULA'],
+            $row['ID_MODALIDADE'],
+            $row['ID_INSTRUTOR'],
+            $row['ID_UNIDADE'],
+            $row['DIA_SEMANA'],
+            $row['HORARIO_INICIO'],
+            $row['DURACAO_MINUTOS'],
+            $row['VAGAS'],
+            $row['CRIADO_EM']
+        );
+        
+        $aula->setIdAula($row['ID_AULA']);
+        return $aula;
+    }
+    
+    // 13. Buscar agenda semanal
+    public function buscarAgendaSemanal($id_unidade = null, $data_referencia = null) {
+        $data_referencia = $data_referencia ? new DateTime($data_referencia) : new DateTime();
+        $dia_semana_atual = $data_referencia->format('N'); // 1=Segunda, 7=Domingo
+        
+        // Mapear número para código de dia da semana
+        $mapa_dias = [
+            1 => 'SEG', 2 => 'TER', 3 => 'QUA', 
+            4 => 'QUI', 5 => 'SEX', 6 => 'SAB', 7 => 'DOM'
+        ];
+        
+        $dia_semana_sql = $mapa_dias[$dia_semana_atual];
+        
+        $sql = "SELECT * FROM AULAS 
+                WHERE DIA_SEMANA = ?";
+        
+        $params = [$dia_semana_sql];
+        
+        if ($id_unidade) {
+            $sql .= " AND ID_UNIDADE = ?";
+            $params[] = $id_unidade;
+        }
+        
+        $sql .= " ORDER BY HORARIO_INICIO";
+        
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($params);
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $aulas = [];
+            foreach ($resultados as $row) {
+                $aulas[] = $this->mapearParaObjeto($row);
+            }
+            return $aulas;
+            
+        } catch (PDOException $e) {
+            throw new Exception("Erro ao buscar agenda semanal: " . $e->getMessage());
+        }
     }
 }
 ?>
