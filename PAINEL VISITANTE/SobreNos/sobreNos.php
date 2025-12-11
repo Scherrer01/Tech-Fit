@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planos - Tech Fit</title>
-    <link rel="stylesheet" href="planos.css">
+    <title>Sobre Nós - Tech Fit</title>
+    <link rel="stylesheet" href="sobreNos.css">
 </head>
 <body>
     <!-- ============================================================== -->
@@ -19,100 +19,118 @@
         <nav>
             <ul>
                 <li><a href="/PAINEL VISITANTE/Home/home.php">Início</a></li>
-                <li><a href="/PAINEL VISITANTE/Contato/contato.php">Contato</a></li>
-                <li><a href="/PAINEL VISITANTE/sobreNos/sobreNos.php">Sobre nós</a></li>
+                <li><a href="/PAINEL VISITANTE/Planos/planos.php">Planos</a></li>
+                <li><a href="/PAINEL VISITANTE/SobreNos/sobreNos.php">Sobre nós</a></li>
                 <li id="login"><a href="/PAINEL VISITANTE/registro/login.php">Login</a></li>
             </ul>
         </nav>
     </header>
     <!-- ============================================================== -->
 
-    <!-- Conteúdo Principal -->
-    <main class="plans">
-        <!-- Cabeçalho da Seção -->
-        <div class="section-header" style="text-align: center; margin-bottom: 60px;">
-            <h2 style="font-size: 42px; margin-bottom: 20px;">Escolha o Plano Perfeito</h2>
-            <p style="max-width: 800px; margin: 0 auto; color: #b0b0b0; font-size: 18px;">
-                Selecione o plano ideal para você e comece sua transformação fitness com tecnologia de ponta
-            </p>
-        </div>
-
-        <!-- Grid de Planos -->
-        <div class="plans-grid">
-            <!-- Plano Básico -->
-            <div class="plan-card">
-                <div class="plan-header">
-                    <h3>Básico</h3>
-                    <div class="plan-price">
-                        <span class="price">R$ 79</span>
-                        <span class="period">/mês</span>
-                    </div>
-                </div>
-                <ul class="plan-features">
-                    <li>Acesso à academia</li>
-                    <li>Uso de equipamentos básicos</li>
-                    <li>Área de musculação</li>
-                    <li>Wi-Fi gratuito</li>
-                    <li>Estacionamento</li>
-                    <li class="disabled">Aulas em grupo</li>
-                    <li class="disabled">Acompanhamento personalizado</li>
-                    <li class="disabled">Acesso a todas as unidades</li>
-                </ul>
-                <button class="plan-btn" onclick="window.location.href='/PAINEL VISITANTE/Registro/register.php'">
-                    Começar agora
-                </button>
-            </div>
-
-            <!-- Plano Intermediário (Destaque) -->
-            <div class="plan-card featured">
-                <div class="plan-badge">MAIS POPULAR</div>
-                <div class="plan-header">
-                    <h3>Intermediário</h3>
-                    <div class="plan-price">
-                        <span class="price">R$ 119</span>
-                        <span class="period">/mês</span>
-                    </div>
-                </div>
-                <ul class="plan-features">
-                    <li>Tudo do plano Básico</li>
-                    <li>Aulas em grupo ilimitadas</li>
-                    <li>2 sessões de personal trainer</li>
-                    <li>Acesso a 3 unidades</li>
-                    <li>Monitoramento básico de performance</li>
-                    <li>Área de cardio premium</li>
-                    <li>App de treinos</li>
-                    <li class="disabled">Acompanhamento nutricional</li>
-                </ul>
-                <button class="plan-btn primary" onclick="window.location.href='/PAINEL VISITANTE/Registro/register.php'">
-                    Começar agora
-                </button>
-            </div>
-
-            <!-- Plano Premium -->
-            <div class="plan-card">
-                <div class="plan-header">
-                    <h3>Premium</h3>
-                    <div class="plan-price">
-                        <span class="price">R$ 169</span>
-                        <span class="period">/mês</span>
-                    </div>
-                </div>
-                <ul class="plan-features">
-                    <li>Tudo do plano Intermediário</li>
-                    <li>Acompanhamento nutricional</li>
-                    <li>Acesso a todas as unidades</li>
-                    <li>4 sessões de personal trainer</li>
-                    <li>Monitoramento avançado de performance</li>
-                    <li>Treinos personalizados</li>
-                    <li>Toalhas e armário premium</li>
-                    <li>Convite para eventos exclusivos</li>
-                </ul>
-                <button class="plan-btn" onclick="window.location.href='/PAINEL VISITANTE/Registro/register.php'">
-                    Começar agora
-                </button>
+    <!-- Seção Hero -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Revolucionando o Fitness com Tecnologia</h2>
+                <p>Na Tech Fit, combinamos tecnologia de ponta com fitness de alta performance para criar uma experiência única de treino. Transformamos vidas através da inovação e resultados mensuráveis.</p>
+                <a href="/PAINEL VISITANTE/Registro/register.php" class="cta-button">Comece Sua Jornada</a>
             </div>
         </div>
-    </main>
+    </section>
+
+    <!-- Seção Sobre -->
+    <section class="about-section">
+        <div class="container">
+            <h2>Nossa História</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Fundada em 2020, a Tech Fit nasceu da visão de transformar o mercado fitness tradicional através da tecnologia. Percebemos que as academias convencionais não acompanhavam as inovações tecnológicas que poderiam revolucionar a experiência de treino.</p>
+                    <p>Nosso fundador, um apaixonado por tecnologia e fitness, reuniu uma equipe de engenheiros, desenvolvedores e profissionais de educação física para criar o primeiro ecossistema fitness totalmente integrado com inteligência artificial no Brasil.</p>
+                    <p>Hoje, somos referência em fitness tecnológico, com mais de 10 unidades equipadas com os mais avançados sistemas de monitoramento, treinamento personalizado por IA e uma comunidade ativa de mais de 5.000 membros transformados.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <h3>5.000+</h3>
+                        <p>Membros Transformados</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>10</h3>
+                        <p>Unidades em Operação</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>50+</h3>
+                        <p>Profissionais Especializados</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>98%</h3>
+                        <p>Satisfação dos Clientes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Missão -->
+    <section class="mission-section">
+        <div class="container">
+            <h2 style="text-align: center; color: white; margin-bottom: 50px; font-size: 48px;">Nossa Missão</h2>
+            <div class="mission-cards">
+                <div class="mission-card">
+                    <div class="card-icon">💡</div>
+                    <h3>Inovação</h3>
+                    <p>Desenvolver soluções tecnológicas que otimizem o desempenho físico e tornem o treino mais eficiente, preciso e motivador.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Resultados</h3>
+                    <p>Garantir que cada membro atinja seus objetivos de forma mensurável, com acompanhamento detalhado e personalizado.</p>
+                </div>
+                <div class="mission-card">
+                    <div class="card-icon">❤️</div>
+                    <h3>Comunidade</h3>
+                    <p>Criar um ambiente inclusivo e motivador onde todos se sintam apoiados em sua jornada de transformação.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Equipe -->
+    <section class="team-section">
+        <div class="container">
+            <h2>Nossa Equipe</h2>
+            <p class="section-subtitle">Conheça os especialistas que tornam a Tech Fit possível</p>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="Foto Scherrer 2.jpeg" alt="Diogo Scherrer">
+                    </div>
+                    <h3>Diogo Scherrer</h3>
+                    <p class="member-role">CEO & Fundador</p>
+                    <p>CEO da Tech Fit</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="Foto Henrique.png" alt="Henrique Delgado">
+                    </div>
+                    <h3>Henrique Delgado</h3>
+                    <p class="member-role">Diretora de Inovação</p>
+                    <p>CEO da Tech Fit</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Pronto para Transformar Sua Vida?</h2>
+            <p>Junte-se à revolução fitness mais tecnológica do país e alcance resultados que nunca imaginou possíveis.</p>
+            <div class="cta-buttons">
+                <a href="/PAINEL VISITANTE/planos/planos.php" class="cta-button primary">Conhecer Planos</a>
+                <a href="/PAINEL VISITANTE/registro/register.php" class="cta-button secondary">Cadastrar Agora</a>
+            </div>
+        </div>
+    </section>
 
     <!-- ============================================================== -->
     <!-- FOOTER -->

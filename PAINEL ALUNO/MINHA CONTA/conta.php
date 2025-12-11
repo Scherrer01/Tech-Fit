@@ -147,6 +147,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+// ==============================================================
+// PROCESSAR CANCELAMENTO DE AULA VIA AJAX
+// ==============================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cancelar_aula') {
+    
+    $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+    
+    try {
+        // Validar dados
+        if (!isset($_POST['nome_aula']) || !isset($_POST['dia_semana']) || !isset($_POST['horario']) || !isset($_POST['id_aluno'])) {
+            throw new Exception("Dados incompletos para cancelamento.");
+        }
+        
+        if ($_POST['id_aluno'] != $id_aluno) {
+            throw new Exception("Acesso não autorizado.");
+        }
+        
+        $nome_aula = trim($_POST['nome_aula']);
+        $dia_semana = trim($_POST['dia_semana']);
+        $horario = trim($_POST['horario']);
+        
+        // Buscar ID da aula
+        $sql_aula = "SELECT a.ID_AULA 
+                    FROM AULAS a
+                    WHERE a.NOME_AULA = :nome_aula 
+                    AND a.DIA_SEMANA = :dia_semana 
+                    AND a.HORARIO_INICIO = :horario
+                    LIMIT 1";
+        $stmt_aula = $conn->prepare($sql_aula);
+        $stmt_aula->bindParam(':nome_aula', $nome_aula);
+        $stmt_aula->bindParam(':dia_semana', $dia_semana);
+        $stmt_aula->bindParam(':horario', $horario);
+        $stmt_aula->execute();
+        
+        if ($stmt_aula->rowCount() === 0) {
+            throw new Exception("Aula não encontrada.");
+        }
+        
+        $aula = $stmt_aula->fetch(PDO::FETCH_ASSOC);
+        $id_aula = $aula['ID_AULA'];
+        
+        // Verificar se o aluno está inscrito
+        $sql_verificar = "SELECT COUNT(*) as total FROM PARTICIPAM WHERE ID_AULA = :id_aula AND ID_ALUNO = :id_aluno";
+        $stmt_verificar = $conn->prepare($sql_verificar);
+        $stmt_verificar->bindParam(':id_aula', $id_aula);
+        $stmt_verificar->bindParam(':id_aluno', $id_aluno);
+        $stmt_verificar->execute();
+        $result = $stmt_verificar->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result['total'] == 0) {
+            throw new Exception("Você não está inscrito nesta aula.");
+        }
+        
+        // Cancelar a aula (remover da tabela PARTICIPAM)
+        $sql_cancelar = "DELETE FROM PARTICIPAM WHERE ID_AULA = :id_aula AND ID_ALUNO = :id_aluno";
+        $stmt_cancelar = $conn->prepare($sql_cancelar);
+        $stmt_cancelar->bindParam(':id_aula', $id_aula);
+        $stmt_cancelar->bindParam(':id_aluno', $id_aluno);
+        
+        if ($stmt_cancelar->execute()) {
+            $response = [
+                'success' => true,
+                'message' => 'Aula cancelada com sucesso!',
+                'data' => [
+                    'nome_aula' => $nome_aula,
+                    'dia_semana' => $dia_semana,
+                    'horario' => $horario
+                ]
+            ];
+        } else {
+            throw new Exception("Erro ao cancelar aula.");
+        }
+        
+    } catch (Exception $e) {
+        $response = [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+    
+    if ($isAjax) {
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
+}
+
 // Função para formatar telefone para exibição
 function formatarTelefoneExibicao($telefone) {
     if (strlen($telefone) === 11) {
@@ -201,7 +288,9 @@ try {
                   JOIN MODALIDADES m ON a.ID_MODALIDADE = m.ID_MODALIDADE
                   LEFT JOIN FUNCIONARIOS f ON a.ID_INSTRUTOR = f.ID_FUNCIONARIO
                   WHERE pa.ID_ALUNO = :id_aluno
-                  ORDER BY a.DIA_SEMANA, a.HORARIO_INICIO";
+                  ORDER BY 
+                    FIELD(a.DIA_SEMANA, 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'),
+                    a.HORARIO_INICIO";
     
     $stmt_aulas = $conn->prepare($sql_aulas);
     $stmt_aulas->bindParam(':id_aluno', $id_aluno, PDO::PARAM_INT);
@@ -255,7 +344,6 @@ try {
                 <li><a href="../index.php">Início</a></li>
                 <li><a href="../AULAS/aulas.php">Aulas</a></li>
                 <li><a href="../PLANOS/plano.php">Planos</a></li>
-                <li><a href="../MODALIDADES/modalidades.php">Modalidades</a></li>
                 <li><a href="../UNIDADES/unidades.php">Unidades</a></li>
                 <li id="login"><a href="../../PAINEL VISITANTE/registro/logout.php">Sair</a></li>
             </ul>
@@ -291,10 +379,6 @@ try {
                     <a href="#aulas" class="nav-item">
                         <span class="nav-icon">📅</span>
                         <span>Minhas Aulas</span>
-                    </a>
-                    <a href="#progresso" class="nav-item">
-                        <span class="nav-icon">📊</span>
-                        <span>Meu Progresso</span>
                     </a>
                     <a href="#pagamentos" class="nav-item">
                         <span class="nav-icon">💰</span>
@@ -375,8 +459,7 @@ try {
                         </div>
                         
                         <div class="profile-actions">
-                            <button class="btn-primary" onclick="window.location.href='editar_perfil.php'">Editar Perfil</button>
-                            <button class="btn-secondary" onclick="window.location.href='alterar_senha.php'">Alterar Senha</button>
+                            <button class="btn-primary" id="editarPerfilBtn">Editar Perfil</button>
                         </div>
                     </div>
                 </div>
@@ -390,7 +473,7 @@ try {
                             <div class="summary-icon">📅</div>
                             <div class="summary-info">
                                 <h4>Próxima Aula</h4>
-                                <p>
+                                <p id="proximaAulaText">
                                     <?php if (!empty($aulas_agendadas)): ?>
                                         <?php 
                                         $proxima_aula = $aulas_agendadas[0];
@@ -408,14 +491,14 @@ try {
                             <div class="summary-icon">✅</div>
                             <div class="summary-info">
                                 <h4>Aulas Agendadas</h4>
-                                <p><?php echo count($aulas_agendadas); ?> aulas</p>
+                                <p id="totalAulasText"><?php echo count($aulas_agendadas); ?> aulas</p>
                             </div>
                         </div>
                         <div class="summary-card">
                             <div class="summary-icon">🎯</div>
                             <div class="summary-info">
                                 <h4>Modalidades</h4>
-                                <p>
+                                <p id="modalidadesText">
                                     <?php 
                                     $modalidades = array_unique(array_column($aulas_agendadas, 'NOME_MODALIDADE'));
                                     echo count($modalidades) > 0 ? implode(', ', $modalidades) : 'Nenhuma';
@@ -427,27 +510,27 @@ try {
 
                     <div class="upcoming-classes">
                         <h3>Minhas Aulas</h3>
-                        <div class="class-list">
+                        <div class="class-list" id="classList">
                             <?php if (!empty($aulas_agendadas)): ?>
-                                <?php foreach ($aulas_agendadas as $aula): ?>
-                                    <div class="class-item">
+                                <?php foreach ($aulas_agendadas as $aula): 
+                                    $dias_semana = [
+                                        'DOM' => 'Domingo',
+                                        'SEG' => 'Segunda',
+                                        'TER' => 'Terça',
+                                        'QUA' => 'Quarta',
+                                        'QUI' => 'Quinta',
+                                        'SEX' => 'Sexta',
+                                        'SAB' => 'Sábado'
+                                    ];
+                                    $dia_semana_formatado = $dias_semana[$aula['DIA_SEMANA']] ?? $aula['DIA_SEMANA'];
+                                    $horario_formatado = date('H:i', strtotime($aula['HORARIO_INICIO']));
+                                    $horario_fim_formatado = date('H:i', strtotime($aula['HORARIO_INICIO']) + $aula['DURACAO_MINUTOS'] * 60);
+                                ?>
+                                    <div class="class-item" data-aula-id="<?php echo $aula['ID_AULA'] ?? ''; ?>">
                                         <div class="class-info">
                                             <h4><?php echo htmlspecialchars($aula['NOME_AULA']); ?></h4>
-                                            <p>
-                                                <?php 
-                                                $dias_semana = [
-                                                    'DOM' => 'Domingo',
-                                                    'SEG' => 'Segunda',
-                                                    'TER' => 'Terça',
-                                                    'QUA' => 'Quarta',
-                                                    'QUI' => 'Quinta',
-                                                    'SEX' => 'Sexta',
-                                                    'SAB' => 'Sábado'
-                                                ];
-                                                echo $dias_semana[$aula['DIA_SEMANA']] . ' - ' . 
-                                                     date('H:i', strtotime($aula['HORARIO_INICIO'])) . ' às ' . 
-                                                     date('H:i', strtotime($aula['HORARIO_INICIO']) + $aula['DURACAO_MINUTOS'] * 60);
-                                                ?>
+                                            <p class="aula-horario">
+                                                <?php echo $dia_semana_formatado . ' - ' . $horario_formatado . ' às ' . $horario_fim_formatado; ?>
                                             </p>
                                             <span class="instructor">
                                                 <?php 
@@ -461,13 +544,26 @@ try {
                                             </span>
                                         </div>
                                         <div class="class-actions">
-                                            <button class="btn-small primary">Ver detalhes</button>
-                                            <button class="btn-small secondary">Cancelar</button>
+                                            <button class="btn-small primary ver-detalhes" 
+                                                    data-aula-nome="<?php echo htmlspecialchars($aula['NOME_AULA']); ?>"
+                                                    data-dia-semana="<?php echo $aula['DIA_SEMANA']; ?>"
+                                                    data-horario="<?php echo $horario_formatado; ?>"
+                                                    data-modalidade="<?php echo htmlspecialchars($aula['NOME_MODALIDADE']); ?>"
+                                                    data-instrutor="<?php echo htmlspecialchars($aula['NOME_FUNCIONARIO'] ?? ''); ?>">
+                                                Ver detalhes
+                                            </button>
+                                            <button class="btn-small secondary cancelar-aula" 
+                                                    data-aula-nome="<?php echo htmlspecialchars($aula['NOME_AULA']); ?>"
+                                                    data-dia-semana="<?php echo $aula['DIA_SEMANA']; ?>"
+                                                    data-horario="<?php echo $horario_formatado; ?>"
+                                                    data-id-aluno="<?php echo $id_aluno; ?>">
+                                                Cancelar
+                                            </button>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <div class="no-classes">
+                                <div class="no-classes" id="noClassesMessage">
                                     <p>Você não está inscrito em nenhuma aula. <a href="../AULAS/aulas.php">Inscreva-se agora!</a></p>
                                 </div>
                             <?php endif; ?>
@@ -495,7 +591,7 @@ try {
                             <div class="stat-trend neutral">--</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-value">
+                            <div class="stat-value" id="statTotalAulas">
                                 <?php echo count($aulas_agendadas); ?><span>aulas</span>
                             </div>
                             <div class="stat-label">Total Inscrito</div>
@@ -521,8 +617,8 @@ try {
                             <div class="chart-icon">📊</div>
                             <p>
                                 <?php if (!empty($aulas_agendadas)): ?>
-                                    Você está inscrito em <strong><?php echo count($aulas_agendadas); ?> aulas</strong><br>
-                                    em <strong><?php echo count($modalidades); ?> modalidades</strong> diferentes
+                                    Você está inscrito em <strong id="chartTotalAulas"><?php echo count($aulas_agendadas); ?> aulas</strong><br>
+                                    em <strong id="chartModalidades"><?php echo count($modalidades); ?> modalidades</strong> diferentes
                                 <?php else: ?>
                                     Comece suas atividades! Inscreva-se em aulas para acompanhar seu progresso.
                                 <?php endif; ?>
@@ -607,14 +703,9 @@ try {
                             </label>
                         </div>
                         <div class="setting-item">
-                            <h4>🔒 Privacidade</h4>
-                            <p>Configurar visibilidade do perfil</p>
-                            <button class="btn-small secondary">Configurar</button>
-                        </div>
-                        <div class="setting-item">
                             <h4>📱 Dados Pessoais</h4>
                             <p>Atualizar informações cadastrais</p>
-                            <button class="btn-small secondary" onclick="window.location.href='editar_perfil.php'">Editar</button>
+                            <button class="btn-small secondary" id="configEditarPerfilBtn">Editar</button>
                         </div>
                     </div>
                 </div>
@@ -735,11 +826,11 @@ try {
             </div>
             
             <div class="form-actions">
-    <input type="hidden" name="action" value="update_profile">
-    <input type="hidden" name="id_aluno" value="<?php echo $id_aluno; ?>">
-    <button type="button" class="btn-secondary modal-close">Cancelar</button>
-    <button type="submit" class="btn-primary">Salvar Alterações</button>
-</div>
+                <input type="hidden" name="action" value="update_profile">
+                <input type="hidden" name="id_aluno" value="<?php echo $id_aluno; ?>">
+                <button type="button" class="btn-secondary modal-close">Cancelar</button>
+                <button type="submit" class="btn-primary">Salvar Alterações</button>
+            </div>
         </form>
     </div>
 </div>

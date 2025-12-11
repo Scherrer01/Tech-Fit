@@ -65,11 +65,12 @@ try {
         </div>
         <nav>
             <ul>
-                <li><a href="<?php echo $home_url; ?>">Início</a></li>
-                <li><a href="<?php echo $planos_url; ?>">Planos</a></li>
-                <li><a href="<?php echo $sobre_url; ?>">Sobre nós</a></li>
-                <li id="login"><a href="<?php echo $login_url; ?>">Login</a></li>
-            </ul>
+    <li><a href="/PAINEL VISITANTE/Home/home.php">Início</a></li>
+    <li><a href="/PAINEL VISITANTE/Planos/planos.php">Planos</a></li>
+    <li><a href="/PAINEL VISITANTE/SobreNos/sobreNos.php">Sobre nós</a></li>
+    <li><a href="/PAINEL VISITANTE/Contato/contato.php">Contato</a></li>
+    <li id="login"><a href="login.php">Login</a></li>
+</ul>
         </nav>
     </header>
 <!-- ============================================================================================-->

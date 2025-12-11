@@ -1,5 +1,124 @@
 ﻿<?php
 // plano.php
+session_start();
+
+// Verificar se o usuário está logado
+if (!isset($_SESSION['id_aluno'])) {
+    header("Location: /PAINEL ALUNO/index.php");
+    exit();
+}
+
+$id_aluno = $_SESSION['id_aluno'];
+
+// Incluir a classe Database
+require_once '../../database.php';
+
+// Conexão com o banco de dados
+$database = new Database();
+$conn = $database->getConnection();
+
+// ==============================================================
+// PROCESSAR TROCA DE PLANO VIA AJAX
+// ==============================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'trocar_plano') {
+    
+    $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+    
+    try {
+        // Validar dados
+        if (!isset($_POST['plano_id']) || !isset($_POST['id_aluno'])) {
+            throw new Exception("Dados incompletos para troca de plano.");
+        }
+        
+        // Verificar se o ID do aluno corresponde ao da sessão
+        if ($_POST['id_aluno'] != $id_aluno) {
+            throw new Exception("Acesso não autorizado.");
+        }
+        
+        $plano_id = (int)$_POST['plano_id'];
+        $id_aluno_post = (int)$_POST['id_aluno'];
+        
+        // Verificar se o plano existe
+        $sql_verificar_plano = "SELECT ID_PLANO, NOME_PLANO, VALOR FROM PLANOS WHERE ID_PLANO = :plano_id";
+        $stmt_verificar_plano = $conn->prepare($sql_verificar_plano);
+        $stmt_verificar_plano->bindParam(':plano_id', $plano_id, PDO::PARAM_INT);
+        $stmt_verificar_plano->execute();
+        
+        if ($stmt_verificar_plano->rowCount() === 0) {
+            throw new Exception("Plano não encontrado.");
+        }
+        
+        $plano = $stmt_verificar_plano->fetch(PDO::FETCH_ASSOC);
+        
+        // Verificar se o aluno já tem este plano
+        $sql_verificar_aluno_plano = "SELECT ID_PLANO FROM ALUNOS WHERE ID_ALUNO = :id_aluno";
+        $stmt_verificar_aluno_plano = $conn->prepare($sql_verificar_aluno_plano);
+        $stmt_verificar_aluno_plano->bindParam(':id_aluno', $id_aluno_post, PDO::PARAM_INT);
+        $stmt_verificar_aluno_plano->execute();
+        
+        $aluno_atual = $stmt_verificar_aluno_plano->fetch(PDO::FETCH_ASSOC);
+        
+        if ($aluno_atual['ID_PLANO'] == $plano_id) {
+            throw new Exception("Você já possui este plano.");
+        }
+        
+        // Atualizar plano do aluno
+        $sql_atualizar_plano = "UPDATE ALUNOS SET ID_PLANO = :plano_id WHERE ID_ALUNO = :id_aluno";
+        $stmt_atualizar_plano = $conn->prepare($sql_atualizar_plano);
+        $stmt_atualizar_plano->bindParam(':plano_id', $plano_id, PDO::PARAM_INT);
+        $stmt_atualizar_plano->bindParam(':id_aluno', $id_aluno_post, PDO::PARAM_INT);
+        
+        if ($stmt_atualizar_plano->execute()) {
+            // Registrar pagamento - USANDO 'PIX' (ou outro valor válido do ENUM)
+            $sql_registrar_pagamento = "INSERT INTO PAGAMENTOS (ID_ALUNO, TIPO_PAGAMENTO, VALOR_PAGAMENTO, DATA_PAGAMENTO) 
+                                        VALUES (:id_aluno, 'PIX', :valor, CURDATE())";
+            $stmt_registrar_pagamento = $conn->prepare($sql_registrar_pagamento);
+            $stmt_registrar_pagamento->bindParam(':id_aluno', $id_aluno_post, PDO::PARAM_INT);
+            $stmt_registrar_pagamento->bindParam(':valor', $plano['VALOR'], PDO::PARAM_STR);
+            $stmt_registrar_pagamento->execute();
+            
+            $response = [
+                'success' => true,
+                'message' => 'Plano alterado com sucesso!',
+                'data' => [
+                    'plano_nome' => $plano['NOME_PLANO'],
+                    'plano_valor' => number_format($plano['VALOR'], 2, ',', '.'),
+                    'plano_id' => $plano_id
+                ]
+            ];
+        } else {
+            throw new Exception("Erro ao atualizar plano.");
+        }
+        
+    } catch (Exception $e) {
+        $response = [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+    
+    if ($isAjax) {
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    }
+}
+
+// Buscar todos os planos disponíveis
+$sql_planos = "SELECT ID_PLANO, NOME_PLANO, VALOR, BENEFICIOS FROM PLANOS ORDER BY VALOR ASC";
+$stmt_planos = $conn->prepare($sql_planos);
+$stmt_planos->execute();
+$planos = $stmt_planos->fetchAll(PDO::FETCH_ASSOC);
+
+// Buscar plano atual do aluno
+$sql_plano_atual = "SELECT p.ID_PLANO, p.NOME_PLANO, p.VALOR 
+                    FROM ALUNOS a 
+                    JOIN PLANOS p ON a.ID_PLANO = p.ID_PLANO 
+                    WHERE a.ID_ALUNO = :id_aluno";
+$stmt_plano_atual = $conn->prepare($sql_plano_atual);
+$stmt_plano_atual->bindParam(':id_aluno', $id_aluno, PDO::PARAM_INT);
+$stmt_plano_atual->execute();
+$plano_atual = $stmt_plano_atual->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -11,85 +130,97 @@
 </head>
 <body>
     <header class="cabecalho">
-    <div class="logo-container">
-        <div class="logo">
-            <img src="../../logo.png" alt="Tech Fit">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="../../logo.png" alt="Tech Fit">
+            </div>
+            <h1>Tech <span class="color-accent">Fit</span></h1>
         </div>
-        <h1>Tech <span class="color-accent">Fit</span></h1>
+        <nav>
+            <ul>
+                <li><a href="/PAINEL ALUNO/index.php">Início</a></li>
+                <li><a href="/PAINEL ALUNO/AULAS/aulas.php">Aulas</a></li>
+                <li><a href="/PAINEL ALUNO/UNIDADES/unidades.php">Unidades</a></li>
+                <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ================================================================================== -->
+    <!-- Seção Planos -->
+    <section class="plans">
+        <div class="section-header">
+            <h2>Troque seu Plano</h2>
+            <p>Escolha o plano que melhor se adapta aos seus objetivos</p>
+            <?php if ($plano_atual): ?>
+                
+            <?php endif; ?>
+        </div>
+        <div class="plans-grid">
+            <?php foreach ($planos as $plano): 
+                $is_current = ($plano_atual && $plano['ID_PLANO'] == $plano_atual['ID_PLANO']);
+                $is_popular = ($plano['NOME_PLANO'] == 'Premium');
+                
+                // Decodificar benefícios do banco de dados
+                $beneficios = explode(',', $plano['BENEFICIOS']);
+            ?>
+                <div class="plan-card <?php echo $is_popular ? 'featured' : ''; ?> <?php echo $is_current ? 'current' : ''; ?>">
+                    <?php if ($is_popular): ?>
+                        <div class="plan-badge">Mais Popular</div>
+                    <?php endif; ?>
+                    
+                    <?php if ($is_current): ?>
+                        <div class="plan-badge current-badge">Plano Atual</div>
+                    <?php endif; ?>
+                    
+                    <div class="plan-header">
+                        <h3><?php echo htmlspecialchars($plano['NOME_PLANO']); ?></h3>
+                        <div class="plan-price">
+                            <span class="price">R$ <?php echo number_format($plano['VALOR'], 0, ',', '.'); ?></span>
+                            <span class="period">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="plan-features">
+                        <?php foreach ($beneficios as $beneficio): 
+                            $beneficio = trim($beneficio);
+                            if (!empty($beneficio)): ?>
+                                <li><?php echo htmlspecialchars($beneficio); ?></li>
+                            <?php endif;
+                        endforeach; ?>
+                    </ul>
+                    <button class="plan-btn <?php echo $is_popular ? 'primary' : ''; ?> 
+                             <?php echo $is_current ? 'disabled' : ''; ?>" 
+                            data-plano-id="<?php echo $plano['ID_PLANO']; ?>"
+                            data-plano-nome="<?php echo htmlspecialchars($plano['NOME_PLANO']); ?>"
+                            data-plano-valor="<?php echo number_format($plano['VALOR'], 2, ',', '.'); ?>"
+                            <?php echo $is_current ? 'disabled' : ''; ?>>
+                        <?php echo $is_current ? 'Plano Atual' : 'Trocar para este plano'; ?>
+                    </button>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Confirmar Troca de Plano</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p id="confirmMessage">Tem certeza que deseja trocar para o plano <strong id="planoNome"></strong> por R$ <strong id="planoValor"></strong>/mês?</p>
+                <p class="modal-note">A alteração será efetivada imediatamente e aparecerá na sua conta.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary cancel-troca">Cancelar</button>
+                <button class="btn-primary confirm-troca" data-plano-id="" data-id-aluno="<?php echo $id_aluno; ?>">Confirmar Troca</button>
+            </div>
+        </div>
     </div>
-    <nav>
-        <ul>
-            <li><a href="/PAINEL ALUNO/index.php">Início</a></li>
-            <li><a href="/PAINEL ALUNO/AULAS/aulas.php">Aulas</a></li>
-            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.php">Modalidades</a></li>
-            <li><a href="/PAINEL ALUNO/UNIDADES/unidades.php">Unidades</a></li>
-            <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
-        </ul>
-    </nav>
-</header>
 
-<!-- ================================================================================== -->
-                                 <!-- Seção Planos -->
-                                  <!-- Plans Section -->
-        <section class="plans">
-            <div class="section-header">
-                <h2>Troque seu Plano</h2>
-                <p>Escolha o plano que melhor se adapta aos seus objetivos</p>
-            </div>
-            <div class="plans-grid">
-                <div class="plan-card">
-                    <div class="plan-header">
-                        <h3>Básico</h3>
-                        <div class="plan-price">
-                            <span class="price">R$ 89</span>
-                            <span class="period">/mês</span>
-                        </div>
-                    </div>
-                    <ul class="plan-features">
-                        <li>Acesso à área de musculação</li>
-                        <li>Avaliação física inicial</li>
-                        <li class="disabled">Aulas coletivas</li>
-                        <li class="disabled">Personal trainer</li>
-                    </ul>
-                    <button class="plan-btn">Trocar para este plano</button>
-                </div>
-                <div class="plan-card featured">
-                    <div class="plan-badge">Mais Popular</div>
-                    <div class="plan-header">
-                        <h3>Premium</h3>
-                        <div class="plan-price">
-                            <span class="price">R$ 129</span>
-                            <span class="period">/mês</span>
-                        </div>
-                    </div>
-                    <ul class="plan-features">
-                        <li>Acesso à área de musculação</li>
-                        <li>Avaliação física mensal</li>
-                        <li>Todas as aulas coletivas</li>
-                        <li class="disabled">Personal trainer</li>
-                    </ul>
-                    <button class="plan-btn primary">Trocar para este plano</button>
-                </div>
-                <div class="plan-card">
-                    <div class="plan-header">
-                        <h3>Elite</h3>
-                        <div class="plan-price">
-                            <span class="price">R$ 180</span>
-                            <span class="period">/mês</span>
-                        </div>
-                    </div>
-                    <ul class="plan-features">
-                        <li>Acesso à área de musculação</li>
-                        <li>Avaliação física quinzenal</li>
-                        <li>Todas as aulas coletivas</li>
-                        <li>4 sessões com personal trainer</li>
-                    </ul>
-                    <button class="plan-btn">Trocar para este plano</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
+    <!-- Footer -->
+    <!-- FOOTER -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -149,6 +280,132 @@
             </div>
         </div>
     </footer>
-    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const planButtons = document.querySelectorAll('.plan-btn:not(.disabled)');
+        const confirmModal = document.getElementById('confirmModal');
+        const modalClose = confirmModal.querySelector('.modal-close');
+        const cancelBtn = confirmModal.querySelector('.cancel-troca');
+        const confirmBtn = confirmModal.querySelector('.confirm-troca');
+        const planoNome = document.getElementById('planoNome');
+        const planoValor = document.getElementById('planoValor');
+        const confirmMessage = document.getElementById('confirmMessage');
+
+        // Abrir modal ao clicar em um botão de plano
+        planButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const planoId = this.dataset.planoId;
+                const planoNomeText = this.dataset.planoNome;
+                const planoValorText = this.dataset.planoValor;
+                
+                // Atualizar modal
+                planoNome.textContent = planoNomeText;
+                planoValor.textContent = planoValorText;
+                confirmBtn.dataset.planoId = planoId;
+                
+                // Mostrar modal
+                confirmModal.style.display = 'flex';
+            });
+        });
+
+        // Fechar modal
+        function closeModal() {
+            confirmModal.style.display = 'none';
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // Confirmar troca de plano
+        confirmBtn.addEventListener('click', async function() {
+            const planoId = this.dataset.planoId;
+            const idAluno = this.dataset.idAluno;
+            
+            if (!planoId || !idAluno) {
+                alert('Erro: Dados incompletos');
+                return;
+            }
+            
+            // Desabilitar botão durante a requisição
+            this.disabled = true;
+            this.textContent = 'Processando...';
+            
+            try {
+                // Enviar requisição AJAX
+                const formData = new FormData();
+                formData.append('action', 'trocar_plano');
+                formData.append('plano_id', planoId);
+                formData.append('id_aluno', idAluno);
+                
+                const response = await fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Mostrar mensagem de sucesso
+                    confirmMessage.innerHTML = `
+                        <div class="success-message">
+                            ✅ ${result.message}<br>
+                            Novo plano: <strong>${result.data.plano_nome}</strong> - R$ ${result.data.plano_valor}/mês
+                        </div>
+                    `;
+                    
+                    // Atualizar botões
+                    document.querySelectorAll('.plan-btn').forEach(btn => {
+                        btn.textContent = 'Trocar para este plano';
+                        btn.classList.remove('disabled', 'current');
+                    });
+                    
+                    // Marcar novo plano como atual
+                    const newPlanBtn = document.querySelector(`[data-plano-id="${planoId}"]`);
+                    if (newPlanBtn) {
+                        newPlanBtn.textContent = 'Plano Atual';
+                        newPlanBtn.classList.add('disabled', 'current');
+                        newPlanBtn.disabled = true;
+                        
+                        // Adicionar badge ao card
+                        const planCard = newPlanBtn.closest('.plan-card');
+                        const currentBadge = document.createElement('div');
+                        currentBadge.className = 'plan-badge current-badge';
+                        currentBadge.textContent = 'Plano Atual';
+                        planCard.appendChild(currentBadge);
+                    }
+                    
+                    // Fechar modal após 3 segundos
+                    setTimeout(() => {
+                        closeModal();
+                        // Redirecionar para página de confirmação ou atualizar a página
+                        window.location.href = '/PAINEL ALUNO/MINHA CONTA/conta.php';
+                    }, 3000);
+                    
+                } else {
+                    alert('Erro: ' + result.message);
+                    this.disabled = false;
+                    this.textContent = 'Confirmar Troca';
+                }
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro de conexão. Tente novamente.');
+                this.disabled = false;
+                this.textContent = 'Confirmar Troca';
+            }
+        });
+
+        // Fechar modal ao clicar fora
+        confirmModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    });
+    </script>
 </body>
 </html>

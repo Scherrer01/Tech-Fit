@@ -45,7 +45,6 @@ define('LOGO_URL', '../../logo.png'); // Ajuste conforme necessário
         <nav>
             <ul>
                 <li><a href="<?php echo AULAS_URL; ?>">Aulas</a></li>
-                <li><a href="<?php echo MODALIDADES_URL; ?>">Modalidades</a></li>
                 <li><a href="<?php echo UNIDADES_URL; ?>">Unidades</a></li>
                 <li><a href="<?php echo PLANOS_URL; ?>">Planos</a></li>
                 <li id="conta"><a href="<?php echo CONTA_URL; ?>">Minha conta</a></li>
@@ -60,10 +59,9 @@ define('LOGO_URL', '../../logo.png'); // Ajuste conforme necessário
                 <h1>Transforme seu corpo e mente</h1>
                 <p>Na Tech Fit, combinamos tecnologia de ponta com treinamento especializado para resultados extraordinários</p>
                 <div class="hero-buttons">
-                    <button class="primary-btn">Agendar aula</button>
-                    <a href="<?php echo PLANOS_URL; ?>" class="btn-link">
-                    <button class="secondary-btn">Mude seu plano</button></a>
-                </div>
+    <a href="/PAINEL ALUNO/AULAS/aulas.php" class="primary-btn">Agendar aula</a>
+    <a href="/PAINEL ALUNO/PLANOS/plano.php" class="secondary-btn">Mude seu plano</a>
+</div>
                 <div class="hero-stats">
                     <div class="stat">
                         <h3>500+</h3>
@@ -202,13 +200,13 @@ define('LOGO_URL', '../../logo.png'); // Ajuste conforme necessário
         </section>
 
         <!-- CTA Section -->
-        <section class="cta-section">
-            <div class="cta-content">
-                <h2>Pronto para transformar seu corpo?</h2>
-                <p>Agende sua aula experimental gratuita e venha conhecer a Tech Fit</p>
-                <button class="primary-btn">Agendar Aula Experimental</button>
-            </div>
-        </section>
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Pronto para transformar seu corpo?</h2>
+        <p>Agende sua aula e venha conhecer a Tech Fit</p>
+        <a href="/PAINEL ALUNO/AULAS/aulas.php" class="primary-btn-link">Agendar Aula</a>
+    </div>
+</section>
 
         <!-- Footer -->
         <footer class="footer">

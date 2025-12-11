@@ -799,3 +799,8 @@ nav a:hover::after {
     background-color: #333;
     color: white;
 }
+
+.modal-content h3,
+.modal-content p {
+    color: white !important;
+}

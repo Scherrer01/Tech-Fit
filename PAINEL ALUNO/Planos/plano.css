@@ -1,3 +1,4 @@
+
 /* ============================================================== */
 /* CABEÇALHO PADRÃO */
 h1 {
@@ -32,7 +33,6 @@ body {
     top: 0;
     z-index: 1000;
 }
-
 
 nav ul {
     display: flex;
@@ -78,7 +78,7 @@ nav a:hover::after {
 
 #conta {
     list-style: none;
-    margin-left: auto;
+    margin-left: 10px;
     
 }
 
@@ -397,4 +397,209 @@ p {
     padding-top: 30px;
     text-align: center;
     color: #888;
+}
+
+/* plano.css */
+:root {
+    --primary-color: #FF2626;
+    --primary-dark: #cc0000;
+    --secondary-color: #282828;
+    --accent-color: #FF2626;
+    --light-gray: #f5f5f5;
+    --medium-gray: #e0e0e0;
+    --dark-gray: #333;
+    --text-color: #333;
+    --white: #ffffff;
+    --success-color: #4CAF50;
+    --warning-color: #FF9800;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: var(--light-gray);
+    line-height: 1.6;
+}
+
+/* Header */
+.cabecalho {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #1a1a1a 100%);
+    padding: 1rem 2rem;
+}
+
+/* Adicione estas regras ao seu plano.css existente */
+
+.current-plan-info {
+    background: rgba(255, 38, 38, 0.2);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 10px auto;
+    max-width: 600px;
+    text-align: center;
+    border: 1px solid rgba(255, 38, 38, 0.3);
+}
+
+.current-plan-info p {
+    margin: 0;
+}
+
+.plan-card.current {
+    border: 2px solid #FF2626;
+    position: relative;
+    background-color: #282828;
+}
+
+.plan-card.current::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #FF2626;
+    border-radius: 5px 5px 0 0;
+}
+
+.plan-btn.disabled {
+    background: #333;
+    cursor: not-allowed;
+    opacity: 0.7;
+    border-color: #444;
+}
+
+.plan-btn.disabled:hover {
+    background: #333;
+    transform: none;
+}
+
+/* Badge para plano atual */
+.plan-card .current-badge {
+    background-color: #FF2626;
+    color: white;
+}
+
+/* Modal styles (se ainda não existirem) */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal {
+    background: #282828;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid #444;
+    animation: modalSlideIn 0.3s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: white;
+    font-size: 24px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #b0b0b0;
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.modal-content {
+    color: white;
+    margin-bottom: 25px;
+}
+
+.modal-note {
+    font-size: 14px;
+    color: #b0b0b0;
+    margin-top: 10px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: #FF2626;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #cc0000;
+    transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: #444;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #555;
+    transform: translateY(-2px);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(20px) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.success-message {
+    background: rgba(255, 38, 38, 0.2);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    text-align: center;
+    border: 1px solid rgba(255, 38, 38, 0.3);
 }

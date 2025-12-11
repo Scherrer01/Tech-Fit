@@ -42,11 +42,12 @@ if (isset($_GET['sucesso'])) {
         </div>
         <nav>
             <ul>
-                <li><a href="<?php echo HOME_URL; ?>">Início</a></li>
-                <li><a href="<?php echo PLANOS_URL; ?>">Planos</a></li>
-                <li><a href="<?php echo SOBRE_URL; ?>">Sobre nós</a></li>
-                <li id="login"><a href="<?php echo REGISTRO_URL; ?>">Cadastre-se</a></li>
-            </ul>
+    <li><a href="/PAINEL VISITANTE/Home/home.php">Início</a></li>
+    <li><a href="/PAINEL VISITANTE/Planos/planos.php">Planos</a></li>
+    <li><a href="/PAINEL VISITANTE/SobreNos/sobreNos.php">Sobre nós</a></li>
+    <li><a href="/PAINEL VISITANTE/Contato/contato.php">Contato</a></li>
+    <li id="login"><a href="login.php">Login</a></li>
+</ul>
         </nav>
     </header>
 <!-- ============================================================================================-->

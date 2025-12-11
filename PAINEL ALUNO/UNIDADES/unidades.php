@@ -23,7 +23,6 @@
             <ul>
             <li><a href="/PAINEL ALUNO/index.php">Início</a></li>
             <li><a href="/PAINEL ALUNO/AULAS/aulas.php">Aulas</a></li>
-            <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.php">Modalidades</a></li>
             <li><a href="/PAINEL ALUNO/PLANOS/plano.php">Planos</a></li>
             <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
             </ul>

@@ -938,3 +938,110 @@ nav a:hover::after {
         grid-template-columns: 1fr;
     }
 }
+
+/* Botão Agendar Aula no CTA Section - AUMENTADO */
+.primary-btn-link {
+    display: inline-block;
+    background-color: #FF2626;
+    color: white;
+    text-decoration: none;
+    padding: 15px 30px; /* AUMENTADO de 5px 5px */
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    border: 2px solid #FF2626; /* ADICIONADO borda */
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    min-width: 180px; /* ADICIONADO largura mínima */
+}
+
+.primary-btn-link:hover {
+    background-color: #e02020;
+    border-color: #e02020;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 38, 38, 0.3);
+}
+
+/* Estilo para botões que são na verdade links - AJUSTADO para ficarem iguais */
+.primary-btn,
+.secondary-btn {
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 2px solid transparent;
+    min-width: 180px; /* ADICIONADO para manter tamanho consistente */
+}
+
+.primary-btn {
+    background-color: #FF2626;
+    color: white;
+    border-color: #FF2626;
+}
+
+.primary-btn:hover {
+    background-color: #e02020;
+    border-color: #e02020;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 38, 38, 0.3);
+}
+
+.secondary-btn {
+    background-color: transparent;
+    color: white;
+    border-color: white;
+}
+
+.secondary-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Para manter o layout dos botões lado a lado */
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* CTA Section - para garantir que o botão fique bem posicionado */
+.cta-section .cta-content {
+    text-align: center;
+}
+
+.cta-section .primary-btn-link {
+    margin-top: 20px;
+    display: inline-block; /* Garante que o botão não ocupe toda a largura */
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .primary-btn-link,
+    .primary-btn,
+    .secondary-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+        min-width: 160px;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .hero-buttons .primary-btn,
+    .hero-buttons .secondary-btn {
+        width: 100%;
+    }
+}

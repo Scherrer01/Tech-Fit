@@ -2,13 +2,8 @@
 // aulas.php
 session_start();
 
-// Verificar se o usuário está logado
-if (!isset($_SESSION['id_aluno'])) {
-    header('Location: ../../PAINEL VISITANTE/registro/login.php');
-    exit();
-}
-
-$id_aluno = $_SESSION['id_aluno'];
+// Verificar se o usuário está logado PARA REQUESTS NÃO-AJAX
+// Para requests AJAX, vamos tratar de forma diferente
 
 // Incluir a classe Database
 require_once '../../database.php';
@@ -16,9 +11,144 @@ require_once '../../database.php';
 $database = new Database();
 $conn = $database->getConnection();
 
+// ==============================================================
+// PROCESSAR AGENDAMENTO DE AULA VIA AJAX
+// ==============================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'agendar_aula') {
+    
+    // Verificar se o usuário está logado para AJAX
+    if (!isset($_SESSION['id_aluno'])) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false,
+            'message' => 'Sessão expirada. Por favor, faça login novamente.'
+        ]);
+        exit();
+    }
+    
+    $id_aluno = $_SESSION['id_aluno'];
+    
+    if (!$conn) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => false,
+            'message' => 'Erro na conexão com o banco de dados.'
+        ]);
+        exit();
+    }
+    
+    try {
+        // Validar dados
+        $required_fields = ['nome_aula', 'horario', 'dia_semana', 'id_aluno'];
+        foreach ($required_fields as $field) {
+            if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
+                throw new Exception("Campo obrigatório '$field' não preenchido.");
+            }
+        }
+        
+        if ($_POST['id_aluno'] != $id_aluno) {
+            throw new Exception("Acesso não autorizado.");
+        }
+        
+        // Buscar ID da aula pelo nome
+        $nome_aula = trim($_POST['nome_aula']);
+        $dia_semana = trim($_POST['dia_semana']);
+        $horario = trim($_POST['horario']);
+        
+        $sql_aula = "SELECT ID_AULA FROM AULAS WHERE NOME_AULA = :nome_aula AND DIA_SEMANA = :dia_semana AND HORARIO_INICIO = :horario LIMIT 1";
+        $stmt_aula = $conn->prepare($sql_aula);
+        $stmt_aula->bindParam(':nome_aula', $nome_aula);
+        $stmt_aula->bindParam(':dia_semana', $dia_semana);
+        $stmt_aula->bindParam(':horario', $horario);
+        $stmt_aula->execute();
+        
+        if ($stmt_aula->rowCount() === 0) {
+            throw new Exception("Aula não encontrada.");
+        }
+        
+        $aula = $stmt_aula->fetch(PDO::FETCH_ASSOC);
+        $id_aula = $aula['ID_AULA'];
+        
+        // Verificar se já está agendado
+        $sql_verificar = "SELECT COUNT(*) as total FROM PARTICIPAM WHERE ID_AULA = :id_aula AND ID_ALUNO = :id_aluno";
+        $stmt_verificar = $conn->prepare($sql_verificar);
+        $stmt_verificar->bindParam(':id_aula', $id_aula);
+        $stmt_verificar->bindParam(':id_aluno', $id_aluno);
+        $stmt_verificar->execute();
+        $result = $stmt_verificar->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result['total'] > 0) {
+            throw new Exception("Você já está inscrito nesta aula.");
+        }
+        
+        // Verificar vagas disponíveis
+        $sql_vagas = "SELECT VAGAS FROM AULAS WHERE ID_AULA = :id_aula";
+        $stmt_vagas = $conn->prepare($sql_vagas);
+        $stmt_vagas->bindParam(':id_aula', $id_aula);
+        $stmt_vagas->execute();
+        $vaga = $stmt_vagas->fetch(PDO::FETCH_ASSOC);
+        
+        $vagas_ocupadas = "SELECT COUNT(*) as ocupadas FROM PARTICIPAM WHERE ID_AULA = :id_aula";
+        $stmt_ocupadas = $conn->prepare($vagas_ocupadas);
+        $stmt_ocupadas->bindParam(':id_aula', $id_aula);
+        $stmt_ocupadas->execute();
+        $ocupadas = $stmt_ocupadas->fetch(PDO::FETCH_ASSOC);
+        
+        if ($ocupadas['ocupadas'] >= $vaga['VAGAS']) {
+            throw new Exception("Não há vagas disponíveis para esta aula.");
+        }
+        
+        // Agendar a aula
+        $sql_agendar = "INSERT INTO PARTICIPAM (ID_AULA, ID_ALUNO, DATA_PARTICIPACAO) VALUES (:id_aula, :id_aluno, NOW())";
+        $stmt_agendar = $conn->prepare($sql_agendar);
+        $stmt_agendar->bindParam(':id_aula', $id_aula);
+        $stmt_agendar->bindParam(':id_aluno', $id_aluno);
+        
+        if ($stmt_agendar->execute()) {
+            $response = [
+                'success' => true,
+                'message' => 'Aula agendada com sucesso!',
+                'data' => [
+                    'nome_aula' => $nome_aula,
+                    'dia_semana' => $dia_semana,
+                    'horario' => $horario
+                ]
+            ];
+        } else {
+            throw new Exception("Erro ao agendar aula.");
+        }
+        
+    } catch (Exception $e) {
+        $response = [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+    
+    // Garantir que só output JSON
+    header('Content-Type: application/json');
+    echo json_encode($response);
+    exit(); // IMPORTANTE: sair aqui para não renderizar o HTML
+}
+
+// ==============================================================
+// SE NÃO FOR UMA REQUEST AJAX, CONTINUA COM A PÁGINA NORMAL
+// ==============================================================
+
+// Verificar se o usuário está logado para página normal
+if (!isset($_SESSION['id_aluno'])) {
+    header('Location: ../../PAINEL VISITANTE/registro/login.php');
+    exit();
+}
+
+$id_aluno = $_SESSION['id_aluno'];
+
 if (!$conn) {
     die("Erro na conexão com o banco de dados.");
 }
+
+// ... O RESTO DO SEU CÓDIGO PARA A PÁGINA HTML CONTINUA AQUI ...
+// (todo o código depois desta linha)
 
 // ==============================================================
 // PROCESSAR AGENDAMENTO DE AULA VIA AJAX
@@ -216,6 +346,23 @@ $dias_semana = [
     'SEX' => 'Sexta',
     'SAB' => 'Sábado'
 ];
+
+// Mapeamento de imagens para cada modalidade
+$imagens_modalidades = [
+    'Musculação' => 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&h=400&fit=crop',
+    'Spinning' => 'https://images.unsplash.com/photo-1536922246289-88c42f957773?w=400&h=250&fit=crop',
+    'Zumba' => 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=250&fit=crop',
+    'Pilates' => 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=250&fit=crop',
+    'CrossFit' => 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop',
+    'Yoga' => 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=250&fit=crop',
+    'Natação' => 'https://images.unsplash.com/photo-1540496905036-5937c10647cc?w=400&h=250&fit=crop',
+    'Boxe' => 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=800&h=400&fit=crop',
+    'Treino Funcional'  => 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=800&h=400&fit=crop',
+    'Alongamento' => 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=250&fit=crop'
+];
+
+// Imagem padrão caso não encontre a modalidade
+$imagem_padrao = 'https://images.unsplash.com/photo-1534367507877-0edd93bd013b?w=400&h=250&fit=crop';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -453,6 +600,96 @@ $dias_semana = [
         .section-hidden {
             display: none;
         }
+
+        /* Estilos para as imagens das aulas */
+        .class-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px 10px 0 0;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 15px;
+        }
+
+        .musculacao {
+            background-image: url('https://images.unsplash.com/photo-1534367507877-0edd93bd013b?w=800&h=400&fit=crop');
+        }
+
+        .spinning {
+            background-image: url('https://images.unsplash.com/photo-1536922246289-88c42f957773?w=800&h=400&fit=crop');
+        }
+
+        .zumba {
+            background-image: url('https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&h=400&fit=crop');
+        }
+
+        .pilates {
+            background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=400&fit=crop');
+        }
+
+        .crossfit {
+            background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop');
+        }
+
+        .yoga {
+            background-image: url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=800&h=400&fit=crop');
+        }
+
+        .natacao {
+            background-image: url('https://images.unsplash.com/photo-1540496905036-5937c10647cc?w=800&h=400&fit=crop');
+        }
+
+        .boxe {
+            background-image: url('https://images.unsplash.com/photo-1547925324-2e5c43d1a4a5?w=800&h=400&fit=crop');
+        }
+
+        .treino-funcional {
+            background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop');
+        }
+
+        .alongamento {
+            background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=400&fit=crop');
+        }
+
+        /* Card das aulas */
+        .class-card {
+            background: #282828;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 38, 38, 0.2);
+            border-color: #FF2626;
+        }
+
+        .class-info {
+            padding: 20px;
+        }
+
+        .class-schedule {
+            padding: 0 20px 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .classes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .scheduled-classes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .class-image {
+                height: 150px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -468,7 +705,6 @@ $dias_semana = [
         <nav>
             <ul>
                 <li><a href="/PAINEL ALUNO/index.php">Início</a></li>
-                <li><a href="/PAINEL ALUNO/MODALIDADES/modalidades.php">Modalidades</a></li>
                 <li><a href="/PAINEL ALUNO/UNIDADES/unidades.php">Unidades</a></li>
                 <li><a href="/PAINEL ALUNO/PLANOS/plano.php">Planos</a></li>
                 <li id="conta"><a href="/PAINEL ALUNO/MINHA CONTA/conta.php">Minha conta</a></li>
@@ -481,16 +717,16 @@ $dias_semana = [
     <div id="notification" class="notification" style="display: none;"></div>
 
     <!-- Modal de confirmação -->
-    <div id="modalOverlay" class="modal-overlay">
-        <div class="modal-content">
-            <h3 id="modalTitle">Confirmar agendamento</h3>
-            <p id="modalMessage">Tem certeza que deseja agendar esta aula?</p>
-            <div class="modal-buttons">
-                <button id="modalCancel" class="modal-btn cancel">Cancelar</button>
-                <button id="modalConfirm" class="modal-btn confirm">Confirmar</button>
-            </div>
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content">
+        <h3 id="modalTitle">Confirmar agendamento</h3>
+        <p id="modalMessage">Tem certeza que deseja agendar esta aula?</p>
+        <div class="modal-buttons">
+            <button id="modalCancel" class="modal-btn cancel">Cancelar</button>
+            <button id="modalConfirm" class="modal-btn confirm">Confirmar</button>
         </div>
     </div>
+</div>
 
     <!-- Conteúdo Principal -->
     <main class="aulas-container">
@@ -527,8 +763,10 @@ $dias_semana = [
                     $data_participacao = new DateTime($aula['DATA_PARTICIPACAO']);
                     $hoje = new DateTime();
                     $status = ($data_participacao < $hoje) ? 'realizada' : 'agendada';
+                    $imagem_url = $imagens_modalidades[$aula['NOME_MODALIDADE']] ?? $imagem_padrao;
                 ?>
                 <div class="scheduled-class-card">
+                    <div class="class-image" style="background-image: url('<?php echo $imagem_url; ?>');"></div>
                     <span class="class-status status-<?php echo $status; ?>">
                         <?php echo ucfirst($status); ?>
                     </span>
@@ -558,11 +796,12 @@ $dias_semana = [
             <h2 style="color: white;">Aulas Disponíveis</h2>
             <div class="classes-grid">
                 <?php foreach ($aulas_agrupadas as $nome_aula => $dados_aula): 
-                    // Determinar classe CSS baseada na modalidade
+                    // Determinar classe CSS baseada na modalidade para imagem de fundo
                     $modalidade_class = strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $dados_aula['NOME_MODALIDADE']));
+                    $imagem_url = $imagens_modalidades[$dados_aula['NOME_MODALIDADE']] ?? $imagem_padrao;
                 ?>
                 <div class="class-card available" data-modalidade="<?php echo htmlspecialchars($dados_aula['NOME_MODALIDADE']); ?>">
-                    <div class="class-image <?php echo $modalidade_class; ?>"></div>
+                    <div class="class-image <?php echo $modalidade_class; ?>" style="background-image: url('<?php echo $imagem_url; ?>');"></div>
                     <div class="class-info">
                         <h3><?php echo htmlspecialchars($nome_aula); ?></h3>
                         <p><?php echo htmlspecialchars($dados_aula['NOME_MODALIDADE']); ?> com monitoramento de performance</p>
@@ -619,6 +858,5 @@ $dias_semana = [
     </footer>
 
     <script src="aulas.js"></script>
-    <script src="pesquisa.js"></script>
 </body>
 </html>

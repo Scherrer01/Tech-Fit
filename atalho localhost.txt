@@ -1,0 +1,2 @@
+login: http://localhost:8000/PAINEL%20VISITANTE/registro/login.php
+cadastro: http://localhost:8000/PAINEL%20VISITANTE/registro/register.php

@@ -7,14 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const navItems = document.querySelectorAll('.nav-item');
     const contentSections = document.querySelectorAll('.content-section');
     
+    // Variáveis de estado
+    let isSubmitting = false;
+    
     // ==============================================================
     // INICIALIZAÇÃO
     // ==============================================================
 
     function init() {
-        // REMOVER todos os onclick dos botões de edição
-        removeRedirectOnClicks();
-        
         setupNavigation();
         setupEventListeners();
         setupAulasEventListeners();
@@ -25,39 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==============================================================
-    // REMOVER REDIRECIONAMENTOS DOS BOTÕES
-    // ==============================================================
-
-    function removeRedirectOnClicks() {
-        // Botão principal "Editar Perfil"
-        const mainEditBtn = document.querySelector('.profile-actions .btn-primary');
-        if (mainEditBtn && mainEditBtn.getAttribute('onclick')) {
-            mainEditBtn.removeAttribute('onclick');
-            console.log('Removido onclick do botão Editar Perfil');
-        }
-        
-        // Botão "Editar" nas configurações
-        const configEditBtns = document.querySelectorAll('.setting-item .btn-small');
-        configEditBtns.forEach(btn => {
-            if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('editar_perfil')) {
-                btn.removeAttribute('onclick');
-                console.log('Removido onclick do botão nas configurações');
-            }
-        });
-        
-        // Botão "Alterar Senha"
-        const changePassBtn = document.querySelector('.profile-actions .btn-secondary');
-        if (changePassBtn && changePassBtn.getAttribute('onclick')) {
-            changePassBtn.removeAttribute('onclick');
-            console.log('Removido onclick do botão Alterar Senha');
-        }
-    }
-
-    // ==============================================================
     // MODAL DE EDIÇÃO DE PERFIL (LOCAL)
     // ==============================================================
-
-    let isSubmitting = false;
 
     function setupEditModal() {
         const modal = document.getElementById('editModal');
@@ -76,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setupEditModalButtons() {
         // Botão principal "Editar Perfil"
-        const mainEditBtn = document.querySelector('.profile-actions .btn-primary');
+        const mainEditBtn = document.getElementById('editarPerfilBtn');
         if (mainEditBtn) {
             mainEditBtn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -87,25 +56,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Botão "Editar" nas configurações
-        const configEditBtns = document.querySelectorAll('.setting-item .btn-small');
-        configEditBtns.forEach(btn => {
-            if (btn.textContent.includes('Editar') || btn.textContent === 'Editar') {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Botão Editar (configurações) clicado');
-                    openEditModal();
-                });
-            }
-        });
-        
-        // Botão "Alterar Senha" - ainda redireciona
-        const changePassBtn = document.querySelector('.profile-actions .btn-secondary');
-        if (changePassBtn && changePassBtn.textContent.includes('Alterar Senha')) {
-            changePassBtn.addEventListener('click', function(e) {
+        const configEditBtn = document.getElementById('configEditarPerfilBtn');
+        if (configEditBtn) {
+            configEditBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                alterarSenha();
+                console.log('Botão Editar (configurações) clicado');
+                openEditModal();
             });
         }
     }
@@ -241,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         updateProfileData(result.data);
                     }
                     
-                    // AGORA VAI FECHAR O MODAL CORRETAMENTE
+                    // Fechar o modal após 1.5 segundos
                     setTimeout(() => {
                         // Resetar o botão primeiro
                         resetSubmitButton(submitBtn, originalText);
@@ -251,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         // Mostrar notificação
                         showNotification('Perfil atualizado com sucesso!', 'success');
-                    }, 1500); // Reduzido para 1.5 segundos
+                    }, 1500);
                     
                 } else {
                     showModalMessage(result.message || 'Erro ao atualizar perfil', 'error');
@@ -490,6 +447,280 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==============================================================
+    // FUNÇÕES DE AULAS (CANCELAMENTO)
+    // ==============================================================
+
+    function setupAulasEventListeners() {
+        // Botões "Ver detalhes"
+        document.querySelectorAll('.class-actions .ver-detalhes').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const aulaNome = this.dataset.aulaNome;
+                const diaSemana = this.dataset.diaSemana;
+                const horario = this.dataset.horario;
+                const modalidade = this.dataset.modalidade;
+                const instrutor = this.dataset.instrutor;
+                verDetalhesAula(aulaNome, diaSemana, horario, modalidade, instrutor);
+            });
+        });
+        
+        // Botões "Cancelar"
+        document.querySelectorAll('.class-actions .cancelar-aula').forEach(btn => {
+            btn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                const aulaItem = this.closest('.class-item');
+                const aulaNome = this.dataset.aulaNome;
+                const diaSemana = this.dataset.diaSemana;
+                const horario = this.dataset.horario;
+                const idAluno = this.dataset.idAluno;
+                
+                if (!aulaNome || !diaSemana || !horario || !idAluno) {
+                    console.error('Dados incompletos para cancelamento:', { aulaNome, diaSemana, horario, idAluno });
+                    showNotification('Erro: Dados da aula incompletos', 'error');
+                    return;
+                }
+                
+                await cancelarAula(aulaItem, aulaNome, diaSemana, horario, idAluno);
+            });
+        });
+    }
+
+    async function cancelarAula(aulaItem, nomeAula, diaSemana, horario, idAluno) {
+        // Traduzir dia da semana para nome completo (para a mensagem de confirmação)
+        const diasMap = {
+            'DOM': 'Domingo',
+            'SEG': 'Segunda',
+            'TER': 'Terça', 
+            'QUA': 'Quarta',
+            'QUI': 'Quinta',
+            'SEX': 'Sexta',
+            'SAB': 'Sábado'
+        };
+        
+        const diaSemanaNome = diasMap[diaSemana] || diaSemana;
+        
+        if (!confirm(`Tem certeza que deseja cancelar sua inscrição na aula "${nomeAula}" (${diaSemanaNome} ${horario})?`)) {
+            return;
+        }
+        
+        try {
+            // Preparar dados para envio
+            const formData = new FormData();
+            formData.append('action', 'cancelar_aula');
+            formData.append('nome_aula', nomeAula);
+            formData.append('dia_semana', diaSemana);
+            formData.append('horario', horario + ':00'); // Adicionar segundos
+            formData.append('id_aluno', idAluno);
+            
+            // Enviar requisição AJAX
+            const response = await fetch(window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const contentType = response.headers.get('content-type');
+            
+            if (contentType && contentType.includes('application/json')) {
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Remover visualmente o item com animação
+                    aulaItem.style.opacity = '0';
+                    aulaItem.style.transform = 'translateX(-20px)';
+                    aulaItem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    
+                    setTimeout(() => {
+                        aulaItem.remove();
+                        
+                        // Atualizar contadores
+                        atualizarContadoresAposCancelamento();
+                        
+                        // Mostrar mensagem de sucesso
+                        showNotification(result.message, 'success');
+                        
+                        // Verificar se não há mais aulas
+                        verificarSeNaoHaAulas();
+                        
+                    }, 300);
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            } else {
+                // Se não for JSON, pode ser que houve um erro no servidor
+                const text = await response.text();
+                console.error('Resposta não-JSON:', text.substring(0, 200));
+                showNotification('Erro ao processar cancelamento', 'error');
+            }
+            
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            showNotification('Erro de conexão. Tente novamente.', 'error');
+        }
+    }
+
+    function atualizarContadoresAposCancelamento() {
+        // Contar aulas restantes
+        const classItems = document.querySelectorAll('.class-item');
+        const totalAulas = classItems.length;
+        
+        // Atualizar o número no resumo
+        const summaryCount = document.getElementById('totalAulasText');
+        if (summaryCount) {
+            summaryCount.textContent = `${totalAulas} ${totalAulas === 1 ? 'aula' : 'aulas'}`;
+        }
+        
+        // Atualizar o número no progresso
+        const statCardCount = document.getElementById('statTotalAulas');
+        if (statCardCount) {
+            statCardCount.innerHTML = `${totalAulas}<span>aulas</span>`;
+        }
+        
+        // Atualizar no gráfico
+        const chartTotalAulas = document.getElementById('chartTotalAulas');
+        if (chartTotalAulas) {
+            chartTotalAulas.textContent = `${totalAulas} ${totalAulas === 1 ? 'aula' : 'aulas'}`;
+        }
+        
+        // Atualizar as modalidades únicas
+        const modalidadesSet = new Set();
+        document.querySelectorAll('.modalidade-badge').forEach(badge => {
+            modalidadesSet.add(badge.textContent);
+        });
+        
+        const modalidadesText = document.getElementById('modalidadesText');
+        const chartModalidades = document.getElementById('chartModalidades');
+        const modalidadesArray = Array.from(modalidadesSet);
+        
+        if (modalidadesText) {
+            modalidadesText.textContent = modalidadesArray.length > 0 ? 
+                modalidadesArray.join(', ') : 'Nenhuma';
+        }
+        
+        if (chartModalidades) {
+            chartModalidades.textContent = `${modalidadesArray.length} modalidades`;
+        }
+        
+        // Atualizar próxima aula
+        const primeiraAulaItem = document.querySelector('.class-item');
+        const proximaAulaText = document.getElementById('proximaAulaText');
+        if (primeiraAulaItem && proximaAulaText) {
+            const aulaNome = primeiraAulaItem.querySelector('h4').textContent;
+            const aulaHorario = primeiraAulaItem.querySelector('.aula-horario').textContent;
+            const hora = aulaHorario.split(' - ')[1]?.split(' às ')[0] || '';
+            proximaAulaText.textContent = `${aulaNome} - ${aulaHorario.split(' - ')[0]} ${hora}`;
+        } else if (proximaAulaText) {
+            proximaAulaText.textContent = 'Nenhuma aula agendada';
+        }
+    }
+
+    function verificarSeNaoHaAulas() {
+        const classItems = document.querySelectorAll('.class-item');
+        const noClassesDiv = document.getElementById('noClassesMessage');
+        const classList = document.getElementById('classList');
+        
+        if (classItems.length === 0 && !noClassesDiv && classList) {
+            // Criar mensagem de "sem aulas"
+            classList.innerHTML = `
+                <div class="no-classes" id="noClassesMessage">
+                    <p>Você não está inscrito em nenhuma aula. <a href="../AULAS/aulas.php">Inscreva-se agora!</a></p>
+                </div>
+            `;
+        }
+    }
+
+    function verDetalhesAula(nomeAula, diaSemana, horario, modalidade, instrutor) {
+        // Traduzir dia da semana
+        const diasMap = {
+            'DOM': 'Domingo',
+            'SEG': 'Segunda-feira',
+            'TER': 'Terça-feira', 
+            'QUA': 'Quarta-feira',
+            'QUI': 'Quinta-feira',
+            'SEX': 'Sexta-feira',
+            'SAB': 'Sábado'
+        };
+        
+        const diaSemanaNome = diasMap[diaSemana] || diaSemana;
+        
+        // Criar modal de detalhes
+        const modalHtml = `
+            <div class="aula-detalhes-modal" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            ">
+                <div style="
+                    background: #282828;
+                    border-radius: 10px;
+                    padding: 30px;
+                    max-width: 500px;
+                    width: 90%;
+                    border: 1px solid #444;
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; color: white;">Detalhes da Aula</h3>
+                        <button class="close-detalhes" style="
+                            background: none;
+                            border: none;
+                            color: #b0b0b0;
+                            font-size: 24px;
+                            cursor: pointer;
+                            padding: 0;
+                        ">&times;</button>
+                    </div>
+                    
+                    <div style="color: white;">
+                        <h4 style="color: #FF2626; margin-top: 0;">${nomeAula}</h4>
+                        <p><strong>Dia:</strong> ${diaSemanaNome}</p>
+                        <p><strong>Horário:</strong> ${horario}</p>
+                        <p><strong>Modalidade:</strong> ${modalidade}</p>
+                        <p><strong>Instrutor:</strong> ${instrutor || 'Professor não definido'}</p>
+                        <p><strong>Status:</strong> <span style="color: #4CAF50;">● Agendada</span></p>
+                    </div>
+                    
+                    <div style="margin-top: 25px; display: flex; gap: 10px; justify-content: flex-end;">
+                        <button class="btn-small secondary" style="padding: 8px 16px;">Compartilhar</button>
+                        <button class="btn-small primary" style="padding: 8px 16px;">Adicionar à Agenda</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        const modalElement = document.createElement('div');
+        modalElement.innerHTML = modalHtml;
+        document.body.appendChild(modalElement);
+        
+        // Configurar botão de fechar
+        const closeBtn = modalElement.querySelector('.close-detalhes');
+        closeBtn.addEventListener('click', () => {
+            modalElement.style.opacity = '0';
+            setTimeout(() => {
+                if (modalElement.parentNode) {
+                    modalElement.parentNode.removeChild(modalElement);
+                }
+            }, 300);
+        });
+        
+        // Fechar ao clicar fora
+        modalElement.addEventListener('click', (e) => {
+            if (e.target === modalElement) {
+                closeBtn.click();
+            }
+        });
+    }
+
+    // ==============================================================
     // OUTROS EVENT LISTENERS
     // ==============================================================
 
@@ -520,47 +751,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function setupAulasEventListeners() {
-        // Botões "Ver detalhes"
-        document.querySelectorAll('.class-actions .btn-small.primary').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const aulaNome = this.closest('.class-item').querySelector('h4').textContent;
-                verDetalhesAula(aulaNome);
-            });
-        });
-        
-        // Botões "Cancelar"
-        document.querySelectorAll('.class-actions .btn-small.secondary').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const aulaNome = this.closest('.class-item').querySelector('h4').textContent;
-                cancelarAula(aulaNome);
-            });
-        });
-    }
-
-    // ==============================================================
-    // FUNÇÕES DE AÇÃO
-    // ==============================================================
-
-    function alterarSenha() {
-        // Criar um mini modal para alterar senha na mesma página
-        showNotification('Funcionalidade de alterar senha em desenvolvimento', 'info');
-    }
-
     function editarAvatar() {
         showNotification('Funcionalidade em desenvolvimento', 'info');
-    }
-
-    function verDetalhesAula(nomeAula) {
-        showNotification(`Detalhes da aula: ${nomeAula}`, 'info');
-    }
-
-    function cancelarAula(nomeAula) {
-        if (confirm(`Tem certeza que deseja cancelar sua inscrição na aula "${nomeAula}"?`)) {
-            showNotification(`Aula "${nomeAula}" cancelada`, 'warning');
-        }
     }
 
     // ==============================================================

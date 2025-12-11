@@ -91,68 +91,80 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==============================================================
     // FUNÇÃO PARA AGENDAR AULA VIA AJAX
     // ==============================================================
-    async function agendarAula() {
-        if (!aulaParaAgendar) return;
+    // ==============================================================
+// FUNÇÃO PARA AGENDAR AULA VIA AJAX
+// ==============================================================
+async function agendarAula() {
+    if (!aulaParaAgendar) return;
+    
+    const formData = new FormData();
+    formData.append('action', 'agendar_aula');
+    formData.append('nome_aula', aulaParaAgendar.nome_aula);
+    formData.append('dia_semana', aulaParaAgendar.dia_semana);
+    formData.append('horario', aulaParaAgendar.horario);
+    formData.append('id_aluno', aulaParaAgendar.id_aluno);
+    
+    try {
+        const response = await fetch('aulas.php', {
+            method: 'POST',
+            body: formData
+        });
         
-        const formData = new FormData();
-        formData.append('action', 'agendar_aula');
-        formData.append('nome_aula', aulaParaAgendar.nome_aula);
-        formData.append('dia_semana', aulaParaAgendar.dia_semana);
-        formData.append('horario', aulaParaAgendar.horario);
-        formData.append('id_aluno', aulaParaAgendar.id_aluno);
-        
-        try {
-            const response = await fetch('aulas.php', {
-                method: 'POST',
-                body: formData
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                // Atualizar botão
-                aulaParaAgendar.button.classList.remove('agendar');
-                aulaParaAgendar.button.classList.add('agendado');
-                aulaParaAgendar.button.disabled = true;
-                aulaParaAgendar.button.textContent = '✓ Agendada';
-                
-                // Atualizar contador de vagas
-                const vagasSpan = aulaParaAgendar.button.parentElement.querySelector('.vagas-info');
-                if (vagasSpan) {
-                    const vagasText = vagasSpan.textContent;
-                    const [vagasAtuais, total] = vagasText.match(/\d+/g).map(Number);
-                    if (vagasAtuais > 0) {
-                        const novasVagas = vagasAtuais - 1;
-                        vagasSpan.textContent = `Vagas: ${novasVagas}/${total}`;
-                        
-                        // Atualizar cor das vagas
-                        if (novasVagas <= 2) {
-                            vagasSpan.classList.add('vagas-poucas');
-                        }
-                        if (novasVagas <= 0) {
-                            vagasSpan.classList.add('vagas-lotado');
-                        }
-                    }
-                }
-                
-                // Atualizar contador de aulas agendadas
-                const agendadasBtn = document.querySelector('[data-filter="agendadas"] .class-counter');
-                if (agendadasBtn) {
-                    const currentCount = parseInt(agendadasBtn.textContent) || 0;
-                    agendadasBtn.textContent = currentCount + 1;
-                }
-                
-                showNotification(result.message, 'success');
-            } else {
-                showNotification(result.message, 'error');
-            }
-        } catch (error) {
-            console.error('Erro:', error);
-            showNotification('Erro ao agendar aula. Tente novamente.', 'error');
+        // Verificar se a resposta é JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            // Se não for JSON, pegar o texto para debug
+            const text = await response.text();
+            console.error('Resposta não é JSON:', text.substring(0, 200));
+            throw new Error('Resposta do servidor não é JSON. Possível erro PHP.');
         }
         
-        aulaParaAgendar = null;
+        const result = await response.json();
+        
+        if (result.success) {
+            // Atualizar botão
+            aulaParaAgendar.button.classList.remove('agendar');
+            aulaParaAgendar.button.classList.add('agendado');
+            aulaParaAgendar.button.disabled = true;
+            aulaParaAgendar.button.textContent = '✓ Agendada';
+            
+            // Atualizar contador de vagas
+            const vagasSpan = aulaParaAgendar.button.parentElement.querySelector('.vagas-info');
+            if (vagasSpan) {
+                const vagasText = vagasSpan.textContent;
+                const [vagasAtuais, total] = vagasText.match(/\d+/g).map(Number);
+                if (vagasAtuais > 0) {
+                    const novasVagas = vagasAtuais - 1;
+                    vagasSpan.textContent = `Vagas: ${novasVagas}/${total}`;
+                    
+                    // Atualizar cor das vagas
+                    if (novasVagas <= 2) {
+                        vagasSpan.classList.add('vagas-poucas');
+                    }
+                    if (novasVagas <= 0) {
+                        vagasSpan.classList.add('vagas-lotado');
+                    }
+                }
+            }
+            
+            // Atualizar contador de aulas agendadas
+            const agendadasBtn = document.querySelector('[data-filter="agendadas"] .class-counter');
+            if (agendadasBtn) {
+                const currentCount = parseInt(agendadasBtn.textContent) || 0;
+                agendadasBtn.textContent = currentCount + 1;
+            }
+            
+            showNotification(result.message, 'success');
+        } else {
+            showNotification(result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Erro detalhado:', error);
+        showNotification('Erro ao agendar aula. ' + error.message, 'error');
     }
+    
+    aulaParaAgendar = null;
+}
     
     // ==============================================================
     // FILTROS DE AULAS
