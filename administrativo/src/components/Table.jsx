@@ -108,8 +108,8 @@ function Table({ onDataLoaded }) { // Adicionando a prop callback
     mb-1 mr-4
     focus:outline-none 
     focus:ring-2 
-    focus:ring-red-500 
-    focus:border-red-500
+    focus:ring-red-600 
+    focus:border-red-600
     placeholder-gray-400
     bg-white
     text-black
@@ -118,7 +118,7 @@ function Table({ onDataLoaded }) { // Adicionando a prop callback
         </div>
 
 
-        <table className="table-auto w-full border-collapse min-w-max">
+        <table className="table-auto w-full border-none min-w-max">
           <thead className="bg-red-950 text-white sticky top-0">
             <tr>
               <th className="px-4 py-2 border-2">ID</th>
@@ -133,15 +133,16 @@ function Table({ onDataLoaded }) { // Adicionando a prop callback
 
           <tbody>
             {alunos.map((aluno) => (
-              <tr key={aluno.ID_ALUNO} className="bg-red-950 text-white">
-                <td className="px-4 py-2 border-2">{aluno.ID_ALUNO}</td>
-                <td className="px-4 py-2 border-2 text-center">{aluno.NOME}</td>
-                <td className="px-4 py-2 border-2 text-center">{aluno.EMAIL}</td>
-                <td className="px-4 py-2 border-2 text-center">{aluno.TELEFONE}</td>
-                <td className="px-4 py-2 border-2 text-center">{aluno.SEXO}</td>
-                <td className="px-4 py-2 border-2 text-center">{aluno.STATUS_ALUNO}</td>
+              <tr key={aluno.ID_ALUNO} className="bg-red-950 text-white hover:border-2 hover:border-white hover:bg-red-600 hover:font-bold hover:text-base">
+                <td className="px-4 py-2 border border-transparent">{aluno.ID_ALUNO}</td>
 
-                <td className="px-4 py-2 border-2 text-center space-x-2">
+                <td className="px-4 py-2 border-none text-center">{aluno.NOME}</td>
+                <td className="px-4 py-2 border-none text-center">{aluno.EMAIL}</td>
+                <td className="px-4 py-2 border-none text-center">{aluno.TELEFONE}</td>
+                <td className="px-4 py-2 border-none text-center">{aluno.SEXO}</td>
+                <td className="px-4 py-2 border-none text-center">{aluno.STATUS_ALUNO}</td>
+
+                <td className="px-4 py-2 border-none text-center space-x-2">
                   <Button variant="update" onClick={() => openPopUp("edit", aluno.ID_ALUNO)}>
                     Editar
                   </Button>
