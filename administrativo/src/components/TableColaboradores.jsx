@@ -29,7 +29,7 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
     const params = new URLSearchParams();
     
     if (searchTerm) params.append("search", searchTerm);
-    if (tipoSelecionado !== "TODOS") params.append("tipo", tipoSelecionado);
+    if (tipoSelecionado !== "TODOS") params.append("cargo", tipoSelecionado);
     
     if (params.toString()) {
       url += `?${params.toString()}`;
@@ -50,26 +50,28 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
         }
         return res.json();
       })
-      .then((data) => {
-        console.log("Dados recebidos da API:", data);
+      .then((response) => {
+        console.log("Dados recebidos da API:", response);
         
         let colaboradoresData = [];
         
-        if (Array.isArray(data)) {
-          colaboradoresData = data;
-        } else if (data && typeof data === 'object' && data.success !== undefined) {
-          // Se a API retornar {success: true, data: [...]}
-          if (data.data && Array.isArray(data.data)) {
-            colaboradoresData = data.data;
-          } else if (Array.isArray(data)) {
-            colaboradoresData = data;
-          }
-        } else if (data && typeof data === 'object') {
-          // Um único objeto
-          colaboradoresData = [data];
+        // Verificar a estrutura correta da API
+        if (response && response.success && Array.isArray(response.data)) {
+          colaboradoresData = response.data;
+          console.log("Total de registros:", response.total);
+        } else if (Array.isArray(response)) {
+          colaboradoresData = response;
+        } else {
+          console.warn("Estrutura de dados inesperada:", response);
+          colaboradoresData = [];
         }
         
-        console.log("Colaboradores processados:", colaboradoresData);
+        // DEBUG: Mostrar a estrutura dos dados
+        if (colaboradoresData.length > 0) {
+          console.log("Primeiro colaborador (estrutura):", colaboradoresData[0]);
+          console.log("Campos disponíveis:", Object.keys(colaboradoresData[0]));
+        }
+        
         setColaboradores(colaboradoresData);
         
         if (onDataLoaded) {
@@ -91,7 +93,6 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
   useEffect(() => {
     fetchColaboradores();
     
-    // Tornar a função disponível globalmente para refresh
     window.handleRefreshTable = fetchColaboradores;
     
     return () => {
@@ -100,55 +101,67 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
   }, [searchTerm, tipoSelecionado]);
 
   const handleDelete = (id) => {
-    if (window.confirm("Tem certeza que deseja excluir este colaborador?")) {
-      fetch("http://localhost:8000/ColaboradoresAPI.php", {
-        method: "DELETE",
-        headers: { 
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({ idColaborador: id }),
+  if (window.confirm("Tem certeza que deseja excluir este colaborador?")) {
+    fetch("http://localhost:8000/ColaboradoresAPI.php", {
+      method: "DELETE",
+      headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ 
+        id_funcionario: id  // ← Nome correto do campo que a API espera
+      }),
+    })
+      .then((response) => {
+        console.log("Status da resposta:", response.status);
+        console.log("Resposta DELETE:", response);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return response.json();
       })
-        .then((response) => {
-          console.log("Resposta DELETE:", response);
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error('Erro na resposta da API');
-        })
-        .then((data) => {
-          console.log("Dados DELETE:", data);
-          if (data.success) {
-            // Atualizar a lista localmente
-            const novosColaboradores = colaboradores.filter((colaborador) => 
-              colaborador.ID_COLABORADOR !== id
+      .then((data) => {
+        console.log("Dados DELETE:", data);
+        
+        if (data.success) {
+          // Verifique qual é a propriedade correta do ID
+          // Pode ser ID_FUNCIONARIO, ID_COLABORADOR, id, etc.
+          const novosColaboradores = colaboradores.filter((colaborador) => {
+            // Tente diferentes propriedades possíveis
+            return (
+              colaborador.ID_FUNCIONARIO !== id && // Se usar maiúsculas
+              colaborador.id_funcionario !== id && // Se usar minúsculas
+              colaborador.ID_COLABORADOR !== id && // Outra possibilidade
+              colaborador.id !== id                // Última opção
             );
-            setColaboradores(novosColaboradores);
-            
-            if (onDataLoaded) {
-              onDataLoaded(novosColaboradores);
-            }
-            alert(data.message || "Colaborador excluído com sucesso!");
-          } else {
-            alert(data.message || "Erro ao excluir colaborador");
+          });
+          
+          setColaboradores(novosColaboradores);
+          
+          if (onDataLoaded) {
+            onDataLoaded(novosColaboradores);
           }
-        })
-        .catch((err) => {
-          console.error("Erro ao excluir colaborador:", err);
-          alert("Erro ao conectar com o servidor");
-        });
-    }
-  };
+          
+          alert(data.message || "Colaborador excluído com sucesso!");
+        } else {
+          alert(data.message || "Erro ao excluir colaborador");
+        }
+      })
+      .catch((err) => {
+        console.error("Erro ao excluir colaborador:", err);
+        alert("Erro ao conectar com o servidor: " + err.message);
+      });
+  }
+};
 
   // Formatar data
   const formatDate = (dateString) => {
     if (!dateString) return "-";
     
     try {
-      // Remover 'T' se for formato ISO
-      const dateStr = dateString.includes('T') ? dateString.split('T')[0] : dateString;
-      const date = new Date(dateStr);
-      
+      const date = new Date(dateString);
       if (isNaN(date.getTime())) return dateString;
       
       return date.toLocaleDateString('pt-BR');
@@ -160,10 +173,8 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
   // Formatar CPF
   const formatCPF = (cpf) => {
     if (!cpf) return "Não informado";
-    // Remover caracteres não numéricos
     const cleaned = cpf.toString().replace(/\D/g, '');
     
-    // Aplicar máscara
     if (cleaned.length === 11) {
       return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
     }
@@ -179,89 +190,90 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
     if (cleaned.length === 11) {
       return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
     } else if (cleaned.length === 10) {
-      return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $3-$4');
+      return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
     }
     
     return telefone;
   };
 
-  // Badge para status
-  const StatusBadge = ({ status }) => {
-    let bgColor, text, label;
-    
-    switch(status?.toUpperCase()) {
-      case 'ATIVO':
-        bgColor = 'bg-green-100';
-        text = 'text-green-800';
-        label = 'Ativo';
-        break;
-      case 'FERIAS':
-        bgColor = 'bg-yellow-100';
-        text = 'text-yellow-800';
-        label = 'Férias';
-        break;
-      case 'AFASTADO':
-        bgColor = 'bg-orange-100';
-        text = 'text-orange-800';
-        label = 'Afastado';
-        break;
-      case 'INATIVO':
-        bgColor = 'bg-red-100';
-        text = 'text-red-800';
-        label = 'Inativo';
-        break;
-      default:
-        bgColor = 'bg-gray-100';
-        text = 'text-gray-800';
-        label = status || 'Não definido';
-    }
-    
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${bgColor} ${text}`}>
-        {label}
-      </span>
-    );
+  // Formatar salário
+  const formatSalario = (salario) => {
+    if (!salario) return "R$ 0,00";
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(parseFloat(salario));
   };
 
-  // Badge para tipo
-  const TipoBadge = ({ tipo }) => {
+  // Badge para cargo
+  const CargoBadge = ({ cargo }) => {
     let bgColor, text, label;
     
-    switch(tipo?.toUpperCase()) {
+    switch(cargo?.toUpperCase()) {
       case 'INSTRUTOR':
+      case 'PERSONAL TRAINER':
         bgColor = 'bg-blue-100';
         text = 'text-blue-800';
-        label = 'Instrutor';
         break;
       case 'RECEPCIONISTA':
         bgColor = 'bg-green-100';
         text = 'text-green-800';
-        label = 'Recepcionista';
         break;
       case 'ADMINISTRADOR':
+      case 'GERENTE':
         bgColor = 'bg-purple-100';
         text = 'text-purple-800';
-        label = 'Administrador';
-        break;
-      case 'GERENTE':
-        bgColor = 'bg-red-100';
-        text = 'text-red-800';
-        label = 'Gerente';
-        break;
-      case 'PERSONAL':
-        bgColor = 'bg-indigo-100';
-        text = 'text-indigo-800';
-        label = 'Personal Trainer';
         break;
       case 'LIMPEZA':
+      case 'SERVICOS GERAIS':
         bgColor = 'bg-gray-100';
         text = 'text-gray-800';
-        label = 'Serviços Gerais';
+        break;
+      case 'AUXILIAR':
+        bgColor = 'bg-yellow-100';
+        text = 'text-yellow-800';
         break;
       default:
         bgColor = 'bg-gray-100';
         text = 'text-gray-800';
-        label = tipo || 'Não definido';
+    }
+    
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${bgColor} ${text}`}>
+        {cargo || 'Não definido'}
+      </span>
+    );
+  };
+
+  // Badge para turno
+  const TurnoBadge = ({ turno }) => {
+    let bgColor, text, label;
+    
+    switch(turno?.toUpperCase()) {
+      case 'MANHA':
+        bgColor = 'bg-yellow-100';
+        text = 'text-yellow-800';
+        label = 'Manhã';
+        break;
+      case 'TARDE':
+        bgColor = 'bg-orange-100';
+        text = 'text-orange-800';
+        label = 'Tarde';
+        break;
+      case 'NOITE':
+        bgColor = 'bg-indigo-100';
+        text = 'text-indigo-800';
+        label = 'Noite';
+        break;
+      case 'ROTATIVO':
+        bgColor = 'bg-gray-100';
+        text = 'text-gray-800';
+        label = 'Rotativo';
+        break;
+      default:
+        bgColor = 'bg-gray-100';
+        text = 'text-gray-800';
+        label = turno || 'Não definido';
     }
     
     return (
@@ -271,16 +283,12 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
     );
   };
 
-  // Se houver erro de CORS, mostrar mensagem
   if (loading && colaboradores.length === 0) {
     return (
       <div className="w-full p-8 text-center">
         <div className="flex flex-col items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
           <p className="mt-4 text-gray-600">Carregando colaboradores...</p>
-          <p className="text-sm text-gray-500 mt-2">
-            Se estiver demorando muito, verifique se a API está rodando em http://localhost:8000
-          </p>
         </div>
       </div>
     );
@@ -310,11 +318,11 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
             <tr>
               <th className="px-4 py-3 border-2">ID</th>
               <th className="px-4 py-3 border-2">Nome</th>
-              <th className="px-4 py-3 border-2">Cargo/Tipo</th>
+              <th className="px-4 py-3 border-2">Cargo</th>
               <th className="px-4 py-3 border-2">Email</th>
-              <th className="px-4 py-3 border-2">Telefone</th>
-              <th className="px-4 py-3 border-2">Status</th>
+              <th className="px-4 py-3 border-2">Turno</th>
               <th className="px-4 py-3 border-2">Data Admissão</th>
+              <th className="px-4 py-3 border-2">Salário</th>
               <th className="px-4 py-3 border-2">Ações</th>
             </tr>
           </thead>
@@ -322,7 +330,7 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="8" className="px-4 py-8 text-center border-2">
+                <td colSpan="9" className="px-4 py-8 text-center border-2">
                   <div className="flex flex-col items-center justify-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
                     <p className="mt-2 text-gray-600">Carregando colaboradores...</p>
@@ -331,67 +339,65 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
               </tr>
             ) : colaboradores.length > 0 ? (
               colaboradores.map((colaborador) => (
-                <tr key={colaborador.ID_COLABORADOR || colaborador.id || Math.random()} 
-                    className="bg-white hover:bg-gray-50 transition-colors">
+                <tr key={colaborador.id_funcionario} 
+                    className="bg-white hover:bg-gray-50 transition-colors text-red-500">
                   
-                  <td className="px-4 py-3 border-2 text-center font-mono">
-                    {colaborador.ID_COLABORADOR || colaborador.id || '-'}
+                  <td className="px-4 py-3 border-2 text-center font-mono text-sm">
+                    {colaborador.id_funcionario}
                   </td>
                   
                   <td className="px-4 py-3 border-2">
                     <div className="flex items-center">
                       <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
                         <span className="text-blue-600 font-semibold text-lg">
-                          {colaborador.NOME?.charAt(0) || colaborador.nome?.charAt(0) || '?'}
+                          {colaborador.nome_funcionario?.charAt(0) || '?'}
                         </span>
                       </div>
                       <div>
                         <div className="font-medium">
-                          {colaborador.NOME || colaborador.nome} {colaborador.SOBRENOME || colaborador.sobrenome}
+                          {colaborador.nome_funcionario}
                         </div>
                         <div className="text-xs text-gray-500">
-                          CPF: {formatCPF(colaborador.CPF || colaborador.cpf)}
+                          CPF: {formatCPF(colaborador.cpf_funcionario)}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
-                          {colaborador.ENDERECO || colaborador.endereco || 'Endereço não informado'}
+                          Login: {colaborador.login_rede}
                         </div>
+                        {colaborador.endereco_funcionario && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            {colaborador.endereco_funcionario}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </td>
                   
                   <td className="px-4 py-3 border-2 text-center">
-                    <TipoBadge tipo={colaborador.TIPO_COLABORADOR || colaborador.tipo_colaborador || colaborador.cargo} />
-                    {colaborador.SALARIO && (
-                      <div className="text-xs text-gray-600 mt-1">
-                        R$ {parseFloat(colaborador.SALARIO || colaborador.salario || 0).toFixed(2)}
-                      </div>
-                    )}
+                    <CargoBadge cargo={colaborador.cargo} />
                   </td>
                   
                   <td className="px-4 py-3 border-2">
                     <div className="text-center">
-                      <div className="font-medium">{colaborador.EMAIL || colaborador.email || '-'}</div>
+                      <div className="font-medium">{colaborador.email_funcionario || '-'}</div>
                       <div className="text-xs text-gray-500 mt-1">
-                        {colaborador.SEXO || colaborador.sexo || 'Sexo não informado'}
+                        {colaborador.nascimento_funcionario && 
+                         `Nasc: ${formatDate(colaborador.nascimento_funcionario)}`}
                       </div>
                     </div>
                   </td>
                   
                   <td className="px-4 py-3 border-2 text-center">
-                    {formatTelefone(colaborador.TELEFONE || colaborador.telefone)}
-                    {colaborador.NASCIMENTO && (
-                      <div className="text-xs text-gray-600 mt-1">
-                        Nasc: {formatDate(colaborador.NASCIMENTO || colaborador.nascimento)}
-                      </div>
-                    )}
+                    <TurnoBadge turno={colaborador.turno} />
                   </td>
                   
                   <td className="px-4 py-3 border-2 text-center">
-                    <StatusBadge status={colaborador.STATUS_COLABORADOR || colaborador.status_colaborador || colaborador.status} />
+                    {formatDate(colaborador.data_admissao)}
                   </td>
-                  
+
                   <td className="px-4 py-3 border-2 text-center">
-                    {formatDate(colaborador.DATA_ADMISSAO || colaborador.data_admissao)}
+                    <div className="font-medium">
+                      {formatSalario(colaborador.salario)}
+                    </div>
                   </td>
 
                   <td className="px-4 py-3 border-2">
@@ -400,12 +406,12 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
                         variant="update" 
                         onClick={() => {
                           if (onEditClick) {
-                            onEditClick(colaborador.ID_COLABORADOR || colaborador.id);
+                            onEditClick(colaborador.id_funcionario);
                           } else {
-                            openPopUp("edit", colaborador.ID_COLABORADOR || colaborador.id);
+                            openPopUp("edit", colaborador.id_funcionario);
                           }
                         }}
-                        className="px-3 py-2 text-sm w-full"
+          
                       >
                         <svg className="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -415,8 +421,7 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
 
                       <Button 
                         variant="delete" 
-                        onClick={() => handleDelete(colaborador.ID_COLABORADOR || colaborador.id)}
-                        className="px-3 py-2 text-sm w-full"
+                        onClick={() => handleDelete(colaborador.id_funcionario)}
                       >
                         <svg className="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -429,7 +434,7 @@ function TableColaboradores({ onDataLoaded, searchTerm, tipoSelecionado, onEditC
               ))
             ) : (
               <tr>
-                <td colSpan="8" className="px-4 py-12 text-center border-2">
+                <td colSpan="9" className="px-4 py-12 text-center border-2">
                   <div className="flex flex-col items-center justify-center">
                     <div className="text-5xl mb-4 text-gray-300">👥</div>
                     <p className="text-lg font-semibold text-gray-700 mb-2">Nenhum colaborador encontrado</p>

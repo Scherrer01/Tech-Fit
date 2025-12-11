@@ -3,20 +3,18 @@ import { useState, useEffect } from "react";
 
 function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, onSuccess }) {
   const [formData, setFormData] = useState({
-    nome: "",
-    sobrenome: "",
-    cpf: "",
-    data_nascimento: "",
-    telefone: "",
-    email: "",
-    endereco: "",
-    sexo: "",
-    cargo: "INSTRUTOR",
+    nome_funcionario: "",         // Mudou de "nome" para "nome_funcionario"
+    login_rede: "",              // Campo novo que não existia
+    cpf_funcionario: "",         // Mudou de "cpf" para "cpf_funcionario"
+    nascimento_funcionario: "",  // Mudou de "data_nascimento" para "nascimento_funcionario"
+    telefone_funcionario: "",    // Mudou de "telefone" para "telefone_funcionario"
+    email_funcionario: "",       // Mudou de "email" para "email_funcionario"
+    endereco_funcionario: "",    // Mudou de "endereco" para "endereco_funcionario"
+    cargo: "INSTRUTOR",          // Mantém igual
     salario: "",
     data_admissao: new Date().toISOString().split('T')[0],
-    turno: "MANHÃ",
-    status: "ATIVO",
-    senha: "",
+    turno: "MANHA",              // Correção: no banco é MANHA (sem acento)
+    senha_funcionario: "",       // Mudou de "senha" para "senha_funcionario"
     confirmaSenha: ""
   });
 
@@ -26,72 +24,89 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
   const [erroSenha, setErroSenha] = useState("");
 
   // Buscar funcionário no modo edição
-  useEffect(() => {
-    if (isOpen && mode === "edit" && funcionarioId) {
-      const fetchFuncionario = async () => {
-        try {
-          setLoading(true);
-          const response = await fetch(
-            `http://localhost:8000/ColaboradoresAPI.php?id_funcionario=${funcionarioId}`,
-            {
-              method: "GET"
+  // Buscar funcionário no modo edição
+useEffect(() => {
+  if (isOpen && mode === "edit" && funcionarioId) {
+    const fetchFuncionario = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `http://localhost:8000/ColaboradoresAPI.php?id_funcionario=${funcionarioId}`,
+          {
+            method: "GET",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
             }
-          );
+          }
+        );
 
-          const result = await response.json();
-          console.log("Dados recebidos da API:", result);
+        const result = await response.json();
+        console.log("Dados recebidos da API:", result);
 
-          // Ajuste para a estrutura da sua API
+        // Verificar se a API retornou com sucesso
+        if (result.success && result.data) {
+          const funcionario = result.data;
+          
           setFormData({
-            nome: result.nome || "",
-            sobrenome: result.sobrenome || "",
-            cpf: result.cpf || "",
-            data_nascimento: result.data_nascimento ? result.data_nascimento.split('T')[0] : "",
-            telefone: result.telefone || "",
-            email: result.email || "",
-            endereco: result.endereco || "",
-            sexo: result.sexo || "",
-            cargo: result.cargo || "INSTRUTOR",
-            salario: result.salario || "",
-            data_admissao: result.data_admissao ? result.data_admissao.split('T')[0] : new Date().toISOString().split('T')[0],
-            turno: result.turno || "MANHÃ",
-            status: result.status || "ATIVO",
-            senha: "",
+            nome_funcionario: funcionario.nome_funcionario || "",
+            login_rede: funcionario.login_rede || "",
+            cpf_funcionario: funcionario.cpf_funcionario || "",
+            nascimento_funcionario: funcionario.nascimento_funcionario || "",
+            telefone_funcionario: funcionario.telefone_funcionario || "",
+            email_funcionario: funcionario.email_funcionario || "",
+            endereco_funcionario: funcionario.endereco_funcionario || "",
+            cargo: funcionario.cargo || "INSTRUTOR",
+            salario: funcionario.salario || "",
+            data_admissao: funcionario.data_admissao || new Date().toISOString().split('T')[0],
+            turno: funcionario.turno || "MANHA",
+            senha_funcionario: "",
             confirmaSenha: ""
           });
           
-        } catch (error) {
-          console.error("Erro ao buscar funcionário:", error);
+          console.log("FormData atualizado:", {
+            nome_funcionario: funcionario.nome_funcionario,
+            login_rede: funcionario.login_rede,
+            cpf_funcionario: funcionario.cpf_funcionario,
+            nascimento_funcionario: funcionario.nascimento_funcionario,
+            telefone_funcionario: funcionario.telefone_funcionario
+          });
+        } else {
+          console.error("API não retornou sucesso ou dados:", result);
           setMensagem("Erro ao carregar dados do funcionário.");
-        } finally {
-          setLoading(false);
         }
-      };
+        
+      } catch (error) {
+        console.error("Erro ao buscar funcionário:", error);
+        setMensagem("Erro ao carregar dados do funcionário.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchFuncionario();
-    } else if (isOpen && mode === "create") {
-      setFormData({
-        nome: "",
-        sobrenome: "",
-        cpf: "",
-        data_nascimento: "",
-        telefone: "",
-        email: "",
-        endereco: "",
-        sexo: "",
-        cargo: "INSTRUTOR",
-        salario: "",
-        data_admissao: new Date().toISOString().split('T')[0],
-        turno: "MANHÃ",
-        status: "ATIVO",
-        senha: "",
-        confirmaSenha: ""
-      });
-      setMensagem("");
-      setSuccess(false);
-      setErroSenha("");
-    }
-  }, [isOpen, mode, funcionarioId]);
+    fetchFuncionario();
+  } else if (isOpen && mode === "create") {
+    // Reset para modo criação
+    setFormData({
+      nome_funcionario: "",
+      login_rede: "",
+      cpf_funcionario: "",
+      nascimento_funcionario: "",
+      telefone_funcionario: "",
+      email_funcionario: "",
+      endereco_funcionario: "",
+      cargo: "INSTRUTOR",
+      salario: "",
+      data_admissao: new Date().toISOString().split('T')[0],
+      turno: "MANHA",
+      senha_funcionario: "",
+      confirmaSenha: ""
+    });
+    setMensagem("");
+    setSuccess(false);
+    setErroSenha("");
+  }
+}, [isOpen, mode, funcionarioId]);
 
   if (!isOpen) return null;
 
@@ -100,8 +115,8 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
     setFormData({ ...formData, [name]: value });
     
     // Validação de senha em tempo real
-    if (name === 'confirmaSenha' || name === 'senha') {
-      if (formData.senha && formData.confirmaSenha && formData.senha !== formData.confirmaSenha) {
+    if (name === 'confirmaSenha' || name === 'senha_funcionario') {
+      if (formData.senha_funcionario && formData.confirmaSenha && formData.senha_funcionario !== formData.confirmaSenha) {
         setErroSenha("As senhas não coincidem");
       } else {
         setErroSenha("");
@@ -109,32 +124,52 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
     }
   };
 
+  // Gerar login automaticamente do nome
+  const gerarLogin = (nome) => {
+    if (!nome) return "";
+    return nome.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove acentos
+      .replace(/\s+/g, '.') // Substitui espaços por pontos
+      .replace(/[^a-z.]/g, ''); // Remove caracteres não alfabéticos
+  };
+
+  // Atualizar login quando o nome mudar
+  const handleNomeChange = (e) => {
+    const nome = e.target.value;
+    setFormData(prev => ({
+      ...prev,
+      nome_funcionario: nome,
+      login_rede: gerarLogin(nome)
+    }));
+  };
+
   const validarCPF = (cpf) => {
+    if (!cpf) return false;
+    
     cpf = cpf.replace(/[^\d]/g, '');
     if (cpf.length !== 11) return false;
     
-    // Validação simples de CPF
-    let soma = 0;
-    let resto;
-    
+    // Verifica se todos os dígitos são iguais
     if (/^(\d)\1+$/.test(cpf)) return false;
     
-    for (let i = 1; i <= 9; i++) {
-      soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+    // Validação dos dígitos verificadores
+    let soma = 0;
+    for (let i = 0; i < 9; i++) {
+      soma += parseInt(cpf.charAt(i)) * (10 - i);
     }
     
-    resto = (soma * 10) % 11;
+    let resto = 11 - (soma % 11);
     if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+    if (resto !== parseInt(cpf.charAt(9))) return false;
     
     soma = 0;
-    for (let i = 1; i <= 10; i++) {
-      soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+    for (let i = 0; i < 10; i++) {
+      soma += parseInt(cpf.charAt(i)) * (11 - i);
     }
     
-    resto = (soma * 10) % 11;
+    resto = 11 - (soma % 11);
     if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf.substring(10, 11))) return false;
+    if (resto !== parseInt(cpf.charAt(10))) return false;
     
     return true;
   };
@@ -146,26 +181,32 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
     setSuccess(false);
 
     // Validações
-    if (mode === "create" && (!formData.senha || !formData.confirmaSenha)) {
+    if (mode === "create" && (!formData.senha_funcionario || !formData.confirmaSenha)) {
       setMensagem("Por favor, preencha a senha e confirmação.");
       setLoading(false);
       return;
     }
 
-    if (mode === "create" && formData.senha !== formData.confirmaSenha) {
+    if (mode === "create" && formData.senha_funcionario !== formData.confirmaSenha) {
       setMensagem("As senhas não coincidem.");
       setLoading(false);
       return;
     }
 
-    if (formData.senha && formData.senha.length < 6) {
+    if (formData.senha_funcionario && formData.senha_funcionario.length < 6) {
       setMensagem("A senha deve ter pelo menos 6 caracteres.");
       setLoading(false);
       return;
     }
 
-    if (!validarCPF(formData.cpf)) {
+    if (!validarCPF(formData.cpf_funcionario)) {
       setMensagem("CPF inválido.");
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.login_rede) {
+      setMensagem("Login de rede é obrigatório.");
       setLoading(false);
       return;
     }
@@ -174,44 +215,47 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
       const url = "http://localhost:8000/ColaboradoresAPI.php";
       const method = mode === "create" ? "POST" : "PUT";
 
+      // Preparar payload com os nomes corretos dos campos
       const payload = {
-        nome: formData.nome.trim(),
-        sobrenome: formData.sobrenome.trim(),
-        cpf: formData.cpf.replace(/[^\d]/g, '').trim(),
-        data_nascimento: formData.data_nascimento,
-        telefone: formData.telefone.trim(),
-        email: formData.email.trim(),
-        endereco: formData.endereco.trim(),
-        sexo: formData.sexo,
+        nome_funcionario: formData.nome_funcionario.trim(),
+        login_rede: formData.login_rede.trim().toLowerCase(),
+        cpf_funcionario: formData.cpf_funcionario.replace(/[^\d]/g, '').trim(),
+        nascimento_funcionario: formData.nascimento_funcionario,
+        telefone_funcionario: formData.telefone_funcionario.replace(/\D/g, '').trim(),
+        email_funcionario: formData.email_funcionario.trim().toLowerCase(),
+        endereco_funcionario: formData.endereco_funcionario.trim(),
         cargo: formData.cargo,
         salario: parseFloat(formData.salario) || 0,
         data_admissao: formData.data_admissao,
-        turno: formData.turno,
-        status: formData.status.trim(),
+        turno: formData.turno.toUpperCase().replace('Ã', 'A'), // Remove acento se houver
       };
 
-      // Adicionar senha apenas se foi preenchida (para criação ou alteração)
-      if (formData.senha) {
-        payload.senha = formData.senha.trim();
+      // Adicionar senha apenas se foi preenchida
+      if (formData.senha_funcionario) {
+        payload.senha_funcionario = formData.senha_funcionario.trim();
       }
 
       // Adicionar id_funcionario apenas no modo edição
-      if (mode === "edit") {
+      if (mode === "edit" && funcionarioId) {
         payload.id_funcionario = parseInt(funcionarioId);
       }
 
       console.log("Enviando dados para API:", payload);
+      console.log("Payload JSON:", JSON.stringify(payload));
 
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(payload),
       });
 
       const result = await response.json();
       console.log("Resposta completa do servidor:", result);
 
-      if (response.ok) {
+      if (response.ok && result.success) {
         setMensagem(mode === "create" ? "Funcionário cadastrado com sucesso!" : "Funcionário atualizado com sucesso!");
         setSuccess(true);
         
@@ -221,7 +265,7 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
         }, 1500);
         
       } else {
-        setMensagem(result.message || `Erro ${response.status}: ${response.statusText}`);
+        setMensagem(result.message || result.error || `Erro ${response.status}: ${response.statusText}`);
         setSuccess(false);
       }
     } catch (error) {
@@ -243,10 +287,10 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
   ];
 
   const turnos = [
-    { value: "MANHÃ", label: "Manhã", desc: "06:00 - 12:00" },
+    { value: "MANHA", label: "Manhã", desc: "06:00 - 12:00" },
     { value: "TARDE", label: "Tarde", desc: "12:00 - 18:00" },
     { value: "NOITE", label: "Noite", desc: "18:00 - 00:00" },
-    { value: "INTEGRAL", label: "Integral", desc: "08:00 - 18:00" }
+    { value: "ROTATIVO", label: "Rotativo", desc: "Varia conforme necessidade" }
   ];
 
   const getCargoIcon = (cargo) => {
@@ -256,22 +300,22 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
       case 'ADMINISTRADOR': return '💼';
       case 'GERENTE': return '👔';
       case 'PERSONAL': return '💪';
+      case 'LIMPEZA': return '🧹';
       default: return '👤';
     }
   };
 
   const getTurnoIcon = (turno) => {
     switch(turno) {
-      case 'MANHÃ': return '🌅';
+      case 'MANHA': return '🌅';
       case 'TARDE': return '🌞';
       case 'NOITE': return '🌙';
-      case 'INTEGRAL': return '⏳';
+      case 'ROTATIVO': return '🔄';
       default: return '🕐';
     }
   };
 
   return (
-    
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-start z-50 p-4 w-full max-h-full overflow-auto">
       <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-2xl w-full max-w-5xl shadow-2xl overflow-hidden animate-fadeIn">
         {/* Header do Modal */}
@@ -337,38 +381,39 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
             {/* Grid de Campos - 1ª Linha */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               
-              {/* Nome */}
+              {/* Nome Completo */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-purple-400">
-                  Nome <span className="text-red-500">*</span>
+                  Nome Completo <span className="text-red-500">*</span>
                 </label>
                 <Inputs 
                   type="text" 
-                  name="nome" 
-                  value={formData.nome} 
-                  onChange={handleChange} 
-                  placeholder="Digite o nome" 
+                  name="nome_funcionario" 
+                  value={formData.nome_funcionario} 
+                  onChange={handleNomeChange} 
+                  placeholder="Digite o nome completo" 
                   required 
                   disabled={loading}
                   className="w-full"
                 />
               </div>
 
-              {/* Sobrenome */}
+              {/* Login de Rede */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-purple-400">
-                  Sobrenome <span className="text-red-500">*</span>
+                  Login de Rede <span className="text-red-500">*</span>
                 </label>
                 <Inputs 
                   type="text" 
-                  name="sobrenome" 
-                  value={formData.sobrenome} 
+                  name="login_rede" 
+                  value={formData.login_rede} 
                   onChange={handleChange} 
-                  placeholder="Digite o sobrenome" 
+                  placeholder="nome.sobrenome" 
                   required 
                   disabled={loading}
                   className="w-full"
                 />
+                <p className="text-xs text-gray-500">Gerado automaticamente do nome</p>
               </div>
 
               {/* CPF */}
@@ -378,8 +423,8 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
                 </label>
                 <Inputs 
                   type="text" 
-                  name="cpf" 
-                  value={formData.cpf} 
+                  name="cpf_funcionario" 
+                  value={formData.cpf_funcionario} 
                   onChange={handleChange} 
                   placeholder="000.000.000-00" 
                   required 
@@ -396,8 +441,8 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
                 </label>
                 <Inputs 
                   type="email" 
-                  name="email" 
-                  value={formData.email} 
+                  name="email_funcionario" 
+                  value={formData.email_funcionario} 
                   onChange={handleChange} 
                   placeholder="funcionario@academia.com" 
                   required 
@@ -413,8 +458,8 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
                 </label>
                 <Inputs 
                   type="text" 
-                  name="telefone" 
-                  value={formData.telefone} 
+                  name="telefone_funcionario" 
+                  value={formData.telefone_funcionario} 
                   onChange={handleChange} 
                   placeholder="(11) 99999-9999" 
                   required 
@@ -431,8 +476,8 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
                 </label>
                 <Inputs 
                   type="date" 
-                  name="data_nascimento" 
-                  value={formData.data_nascimento} 
+                  name="nascimento_funcionario" 
+                  value={formData.nascimento_funcionario} 
                   onChange={handleChange} 
                   required 
                   disabled={loading}
@@ -441,66 +486,21 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
               </div>
             </div>
 
-            {/* Grid de Campos - 2ª Linha */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              {/* Endereço */}
-              <div className="space-y-2 md:col-span-2">
-                <label className="block text-sm font-medium text-purple-400">
-                  Endereço Completo <span className="text-red-500">*</span>
-                </label>
-                <Inputs 
-                  type="text" 
-                  name="endereco" 
-                  value={formData.endereco} 
-                  onChange={handleChange} 
-                  placeholder="Rua, número, bairro, cidade - Estado" 
-                  required 
-                  disabled={loading}
-                  className="w-full"
-                />
-              </div>
-
-              {/* Sexo */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-purple-400">
-                  Sexo <span className="text-red-500">*</span>
-                </label>
-                <select 
-                  name="sexo" 
-                  value={formData.sexo} 
-                  onChange={handleChange} 
-                  className="w-full p-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                  required
-                  disabled={loading}
-                >
-                  <option value="" className="bg-gray-900">Selecione o sexo</option>
-                  <option value="MASCULINO" className="bg-gray-900">Masculino</option>
-                  <option value="FEMININO" className="bg-gray-900">Feminino</option>
-                  <option value="OUTRO" className="bg-gray-900">Outro</option>
-                </select>
-              </div>
-
-              {/* Status */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-purple-400">
-                  Status <span className="text-red-500">*</span>
-                </label>
-                <select 
-                  name="status" 
-                  value={formData.status} 
-                  onChange={handleChange} 
-                  className="w-full p-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
-                  required
-                  disabled={loading}
-                >
-                  <option value="" className="bg-gray-900">Selecione o status</option>
-                  <option value="ATIVO" className="bg-gray-900">Ativo</option>
-                  <option value="FERIAS" className="bg-gray-900">Férias</option>
-                  <option value="AFASTADO" className="bg-gray-900">Afastado</option>
-                  <option value="INATIVO" className="bg-gray-900">Inativo</option>
-                </select>
-              </div>
+            {/* Endereço */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-purple-400">
+                Endereço Completo <span className="text-red-500">*</span>
+              </label>
+              <Inputs 
+                type="text" 
+                name="endereco_funcionario" 
+                value={formData.endereco_funcionario} 
+                onChange={handleChange} 
+                placeholder="Rua, número, bairro, cidade - Estado" 
+                required 
+                disabled={loading}
+                className="w-full"
+              />
             </div>
 
             {/* Cargo, Turno, Data Admissão e Salário */}
@@ -590,7 +590,7 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
                 {/* Salário */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-purple-400">
-                    Salário (R$)
+                    Salário (R$) <span className="text-red-500">*</span>
                   </label>
                   <Inputs 
                     type="number" 
@@ -600,6 +600,7 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
                     placeholder="0,00"
                     min="0"
                     step="0.01"
+                    required
                     disabled={loading}
                     className="w-full"
                   />
@@ -619,8 +620,8 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
                 </label>
                 <Inputs 
                   type="password" 
-                  name="senha" 
-                  value={formData.senha} 
+                  name="senha_funcionario" 
+                  value={formData.senha_funcionario} 
                   onChange={handleChange} 
                   placeholder={mode === "edit" ? "Deixe em branco para manter" : "Digite a senha"}
                   required={mode === "create"} 
@@ -704,4 +705,4 @@ function PopUpColaboradores({ isOpen, onClose, mode = "create", funcionarioId, o
   );
 }
 
-export default PopUpColaboradores;  
+export default PopUpColaboradores;

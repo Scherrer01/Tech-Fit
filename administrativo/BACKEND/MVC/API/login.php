@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$conn = new mysqli("localhost", "root", "senaisp", "tech_fit");
+$conn = new mysqli("localhost", "root", "Limeira@123", "tech_fit");
 
 if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);
@@ -19,7 +19,7 @@ $dados = json_decode(file_get_contents("php://input"), true);
 $usuario = $dados['usuario'];
 $senha = $dados['senha'];
 
-$stmt = $conn->prepare("SELECT senha FROM funcionarios WHERE LOGIN_REDE = ?");
+$stmt = $conn->prepare("SELECT senha_funcionario FROM FUNCIONARIOS WHERE LOGIN_REDE = ?");
 $stmt->bind_param("s", $usuario);
 $stmt->execute();
 $result = $stmt->get_result();

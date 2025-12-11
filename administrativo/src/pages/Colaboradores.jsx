@@ -64,7 +64,7 @@ function Colaboradores() {
                 placeholder="Buscar funcionário..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full sm:w-64 pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full sm:w-64 pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
               />
               <svg 
                 className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" 
@@ -79,7 +79,7 @@ function Colaboradores() {
             <select 
               value={cargoSelecionado}
               onChange={(e) => setCargoSelecionado(e.target.value)}
-              className="px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-red-950 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
             >
               <option value="TODOS">Todos os Cargos</option>
               <option value="INSTRUTOR">Instrutores</option>
