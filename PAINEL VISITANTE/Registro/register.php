@@ -14,7 +14,7 @@
 session_start();
 include 'database.php';
 
-// ConfiguraÃ§Ãµes de URL
+// Configurações de URL
 $home_url = "index.php";
 $planos_url = "planos.php";
 $sobre_url = "sobre.php";
@@ -55,7 +55,7 @@ try {
 ?>
 
 <!-- ============================================================================================-->
-    <!-- CabeÃ§alho padrÃ£o -->
+    <!-- Cabeçalho padrão -->
     <header class="cabecalho">
         <div class="logo-container">
             <div class="logo">
@@ -65,9 +65,9 @@ try {
         </div>
         <nav>
             <ul>
-                <li><a href="<?php echo $home_url; ?>">InÃ­cio</a></li>
+                <li><a href="<?php echo $home_url; ?>">Início</a></li>
                 <li><a href="<?php echo $planos_url; ?>">Planos</a></li>
-                <li><a href="<?php echo $sobre_url; ?>">Sobre nÃ³s</a></li>
+                <li><a href="<?php echo $sobre_url; ?>">Sobre nós</a></li>
                 <li id="login"><a href="<?php echo $login_url; ?>">Login</a></li>
             </ul>
         </nav>
@@ -125,8 +125,8 @@ try {
                     </div>
 
                     <div class="campo-grupo">
-                        <label for="endereco">EndereÃ§o *</label>
-                        <input type="text" id="endereco" name="endereco" placeholder="Digite seu endereÃ§o completo" required
+                        <label for="endereco">Endereço *</label>
+                        <input type="text" id="endereco" name="endereco" placeholder="Digite seu endereço completo" required
                                value="<?php echo isset($_POST['endereco']) ? htmlspecialchars($_POST['endereco']) : ''; ?>">
                     </div>
 
@@ -178,7 +178,7 @@ try {
                     <button type="submit" class="btn-registrar">Criar Conta</button>
 
                     <div class="login-link">
-                        <p>JÃ¡ tem uma conta? <a href="<?php echo $login_url; ?>">FaÃ§a login aqui</a></p>
+                        <p>Já tem uma conta? <a href="<?php echo $login_url; ?>">Faça login aqui</a></p>
                     </div>
                 </form>
             </div>
@@ -186,8 +186,8 @@ try {
                 <div class="bem-vindo-logo">
                     <img src="../../logo.png" alt="Tech Fit">
                 </div>
-                <h2 class="bem-vindo-titulo">Junte-se a NÃ³s</h2>
-                <p class="bem-vindo-texto">Crie sua conta e comece sua transformaÃ§Ã£o fitness hoje mesmo.</p>
+                <h2 class="bem-vindo-titulo">Junte-se a Nós</h2>
+                <p class="bem-vindo-texto">Crie sua conta e comece sua transformação fitness hoje mesmo.</p>
             </div>
         </div>
     </div>

@@ -22,10 +22,144 @@ $database = new Database();
 $conn = $database->getConnection();
 
 if (!$conn) {
-    die("Erro na conexão com o banco de dados.");
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+        echo json_encode(['success' => false, 'message' => 'Erro na conexão com o banco de dados.']);
+        exit();
+    } else {
+        die("Erro na conexão com o banco de dados.");
+    }
 }
 
-$id_aluno = $_SESSION['id_aluno'];
+// ==============================================================
+// PROCESSAR ATUALIZAÇÃO DE PERFIL VIA AJAX
+// ==============================================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_profile') {
+    
+    // Verificar se é uma requisição AJAX
+    $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+    
+    try {
+        // Validar dados
+        $required_fields = ['nome', 'id_aluno'];
+        foreach ($required_fields as $field) {
+            if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
+                throw new Exception("Campo obrigatório '$field' não preenchido.");
+            }
+        }
+        
+        // Verificar se o ID do aluno corresponde ao da sessão
+        if ($_POST['id_aluno'] != $id_aluno) {
+            throw new Exception("Acesso não autorizado.");
+        }
+        
+        // Coletar e sanitizar dados
+        $nome = trim($_POST['nome']);
+        $telefone = isset($_POST['telefone']) ? trim($_POST['telefone']) : null;
+        $endereco = isset($_POST['endereco']) ? trim($_POST['endereco']) : null;
+        $sexo = isset($_POST['sexo']) ? $_POST['sexo'] : null;
+        $nascimento = isset($_POST['nascimento']) ? $_POST['nascimento'] : null;
+        
+        // Validações
+        if (strlen($nome) < 3) {
+            throw new Exception("O nome deve ter pelo menos 3 caracteres.");
+        }
+        
+        // Formatar telefone (remover formatação para salvar no banco)
+        if ($telefone) {
+            $telefone = preg_replace('/[^0-9]/', '', $telefone);
+            if (strlen($telefone) < 10 || strlen($telefone) > 11) {
+                throw new Exception("Telefone inválido. Deve ter 10 ou 11 dígitos.");
+            }
+        }
+        
+        // Validar data de nascimento
+        if ($nascimento) {
+            $date = DateTime::createFromFormat('Y-m-d', $nascimento);
+            if (!$date || $date->format('Y-m-d') !== $nascimento) {
+                throw new Exception("Data de nascimento inválida.");
+            }
+            
+            // Verificar se é uma data válida (não no futuro)
+            $hoje = new DateTime();
+            $dataNasc = new DateTime($nascimento);
+            if ($dataNasc > $hoje) {
+                throw new Exception("Data de nascimento não pode ser no futuro.");
+            }
+        }
+        
+        // Atualizar no banco de dados
+        $sql = "UPDATE ALUNOS SET 
+                NOME = :nome,
+                TELEFONE = :telefone,
+                ENDERECO = :endereco,
+                SEXO = :sexo,
+                NASCIMENTO = :nascimento
+                WHERE ID_ALUNO = :id_aluno";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':nome', $nome, PDO::PARAM_STR);
+        $stmt->bindParam(':telefone', $telefone, PDO::PARAM_STR);
+        $stmt->bindParam(':endereco', $endereco, PDO::PARAM_STR);
+        $stmt->bindParam(':sexo', $sexo, PDO::PARAM_STR);
+        $stmt->bindParam(':nascimento', $nascimento, PDO::PARAM_STR);
+        $stmt->bindParam(':id_aluno', $id_aluno, PDO::PARAM_INT);
+        
+        if ($stmt->execute()) {
+            // Preparar resposta de sucesso
+            $response = [
+                'success' => true,
+                'message' => 'Perfil atualizado com sucesso!',
+                'data' => [
+                    'nome' => $nome,
+                    'telefone' => $telefone ? formatarTelefoneExibicao($telefone) : '',
+                    'endereco' => $endereco,
+                    'sexo' => $sexo,
+                    'nascimento' => $nascimento
+                ]
+            ];
+            
+            // Atualizar sessão se necessário
+            $_SESSION['nome_aluno'] = $nome;
+            
+        } else {
+            throw new Exception("Erro ao atualizar no banco de dados.");
+        }
+        
+    } catch (Exception $e) {
+        $response = [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+    
+    // Retornar resposta JSON
+    if ($isAjax) {
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit();
+    } else {
+        // Se não for AJAX, redirecionar com mensagem
+        $_SESSION['flash_message'] = isset($response['success']) && $response['success'] ? 
+            ['type' => 'success', 'text' => $response['message']] : 
+            ['type' => 'error', 'text' => $response['message']];
+        header('Location: conta.php');
+        exit();
+    }
+}
+
+// Função para formatar telefone para exibição
+function formatarTelefoneExibicao($telefone) {
+    if (strlen($telefone) === 11) {
+        return '(' . substr($telefone, 0, 2) . ') ' . substr($telefone, 2, 5) . '-' . substr($telefone, 7);
+    } elseif (strlen($telefone) === 10) {
+        return '(' . substr($telefone, 0, 2) . ') ' . substr($telefone, 2, 4) . '-' . substr($telefone, 6);
+    }
+    return $telefone;
+}
+
+// ==============================================================
+// CÓDIGO ORIGINAL (BUSCAR DADOS PARA EXIBIÇÃO)
+// ==============================================================
 
 try {
     // Buscar dados do aluno usando PDO
@@ -549,6 +683,66 @@ try {
             </div>
         </div>
     </footer>
+
+<!-- Modal de Edição de Perfil -->
+<div id="editModal" class="edit-modal-overlay">
+    <div class="edit-modal">
+        <div class="modal-header">
+            <h3>Editar Perfil</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        
+        <form id="editProfileForm" class="modal-form">
+            <div id="modalMessage" class="modal-message"></div>
+            
+            <div class="form-group">
+                <label for="edit_nome">Nome Completo *</label>
+                <input type="text" id="edit_nome" name="nome" value="<?php echo htmlspecialchars($aluno['NOME']); ?>" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="edit_email">E-mail *</label>
+                <input type="email" id="edit_email" name="email" value="<?php echo htmlspecialchars($aluno['EMAIL']); ?>" required readonly disabled>
+                <small class="form-help">Para alterar o e-mail, entre em contato com a unidade.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="edit_telefone">Telefone</label>
+                <input type="tel" id="edit_telefone" name="telefone" value="<?php echo htmlspecialchars($aluno['TELEFONE'] ?? ''); ?>" placeholder="(99) 99999-9999">
+            </div>
+            
+            <div class="form-group">
+                <label for="edit_endereco">Endereço</label>
+                <textarea id="edit_endereco" name="endereco" rows="3"><?php echo htmlspecialchars($aluno['ENDERECO'] ?? ''); ?></textarea>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="edit_sexo">Sexo</label>
+                    <select id="edit_sexo" name="sexo">
+                        <option value="">Selecione</option>
+                        <option value="MASCULINO" <?php echo $aluno['SEXO'] == 'MASCULINO' ? 'selected' : ''; ?>>Masculino</option>
+                        <option value="FEMININO" <?php echo $aluno['SEXO'] == 'FEMININO' ? 'selected' : ''; ?>>Feminino</option>
+                        <option value="OUTRO" <?php echo $aluno['SEXO'] == 'OUTRO' ? 'selected' : ''; ?>>Outro</option>
+                        <option value="NAO_DECLARAR" <?php echo $aluno['SEXO'] == 'NAO_DECLARAR' ? 'selected' : ''; ?>>Prefiro não declarar</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit_nascimento">Data de Nascimento</label>
+                    <input type="date" id="edit_nascimento" name="nascimento" value="<?php echo $aluno['NASCIMENTO']; ?>">
+                </div>
+            </div>
+            
+            <div class="form-actions">
+    <input type="hidden" name="action" value="update_profile">
+    <input type="hidden" name="id_aluno" value="<?php echo $id_aluno; ?>">
+    <button type="button" class="btn-secondary modal-close">Cancelar</button>
+    <button type="submit" class="btn-primary">Salvar Alterações</button>
+</div>
+        </form>
+    </div>
+</div>
 
     <script src="conta.js"></script>
 </body>

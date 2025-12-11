@@ -1,50 +1,461 @@
 // ==============================================================
-// MINHA CONTA - TECH FIT - FUNCIONALIDADES DE INTERFACE APENAS
+// MINHA CONTA - TECH FIT - EDITAÇÃO LOCAL (CORRIGIDO)
 // ==============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos principais - APENAS PARA NAVEGAÇÃO
+    // Elementos principais
     const navItems = document.querySelectorAll('.nav-item');
     const contentSections = document.querySelectorAll('.content-section');
     
     // ==============================================================
-    // INICIALIZAÇÃO - APENAS FUNCIONALIDADES DE UI
+    // INICIALIZAÇÃO
     // ==============================================================
 
     function init() {
+        // REMOVER todos os onclick dos botões de edição
+        removeRedirectOnClicks();
+        
         setupNavigation();
         setupEventListeners();
         setupAulasEventListeners();
+        setupEditModal();
         addCSSAnimations();
         
         console.log('Tech Fit - Interface carregada com sucesso!');
     }
 
     // ==============================================================
-    // NAVEGAÇÃO ENTRE SEÇÕES - APENAS UI
+    // REMOVER REDIRECIONAMENTOS DOS BOTÕES
+    // ==============================================================
+
+    function removeRedirectOnClicks() {
+        // Botão principal "Editar Perfil"
+        const mainEditBtn = document.querySelector('.profile-actions .btn-primary');
+        if (mainEditBtn && mainEditBtn.getAttribute('onclick')) {
+            mainEditBtn.removeAttribute('onclick');
+            console.log('Removido onclick do botão Editar Perfil');
+        }
+        
+        // Botão "Editar" nas configurações
+        const configEditBtns = document.querySelectorAll('.setting-item .btn-small');
+        configEditBtns.forEach(btn => {
+            if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes('editar_perfil')) {
+                btn.removeAttribute('onclick');
+                console.log('Removido onclick do botão nas configurações');
+            }
+        });
+        
+        // Botão "Alterar Senha"
+        const changePassBtn = document.querySelector('.profile-actions .btn-secondary');
+        if (changePassBtn && changePassBtn.getAttribute('onclick')) {
+            changePassBtn.removeAttribute('onclick');
+            console.log('Removido onclick do botão Alterar Senha');
+        }
+    }
+
+    // ==============================================================
+    // MODAL DE EDIÇÃO DE PERFIL (LOCAL)
+    // ==============================================================
+
+    let isSubmitting = false;
+
+    function setupEditModal() {
+        const modal = document.getElementById('editModal');
+        if (!modal) {
+            console.error('Modal não encontrado no HTML');
+            showNotification('Erro: Modal de edição não encontrado', 'error');
+            return;
+        }
+        
+        // Configurar botões para abrir o modal
+        setupEditModalButtons();
+        
+        // Configurar funcionalidades do modal
+        setupModalFunctionality();
+    }
+
+    function setupEditModalButtons() {
+        // Botão principal "Editar Perfil"
+        const mainEditBtn = document.querySelector('.profile-actions .btn-primary');
+        if (mainEditBtn) {
+            mainEditBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Botão Editar Perfil clicado');
+                openEditModal();
+            });
+        }
+        
+        // Botão "Editar" nas configurações
+        const configEditBtns = document.querySelectorAll('.setting-item .btn-small');
+        configEditBtns.forEach(btn => {
+            if (btn.textContent.includes('Editar') || btn.textContent === 'Editar') {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Botão Editar (configurações) clicado');
+                    openEditModal();
+                });
+            }
+        });
+        
+        // Botão "Alterar Senha" - ainda redireciona
+        const changePassBtn = document.querySelector('.profile-actions .btn-secondary');
+        if (changePassBtn && changePassBtn.textContent.includes('Alterar Senha')) {
+            changePassBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                alterarSenha();
+            });
+        }
+    }
+
+    function setupModalFunctionality() {
+        const modal = document.getElementById('editModal');
+        if (!modal) return;
+        
+        // Botão de fechar modal
+        const closeButtons = modal.querySelectorAll('.modal-close');
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeEditModal();
+            });
+        });
+        
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeEditModal();
+            }
+        });
+        
+        // Fechar modal ao clicar fora
+        modal.addEventListener('click', function(e) {
+            if (e.target === this && !isSubmitting) {
+                closeEditModal();
+            }
+        });
+        
+        // Formatar telefone dinamicamente
+        const telefoneInput = document.getElementById('edit_telefone');
+        if (telefoneInput) {
+            telefoneInput.addEventListener('input', formatarTelefoneInput);
+        }
+        
+        // Formulário de edição
+        const editForm = document.getElementById('editProfileForm');
+        if (editForm) {
+            editForm.addEventListener('submit', handleEditFormSubmit);
+        }
+    }
+
+    function formatarTelefoneInput(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        
+        if (value.length > 11) {
+            value = value.substring(0, 11);
+        }
+        
+        if (value.length <= 10) {
+            value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else {
+            value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+        }
+        
+        e.target.value = value;
+    }
+
+    async function handleEditFormSubmit(e) {
+        e.preventDefault();
+        
+        if (isSubmitting) return;
+        
+        const form = e.target;
+        const nomeInput = form.querySelector('#edit_nome');
+        const telefoneInput = form.querySelector('#edit_telefone');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        if (!nomeInput || !telefoneInput || !submitBtn) return;
+        
+        // Validações
+        const nome = nomeInput.value.trim();
+        const telefone = telefoneInput.value.trim();
+        const telefoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+        
+        if (!nome) {
+            showModalMessage('Por favor, preencha o nome completo', 'error');
+            nomeInput.focus();
+            return;
+        }
+        
+        if (nome.length < 3) {
+            showModalMessage('O nome deve ter pelo menos 3 caracteres', 'error');
+            nomeInput.focus();
+            return;
+        }
+        
+        if (telefone && !telefoneRegex.test(telefone)) {
+            showModalMessage('Formato de telefone inválido. Use (99) 99999-9999', 'error');
+            telefoneInput.focus();
+            return;
+        }
+        
+        // Desabilitar botão e mostrar loading
+        submitBtn.disabled = true;
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Salvando...';
+        submitBtn.style.opacity = '0.7';
+        isSubmitting = true;
+        
+        // Coletar dados do formulário
+        const formData = new FormData(form);
+        
+        try {
+            console.log('Enviando dados para atualização...');
+            
+            // Enviar via AJAX para conta.php
+            const response = await fetch(window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            console.log('Resposta recebida:', response.status);
+            
+            // Verificar se a resposta é JSON
+            const contentType = response.headers.get('content-type');
+            
+            if (contentType && contentType.includes('application/json')) {
+                const result = await response.json();
+                console.log('Resposta JSON:', result);
+                
+                if (result.success) {
+                    showModalMessage('Perfil atualizado com sucesso!', 'success');
+                    
+                    // Atualizar os dados na página sem recarregar
+                    if (result.data) {
+                        updateProfileData(result.data);
+                    }
+                    
+                    // AGORA VAI FECHAR O MODAL CORRETAMENTE
+                    setTimeout(() => {
+                        // Resetar o botão primeiro
+                        resetSubmitButton(submitBtn, originalText);
+                        
+                        // Fechar o modal
+                        closeEditModal();
+                        
+                        // Mostrar notificação
+                        showNotification('Perfil atualizado com sucesso!', 'success');
+                    }, 1500); // Reduzido para 1.5 segundos
+                    
+                } else {
+                    showModalMessage(result.message || 'Erro ao atualizar perfil', 'error');
+                    resetSubmitButton(submitBtn, originalText);
+                }
+            } else {
+                // Se não for JSON, tentar extrair mensagem
+                const text = await response.text();
+                
+                // Verificar padrões comuns de sucesso
+                if (response.ok) {
+                    showModalMessage('Perfil atualizado!', 'success');
+                    
+                    // Tentar extrair dados do HTML
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = text;
+                    
+                    // Procurar dados atualizados
+                    const nomeElement = tempDiv.querySelector('.profile-info h3');
+                    if (nomeElement) {
+                        updateProfileData({
+                            nome: nomeElement.textContent
+                        });
+                    }
+                    
+                    // Fechar modal após 1.5 segundos
+                    setTimeout(() => {
+                        resetSubmitButton(submitBtn, originalText);
+                        closeEditModal();
+                        showNotification('Perfil atualizado com sucesso!', 'success');
+                    }, 1500);
+                    
+                } else {
+                    showModalMessage('Erro ao atualizar perfil', 'error');
+                    resetSubmitButton(submitBtn, originalText);
+                }
+            }
+            
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            showModalMessage('Erro de conexão. Verifique sua internet.', 'error');
+            resetSubmitButton(submitBtn, originalText);
+        }
+    }
+
+    function updateProfileData(data) {
+        console.log('Atualizando dados da página:', data);
+        
+        // Nome
+        if (data.nome) {
+            document.querySelectorAll('.user-profile h3, .profile-info h3').forEach(el => {
+                if (el) el.textContent = data.nome;
+            });
+        }
+        
+        // Telefone
+        if (data.telefone !== undefined) {
+            const telefoneElement = document.querySelector('.detail-item:nth-child(2) p');
+            if (telefoneElement) {
+                telefoneElement.textContent = data.telefone || 'Não cadastrado';
+            }
+        }
+        
+        // Endereço
+        if (data.endereco !== undefined) {
+            const enderecoElement = document.querySelector('.detail-item:nth-child(8) p');
+            if (enderecoElement) {
+                enderecoElement.textContent = data.endereco || 'Não cadastrado';
+            }
+        }
+        
+        // Sexo
+        if (data.sexo) {
+            const sexoElement = document.querySelector('.detail-item:nth-child(7) p');
+            if (sexoElement) {
+                const sexoLabels = {
+                    'MASCULINO': 'Masculino',
+                    'FEMININO': 'Feminino',
+                    'OUTRO': 'Outro',
+                    'NAO_DECLARAR': 'Não declarado'
+                };
+                sexoElement.textContent = sexoLabels[data.sexo] || data.sexo;
+            }
+        }
+        
+        // Data de nascimento
+        if (data.nascimento) {
+            try {
+                const [year, month, day] = data.nascimento.split('-');
+                const formattedDate = `${day}/${month}/${year}`;
+                const nascimentoElement = document.querySelector('.detail-item:nth-child(3) p');
+                if (nascimentoElement) {
+                    nascimentoElement.textContent = formattedDate;
+                }
+            } catch (e) {
+                console.error('Erro ao formatar data:', e);
+            }
+        }
+    }
+
+    function resetSubmitButton(button, text) {
+        if (button) {
+            button.disabled = false;
+            button.textContent = text;
+            button.style.opacity = '1';
+        }
+        isSubmitting = false;
+    }
+
+    function openEditModal() {
+        const modal = document.getElementById('editModal');
+        if (!modal) {
+            console.error('Modal não encontrado!');
+            showNotification('Erro ao abrir editor de perfil', 'error');
+            return;
+        }
+        
+        console.log('Abrindo modal de edição...');
+        
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Limpar mensagens anteriores
+        showModalMessage('', '');
+        
+        // Focar no primeiro campo
+        setTimeout(() => {
+            const nomeInput = document.getElementById('edit_nome');
+            if (nomeInput) {
+                nomeInput.focus();
+                nomeInput.select();
+            }
+        }, 300);
+    }
+
+    function closeEditModal() {
+        console.log('Fechando modal...');
+        
+        // Primeiro resetar o estado de submissão
+        isSubmitting = false;
+        
+        const modal = document.getElementById('editModal');
+        if (modal) {
+            // Remover a classe active
+            modal.classList.remove('active');
+            
+            // Restaurar overflow do body
+            document.body.style.overflow = '';
+            
+            console.log('Modal fechado com sucesso');
+        } else {
+            console.error('Modal não encontrado para fechar');
+        }
+        
+        // Resetar botão de submit (se existir)
+        const submitBtn = document.querySelector('#editProfileForm button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Salvar Alterações';
+            submitBtn.style.opacity = '1';
+        }
+    }
+
+    function showModalMessage(message, type) {
+        const modalMessage = document.getElementById('modalMessage');
+        if (modalMessage) {
+            modalMessage.textContent = message;
+            modalMessage.className = 'modal-message';
+            
+            if (message) {
+                modalMessage.classList.add(type);
+                modalMessage.style.display = 'block';
+                
+                // Rolar para a mensagem
+                setTimeout(() => {
+                    modalMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            } else {
+                modalMessage.style.display = 'none';
+            }
+        }
+    }
+
+    // ==============================================================
+    // NAVEGAÇÃO ENTRE SEÇÕES
     // ==============================================================
 
     function setupNavigation() {
+        if (!navItems.length) return;
+        
         navItems.forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Remove classe active de todos os itens
                 navItems.forEach(nav => nav.classList.remove('active'));
-                
-                // Adiciona classe active ao item clicado
                 this.classList.add('active');
                 
-                // Mostra a seção correspondente
                 const targetId = this.getAttribute('href').substring(1);
                 showSection(targetId);
                 
-                // Atualizar URL sem recarregar a página (opcional)
                 history.pushState(null, null, `#${targetId}`);
             });
         });
         
-        // Verificar hash na URL inicial
         const hash = window.location.hash.substring(1);
         if (hash) {
             const targetNav = document.querySelector(`.nav-item[href="#${hash}"]`);
@@ -57,17 +468,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showSection(sectionId) {
-        // Esconde todas as seções
+        if (!contentSections.length) return;
+        
         contentSections.forEach(section => {
             section.classList.remove('active');
         });
         
-        // Mostra a seção selecionada
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
             targetSection.classList.add('active');
             
-            // Animação de entrada suave
             targetSection.style.opacity = '0';
             targetSection.style.transform = 'translateY(10px)';
             
@@ -80,23 +490,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==============================================================
-    // EVENT LISTENERS - APENAS PARA INTERAÇÃO
+    // OUTROS EVENT LISTENERS
     // ==============================================================
 
     function setupEventListeners() {
-        // Botões de edição do perfil
-        const btnEditarPerfil = document.querySelector('.profile-actions .btn-primary');
-        const btnAlterarSenha = document.querySelector('.profile-actions .btn-secondary');
-        
-        if (btnEditarPerfil) {
-            btnEditarPerfil.addEventListener('click', editarPerfil);
-        }
-        
-        if (btnAlterarSenha) {
-            btnAlterarSenha.addEventListener('click', alterarSenha);
-        }
-        
-        // Botão de editar avatar (se existir)
+        // Botão de editar avatar
         const btnEditAvatar = document.querySelector('.edit-avatar');
         if (btnEditAvatar) {
             btnEditAvatar.addEventListener('click', editarAvatar);
@@ -107,42 +505,35 @@ document.addEventListener('DOMContentLoaded', function() {
             toggle.addEventListener('change', function() {
                 const setting = this.closest('.setting-item').querySelector('h4').textContent;
                 showNotification(`${setting} ${this.checked ? 'ativado' : 'desativado'}`, 'info');
-                
-                // Aqui você poderia fazer uma requisição AJAX para salvar a preferência
-                // saveSetting(setting, this.checked);
             });
         });
         
         // Botões de configurações
         document.querySelectorAll('.setting-item .btn-small').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const setting = this.closest('.setting-item').querySelector('h4').textContent;
-                showNotification(`Abrindo configurações de ${setting}`, 'info');
-            });
+            if (btn.textContent === 'Configurar') {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const setting = this.closest('.setting-item').querySelector('h4').textContent;
+                    showNotification(`Abrindo configurações de ${setting}`, 'info');
+                });
+            }
         });
-        
-        // Botões de ação nas aulas
-        setupAulasEventListeners();
     }
 
     function setupAulasEventListeners() {
-        // Botões "Entrar" ou "Lembrar" das aulas
+        // Botões "Ver detalhes"
         document.querySelectorAll('.class-actions .btn-small.primary').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
                 const aulaNome = this.closest('.class-item').querySelector('h4').textContent;
-                if (this.textContent.includes('Entrar')) {
-                    entrarNaAula(aulaNome);
-                } else if (this.textContent.includes('Lembrar')) {
-                    lembrarAula(aulaNome);
-                } else if (this.textContent.includes('Ver')) {
-                    verDetalhesAula(aulaNome);
-                }
+                verDetalhesAula(aulaNome);
             });
         });
         
-        // Botões "Cancelar" das aulas
+        // Botões "Cancelar"
         document.querySelectorAll('.class-actions .btn-small.secondary').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
                 const aulaNome = this.closest('.class-item').querySelector('h4').textContent;
                 cancelarAula(aulaNome);
             });
@@ -150,62 +541,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==============================================================
-    // FUNÇÕES DE AÇÃO - APENAS NOTIFICAÇÕES/INTERAÇÃO
+    // FUNÇÕES DE AÇÃO
     // ==============================================================
 
-    function editarPerfil() {
-        showNotification('Redirecionando para edição de perfil...', 'info');
-        // Aqui você poderia redirecionar para a página de edição
-        // window.location.href = 'editar_perfil.php';
-    }
-
     function alterarSenha() {
-        showNotification('Redirecionando para alteração de senha...', 'info');
-        // Aqui você poderia redirecionar para a página de alteração de senha
-        // window.location.href = 'alterar_senha.php';
+        // Criar um mini modal para alterar senha na mesma página
+        showNotification('Funcionalidade de alterar senha em desenvolvimento', 'info');
     }
 
     function editarAvatar() {
-        showNotification('Selecionar nova foto de perfil', 'info');
-        // Aqui você poderia abrir um seletor de arquivos
-        // const input = document.createElement('input');
-        // input.type = 'file';
-        // input.accept = 'image/*';
-        // input.click();
-    }
-
-    function entrarNaAula(nomeAula) {
-        showNotification(`Preparando entrada na aula: ${nomeAula}`, 'success');
-        // Aqui você poderia iniciar a aula ou redirecionar
+        showNotification('Funcionalidade em desenvolvimento', 'info');
     }
 
     function verDetalhesAula(nomeAula) {
-        showNotification(`Mostrando detalhes da aula: ${nomeAula}`, 'info');
-        // Aqui você poderia abrir um modal com detalhes
-    }
-
-    function lembrarAula(nomeAula) {
-        showNotification(`Lembrete ativado para: ${nomeAula}`, 'info');
-        // Aqui você poderia ativar notificações no navegador
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(`Lembrete: ${nomeAula}`);
-        }
+        showNotification(`Detalhes da aula: ${nomeAula}`, 'info');
     }
 
     function cancelarAula(nomeAula) {
         if (confirm(`Tem certeza que deseja cancelar sua inscrição na aula "${nomeAula}"?`)) {
-            showNotification(`Inscrição na aula "${nomeAula}" cancelada`, 'warning');
-            // Aqui você poderia fazer uma requisição AJAX para cancelar
-            // cancelarInscricaoAula(aulaId);
+            showNotification(`Aula "${nomeAula}" cancelada`, 'warning');
         }
     }
 
     // ==============================================================
-    // FUNÇÕES UTILITÁRIAS - NOTIFICAÇÕES
+    // SISTEMA DE NOTIFICAÇÕES
     // ==============================================================
 
     function showNotification(mensagem, tipo = 'info') {
-        // Cores por tipo
         const colors = {
             'success': '#4CAF50',
             'warning': '#FF9800',
@@ -213,7 +575,12 @@ document.addEventListener('DOMContentLoaded', function() {
             'info': '#2196F3'
         };
         
-        // Criar elemento de notificação
+        // Remover notificações antigas
+        document.querySelectorAll('.techfit-notification').forEach(n => {
+            n.style.animation = 'techfitNotificationSlideOut 0.3s ease';
+            setTimeout(() => n.remove(), 300);
+        });
+        
         const notification = document.createElement('div');
         notification.className = 'techfit-notification';
         notification.innerHTML = `
@@ -221,7 +588,6 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="techfit-notification-close">&times;</button>
         `;
         
-        // Estilos
         notification.style.cssText = `
             position: fixed;
             top: 20px;
@@ -231,16 +597,16 @@ document.addEventListener('DOMContentLoaded', function() {
             padding: 12px 20px;
             border-radius: 6px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 9999;
+            z-index: 10000;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 15px;
             font-size: 14px;
             max-width: 350px;
             animation: techfitNotificationSlideIn 0.3s ease;
         `;
         
-        // Botão de fechar
         const closeBtn = notification.querySelector('.techfit-notification-close');
         closeBtn.style.cssText = `
             background: none;
@@ -251,6 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
             padding: 0;
             margin: 0;
             line-height: 1;
+            min-width: 24px;
         `;
         
         closeBtn.addEventListener('click', () => {
@@ -260,21 +627,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.appendChild(notification);
         
-        // Remover automaticamente após 5 segundos
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.style.animation = 'techfitNotificationSlideOut 0.3s ease';
                 setTimeout(() => notification.remove(), 300);
             }
         }, 5000);
+        
+        return notification;
     }
 
     // ==============================================================
-    // ANIMAÇÕES CSS - APENAS EFEITOS VISUAIS
+    // ANIMAÇÕES CSS
     // ==============================================================
 
     function addCSSAnimations() {
+        if (document.querySelector('style[data-techfit-animations]')) return;
+        
         const style = document.createElement('style');
+        style.setAttribute('data-techfit-animations', 'true');
         style.textContent = `
             /* Animações de notificação */
             @keyframes techfitNotificationSlideIn {
@@ -302,31 +673,44 @@ document.addEventListener('DOMContentLoaded', function() {
             /* Efeitos hover suaves */
             .nav-item:hover {
                 transform: translateX(5px);
+            }
+            
+            .nav-item {
                 transition: transform 0.2s ease;
             }
             
             .class-item:hover {
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            }
+            
+            .class-item {
                 transition: all 0.3s ease;
             }
             
             .btn-primary:hover, .btn-secondary:hover {
                 transform: translateY(-2px);
-                transition: transform 0.2s ease;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            
+            .btn-primary, .btn-secondary {
+                transition: all 0.2s ease;
             }
             
             .btn-small:hover {
                 transform: translateY(-1px);
+            }
+            
+            .btn-small {
                 transition: transform 0.2s ease;
             }
             
-            .summary-card:hover {
+            .summary-card:hover, .stat-card:hover {
                 transform: translateY(-3px);
-                transition: all 0.3s ease;
+                box-shadow: 0 6px 16px rgba(0,0,0,0.1);
             }
             
-            .stat-card:hover {
-                transform: translateY(-3px);
+            .summary-card, .stat-card {
                 transition: all 0.3s ease;
             }
             
@@ -334,40 +718,33 @@ document.addEventListener('DOMContentLoaded', function() {
             .content-section {
                 transition: opacity 0.3s ease, transform 0.3s ease;
             }
+            
+            /* Animações para o modal */
+            @keyframes modalSlideIn {
+                from {
+                    transform: translateY(20px) scale(0.95);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0) scale(1);
+                    opacity: 1;
+                }
+            }
+            
+            .edit-modal {
+                animation: modalSlideIn 0.3s ease;
+            }
         `;
         document.head.appendChild(style);
     }
 
     // ==============================================================
-    // FUNÇÕES EXTRAS - VALIDAÇÃO DE FORMULÁRIOS
+    // INICIALIZAÇÃO
     // ==============================================================
 
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-
-    function formatarTelefone(telefone) {
-        // Remove tudo que não é número
-        const numeros = telefone.replace(/\D/g, '');
-        
-        // Formata como (XX) XXXXX-XXXX
-        if (numeros.length === 11) {
-            return numeros.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-        } else if (numeros.length === 10) {
-            return numeros.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-        }
-        return telefone;
-    }
-
-    // ==============================================================
-    // INICIALIZAÇÃO FINAL
-    // ==============================================================
-
-    // Inicializa a aplicação
     init();
     
-    // Adiciona listener para o botão de logout se existir
+    // Confirmação de logout
     const logoutBtn = document.querySelector('a[href*="logout"]');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
@@ -378,11 +755,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ==============================================================
-// FUNÇÕES GLOBAIS (opcionais)
-// ==============================================================
-
-// Função para alternar modo escuro/claro
+// Funções globais
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
@@ -390,15 +763,16 @@ function toggleDarkMode() {
     return isDark;
 }
 
-// Verificar preferência de modo escuro
 if (localStorage.getItem('darkMode') === 'true') {
     document.body.classList.add('dark-mode');
 }
 
-// Função para rolar até uma seção
 function scrollToSection(sectionId) {
     const section = document.getElementById(sectionId);
     if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
+        section.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+        });
     }
 }
